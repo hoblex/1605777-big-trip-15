@@ -79,4 +79,5 @@ const generatePoint = () => {
   };
 };
 
-console.log(generatePoint());
+const pointsList = new Array(15).fill().map(() => generatePoint());
+console.log(pointsList[14]);
