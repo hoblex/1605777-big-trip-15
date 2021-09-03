@@ -16,8 +16,8 @@ const generatePointType = () => {
     'Drive',
     'Flight',
     'Check-in',
-    'Sightseen',
-    'Restaraunt',
+    'Sightseeing',
+    'Restaurant',
   ];
 
   const randomIndex = getRandomInteger(0, types.length - 1);
@@ -37,21 +37,29 @@ const generateCity = () => {
   return city[randomIndex];
 };
 
-const generateAdditionalOption = () => {
-  const optionType = [
-    'Amsterdam',
-    'Chamonix',
-    'Geneva',
-  ];
+const generateAdditionalOption = (pointType) => {
+  const additionalOptions = new Map();
+  additionalOptions.set('Taxi', [ 'Order Uber' ]);
+  additionalOptions.set('Flight', ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train']);
+  additionalOptions.set('CheckIn', ['Add breakfast']);
+  additionalOptions.set('Sightseeing', ['Book tickets', 'Lunch in city']);
 
-  const randomIndex = getRandomInteger(0, city.length - 1);
-
-  return city[randomIndex];
+  // const randomIndex = getRandomInteger(0, city.length - 1);
+  //
+  console.log(pointType);
+  if (additionalOptions.has(pointType)) {
+    return additionalOptions.get(pointType);
+  } else {
+    return null;
+  }
 };
 
-export const generatePoint = () => ({
+console.log(generateAdditionalOption(generatePointType()));
+
+const generatePoint = () => ({
   type: generatePointType(),
   city: generateCity(),
+  additionalOptions: generateAdditionalOption(generatePointType()),
 });
 
 console.log(generatePoint());
