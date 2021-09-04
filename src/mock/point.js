@@ -1,4 +1,4 @@
-const dayjs = require('dayjs');
+import dayjs from 'dayjs';
 
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -41,10 +41,11 @@ const CITIES = [
 
 const DESCRIPTION_PHRASE = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras aliquet varius magna, non porta ligula feugiat eget. Fusce tristique felis at fermentum pharetra. Aliquam id orci ut lectus varius viverra. Nullam nunc ex, convallis sed finibus eget, sollicitudin eget ante. Phasellus eros mauris, condimentum sed nibh vitae, sodales efficitur ipsum. Sed blandit, eros vel aliquam faucibus, purus ex euismod diam, eu luctus nunc ante ut dui. Sed sed nisi sed augue convallis suscipit in sed felis. Aliquam erat volutpat. Nunc fermentum tortor ac porta dapibus. In rutrum ac purus sit amet tempus.';
 
-const generateDescription = (phrases) => {
+const PHOTO_ALIAS = 'http://picsum.photos/248/152?r=';
+
+const generateDescriptionPhrases = (phrases) => {
   const phrasesList = phrases.split('. ');
-  const descriptionList = new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1));
-  return descriptionList;
+  return new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1));
 };
 
 const generateAdditionalOption = (options, pointType) => {
@@ -61,13 +62,27 @@ const generateAdditionalOption = (options, pointType) => {
 };
 
 const generateDate = () => {
-  const maxDaysGap = 7;
-  const daysGap = getRandomInteger(-maxDaysGap, maxDaysGap);
-
-  return dayjs().add(daysGap, 'day').format('DD/MM/YYYY');
+  const maxDaysGap = 1;
+  const date1 = dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'day');
+  const date2 = dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'day');
+  if (dayjs(date2).diff(date1,'day') >= 0) {
+    return {
+      'dateBegin': date1,
+      'dateEnd': date2,
+    };
+  } else {
+    return {
+      'dateBegin': date2,
+      'dateEnd': date1,
+    };
+  }
 };
 
-const generatePoint = () => {
+const generatePhotos = () => {
+  return new Array(getRandomInteger(1, 6)).fill().map(() => PHOTO_ALIAS + getRandomInteger(1, 100));
+};
+
+export const generatePoint = () => {
   const date = generateDate();
   const pointType = generateRandomItem(TYPES);
   return {
@@ -75,9 +90,7 @@ const generatePoint = () => {
     city: generateRandomItem(CITIES),
     additionalOptions: generateAdditionalOption(ADDITIONAL_OPTIONALS, pointType),
     date,
-    description: generateDescription(DESCRIPTION_PHRASE),
+    description: generateDescriptionPhrases(DESCRIPTION_PHRASE),
+    photo: generatePhotos(),
   };
 };
-
-const pointsList = new Array(15).fill().map(() => generatePoint());
-console.log(pointsList[14]);
