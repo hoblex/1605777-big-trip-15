@@ -20,9 +20,10 @@ export const createTemporaryTripPoint = (point) => {
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
     : '';
-  const eventTimeDuration = time.timeDuration < 60
-    ? `${time.timeDuration.format('mm')}M`
-    : `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
+
+  const eventTimeDuration = time.timeDuration.hour() ===0
+    ? `${dayjs(time.timeDuration).format('mm')}M`
+    : `${dayjs(time.timeDuration).format('HH')}H ${ dayjs(time.timeDuration).format('mm')}M`;
 
   return ` <div class="event">
     <time class="event__date" datetime="${date.dateBegin.format('YYYY-MM-DD')}">${date.dateBegin.format('D MMM')}</time>

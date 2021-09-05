@@ -86,18 +86,17 @@ const generateTimeDuration = (day) => {
   const time1 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
   const time2 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
 
-  if (dayjs(time2).diff(time1,'minute') >= 0) {
+  if (dayjs(`${time2}`).diff(dayjs(`${time1}`,'minute')) >= 0) {
     return {
       'timeBegin': time1,
       'timeEnd': time2,
-      'timeDuration': dayjs.utc(`${time2}`).diff(dayjs.utc(`${time1}`), 'minute'),
+      'timeDuration': dayjs.utc(dayjs(`${time2}`).diff(dayjs.utc(`${time1}`, 'minute'))),
     };
   } else {
     return {
       'timeBegin': time2,
       'timeEnd': time1,
-      'timeDuration': dayjs.utc(`${time1}`).diff(dayjs.utc(`${time2}`), 'minute'),
-
+      'timeDuration': dayjs.utc(dayjs(`${time1}`).diff(dayjs.utc(`${time2}`, 'minute'))),
     };
   }
 };
@@ -109,7 +108,7 @@ const generatePhotos = () => {
 export const generatePoint = () => {
   const date = generateDate();
   const time = generateTimeDuration(date.dateBegin);
-  console.log(dayjs(time.timeDuration).format('HH:mm'));
+  console.log(time.timeDuration);
   const pointType = generateRandomItem(TYPES);
   return {
     date,
