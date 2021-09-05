@@ -1,4 +1,7 @@
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -78,18 +81,44 @@ const generateDate = () => {
   }
 };
 
+const generateTimeDuration = (day) => {
+  const maxMinGap = 180;
+  const time1 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
+  const time2 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
+
+  if (dayjs(time2).diff(time1,'minute') >= 0) {
+    return {
+      'timeBegin': time1,
+      'timeEnd': time2,
+      'timeDuration': dayjs.utc(`${time2}`).diff(dayjs.utc(`${time1}`), 'minute'),
+    };
+  } else {
+    return {
+      'timeBegin': time2,
+      'timeEnd': time1,
+      'timeDuration': dayjs.utc(`${time1}`).diff(dayjs.utc(`${time2}`), 'minute'),
+
+    };
+  }
+};
+
 const generatePhotos = () => {
   return new Array(getRandomInteger(1, 6)).fill().map(() => PHOTO_ALIAS + getRandomInteger(1, 100));
 };
 
 export const generatePoint = () => {
   const date = generateDate();
+  const time = generateTimeDuration(date.dateBegin);
+  console.log(dayjs(time.timeDuration).format('HH:mm'));
   const pointType = generateRandomItem(TYPES);
   return {
+    date,
     pointType,
     city: generateRandomItem(CITIES),
+    time,
+    fullPointCost: getRandomInteger(1, 10) * 10,
     additionalOptions: generateAdditionalOption(ADDITIONAL_OPTIONALS, pointType),
-    date,
+    isFavorite: Boolean(getRandomInteger(0, 1)),
     description: generateDescriptionPhrases(DESCRIPTION_PHRASE),
     photo: generatePhotos(),
   };
