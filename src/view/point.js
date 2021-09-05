@@ -15,7 +15,7 @@ const createOfferContainer = (optionsList) => {
 };
 
 export const createTemporaryTripPoint = (point) => {
-  const {date, pointType, city, time, fullPointCost, additionalOptions, isFavorite} = point;
+  const {pointType, city, time, pointCost: pointCost, additionalOptions, isFavorite} = point;
 
   const favoriteClassName = isFavorite
     ? 'event__favorite-btn--active'
@@ -26,21 +26,21 @@ export const createTemporaryTripPoint = (point) => {
     : `${dayjs(time.timeDuration).format('HH')}H ${ dayjs(time.timeDuration).format('mm')}M`;
 
   return ` <div class="event">
-    <time class="event__date" datetime="${date.dateBegin.format('YYYY-MM-DD')}">${date.dateBegin.format('D MMM')}</time>
+    <time class="event__date" datetime="${time.timeBegin.format('YYYY-MM-DD')}">${time.timeBegin.format('D MMM')}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
     </div>
     <h3 class="event__title">${pointType} ${city}</h3>
     <div class="event__schedule">
       <p class="event__time">
-        <time class="event__start-time" datetime="${date.dateBegin.format('YYYY-MM-DD')}T${time.timeBegin.format('H:mm')}">${time.timeBegin.format('H:mm')}</time>
+        <time class="event__start-time" datetime="${time.timeBegin.format('YYYY-MM-DD')}T${time.timeBegin.format('H:mm')}">${time.timeBegin.format('H:mm')}</time>
         &mdash;
-        <time class="event__end-time" datetime="${date.dateBegin.format('YYYY-MM-DD')}T${time.timeEnd.format('H:mm')}">${time.timeEnd.format('H:mm')}</time>
+        <time class="event__end-time" datetime="${time.timeEnd.format('YYYY-MM-DD')}T${time.timeEnd.format('H:mm')}">${time.timeEnd.format('H:mm')}</time>
       </p>
       <p class="event__duration">${eventTimeDuration}</p>
     </div>
     <p class="event__price">
-      &euro;&nbsp;<span class="event__price-value">${fullPointCost}</span>
+      &euro;&nbsp;<span class="event__price-value">${pointCost}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
     ${createOfferContainer(additionalOptions)}

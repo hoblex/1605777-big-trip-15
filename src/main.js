@@ -8,7 +8,7 @@ import {createTripPointsListContainer} from './view/trip-points-list.js';
 import {createPointItemContainer} from './view/trip-point-item.js';
 import {createNewPointForm} from './view/add-new-point-form.js';
 import {createEditPointForm} from './view/edit-point-form.js';
-import {createTemporaryTripPoint} from './view/temp-point.js';
+import {createTemporaryTripPoint} from './view/point.js';
 import {generatePoint} from './mock/point';
 
 const POINTS_COUNT = 15;
@@ -57,14 +57,14 @@ render(tripEventsList, createPointItemContainer(), 'beforeend');
 const tripEventItem = tripEventsList.querySelector('.trip-events__item');
 
 //Добавляет форму редактирования точки маршрута
-render(tripEventItem, createEditPointForm(), 'beforeend');
+//render(tripEventItem, createEditPointForm(), 'beforeend');
 
 //Добавляет форму создания новой точки маршрута
-render(tripEventItem, createNewPointForm(), 'beforeend');
+render(tripEventItem, createNewPointForm(pointsList[0]), 'beforeend');
 
 //Добавляет временные точки для отображения в списке точек маршрута
 
-for (let i = 0; i < POINTS_COUNT; i++) {
+for (let i = 1; i < POINTS_COUNT; i++) {
   render(tripEventItem, createTemporaryTripPoint(pointsList[i]), 'beforeend');
   // const offersContainer = document.querySelector('.event__selected-offers');
   // console.log(offersContainer);

@@ -64,6 +64,18 @@ const generateAdditionalOption = (options, pointType) => {
   }
 };
 
+const countAdditionalOptionsCost = (optionsList) => {
+  if (optionsList !== null) {
+    let optionsCost = 0;
+    for (let i = 0; i < optionsList.length; i++) {
+      optionsCost += optionsList[i][1];
+    }
+    return optionsCost;
+  } else {
+    return 0;
+  }
+};
+
 const generateDate = () => {
   const maxDaysGap = 1;
   const date1 = dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'day');
@@ -108,15 +120,18 @@ const generatePhotos = () => {
 export const generatePoint = () => {
   const date = generateDate();
   const time = generateTimeDuration(date.dateBegin);
-  console.log(time.timeDuration);
   const pointType = generateRandomItem(TYPES);
+  const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS, pointType);
+  const pointCost = getRandomInteger(1, 10) * 10;
+  const fullPointCost = countAdditionalOptionsCost(additionalOptions) + pointCost;
   return {
-    date,
+
     pointType,
     city: generateRandomItem(CITIES),
     time,
-    fullPointCost: getRandomInteger(1, 10) * 10,
-    additionalOptions: generateAdditionalOption(ADDITIONAL_OPTIONALS, pointType),
+    additionalOptions,
+    pointCost,
+    fullPointCost,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     description: generateDescriptionPhrases(DESCRIPTION_PHRASE),
     photo: generatePhotos(),
