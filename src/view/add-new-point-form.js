@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 const FORM_TYPES = [
   'Taxi',
   'Bus',
@@ -44,12 +46,12 @@ const createPhotosTemplate = (photoList) => (
 
 export const createNewPointForm = (point = {}) => {
   const {
-    pointType,
-    city,
-    time,
-    additionalOptions,
-    photoList,
-    description,
+    pointType = 'Taxi',
+    city = '',
+    time = {timeBegin: dayjs(), timeEnd:dayjs()},
+    additionalOptions = new Array(0),
+    photoList = new Array(0),
+    description = new Array(0),
   } = point;
 
   return `<form class="event event--edit" action="#" method="post">
