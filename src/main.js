@@ -6,8 +6,7 @@ import {createFilters} from './view/filters.js';
 import {createSort} from './view/sort.js';
 import {createTripPointsListContainer} from './view/trip-points-list.js';
 import {createPointItemContainer} from './view/trip-point-item.js';
-import {createNewPointForm} from './view/add-new-point-form.js';
-import {createEditPointForm} from './view/edit-point-form.js';
+import {createPointForm} from './view/point-form.js';
 import {createTemporaryTripPoint} from './view/point.js';
 import {generatePoint} from './mock/point';
 import dayjs from 'dayjs';
@@ -65,11 +64,8 @@ render(tripEventsList, createPointItemContainer(), 'beforeend');
 //Элемент списка маршрута
 const tripEventItem = tripEventsList.querySelector('.trip-events__item');
 
-//Добавляет форму редактирования точки маршрута
-//render(tripEventItem, createEditPointForm(), 'beforeend');
-
 //Добавляет форму создания новой точки маршрута
-render(tripEventItem, createNewPointForm(pointsList[0]), 'beforeend');
+render(tripEventItem, createPointForm(pointsList[0]), 'beforeend');
 
 //Добавляет временные точки для отображения в списке точек маршрута
 
