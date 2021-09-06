@@ -114,9 +114,7 @@ const generateTimeDuration = (day) => {
   }
 };
 
-const generatePhotoList = () => {
-  return new Array(getRandomInteger(1, 6)).fill().map(() => PHOTO_ALIAS + getRandomInteger(1, 100));
-};
+const generatePhotoList = () => new Array(getRandomInteger(1, 6)).fill().map(() => PHOTO_ALIAS + getRandomInteger(1, 100));
 
 export const generatePoint = () => {
   const date = generateDate();
