@@ -10,6 +10,10 @@ import {createNewPointForm} from './view/add-new-point-form.js';
 import {createEditPointForm} from './view/edit-point-form.js';
 import {createTemporaryTripPoint} from './view/point.js';
 import {generatePoint} from './mock/point';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+
+dayjs.extend(utc);
 
 const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
@@ -28,11 +32,16 @@ render(routeInfoContainer, createTripInfoContainer(), 'afterbegin');
 
 //Добавляет информацию о маршруте: города
 const routeInfoCities = routeInfoContainer.querySelector('.trip-info');
-render(routeInfoCities, createTripInfoCities(), 'beforeend');
+const routeCityList = new Set();
+const routeDateList = new Set();
+pointsList.forEach((item) => routeCityList.add(item.city));
+pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
+render(routeInfoCities, createTripInfoCities(routeCityList, routeDateList), 'beforeend');
 
 //Добавляет информацию о маршруте: стоимость
 const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
-render(routeInfoPrice, createTripInfoPrice(), 'beforeend');
+const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
+render(routeInfoPrice, createTripInfoPrice(tripPrice), 'beforeend');
 
 //Добавляет фильтры
 const filtersContainer = document.querySelector('.trip-controls__filters');

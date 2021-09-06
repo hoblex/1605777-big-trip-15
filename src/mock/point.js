@@ -114,7 +114,7 @@ const generateTimeDuration = (day) => {
   }
 };
 
-const generatePhotos = () => {
+const generatePhotoList = () => {
   return new Array(getRandomInteger(1, 6)).fill().map(() => PHOTO_ALIAS + getRandomInteger(1, 100));
 };
 
@@ -135,6 +135,6 @@ export const generatePoint = () => {
     fullPointCost,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     description: generateDescriptionPhrases(DESCRIPTION_PHRASES),
-    photoList: generatePhotos(),
+    photoList: generatePhotoList(),
   };
 };

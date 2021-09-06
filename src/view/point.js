@@ -21,7 +21,7 @@ export const createTemporaryTripPoint = (point) => {
     ? 'event__favorite-btn--active'
     : '';
 
-  const eventTimeDuration = time.timeDuration.hour() ===0
+  const eventTimeDuration = time.timeDuration.hour() === 0
     ? `${dayjs(time.timeDuration).format('mm')}M`
     : `${dayjs(time.timeDuration).format('HH')}H ${ dayjs(time.timeDuration).format('mm')}M`;
 

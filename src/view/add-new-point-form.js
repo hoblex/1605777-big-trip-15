@@ -39,7 +39,7 @@ const createAdditionalOptionsTemplate = (optionList) => {
 };
 
 const createPhotosTemplate = (photoList) => (
-  photoList.map((item) => `<img className="event__photo" src="${item}" alt="Event photo">`).join('')
+  photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('')
 );
 
 export const createNewPointForm = (point = {}) => {
