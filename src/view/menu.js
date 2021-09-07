@@ -1,6 +1,17 @@
-export const createMenuTemplate = () => (
+const Pages = {
+  TABLE: 'Table',
+  STATS: 'Stats',
+};
+
+const className = (page, current) => page === current ? 'trip-tabs__btn--active' : '';
+
+const pageItem = (page, current) => (
+  `<a class="trip-tabs__btn  ${className(page,current)}" href="#">${page}</a>`
+);
+
+export const createMenuTemplate = (current = Pages.TABLE) => (
   `<nav class="trip-controls__trip-tabs  trip-tabs">
-    <a class="trip-tabs__btn  trip-tabs__btn--active" href="#">Table</a>
-    <a class="trip-tabs__btn" href="#">Stats</a>
+  ${pageItem(Pages.TABLE,current)}
+  ${pageItem(Pages.STATS,current)}
    </nav>`
 );

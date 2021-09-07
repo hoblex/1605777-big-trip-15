@@ -11,11 +11,13 @@ const getRandomInteger = (a = 0, b = 1) => {
 
   return Math.floor(lower + Math.random() * (upper - lower + 1));
 };
+//expect(()=>getRandomInteger(0.49,0.51)).toThrow();
 
 const generateRandomItem = (list = []) => {
   const randomIndex = getRandomInteger(0, list.length - 1);
   return list[randomIndex];
 };
+//expect(()=>generateRandomItem()).toThrow();
 
 const ADDITIONAL_OPTIONALS = [
   ['Taxi', [ 'Order Uber' ]],
@@ -103,12 +105,14 @@ const generateTimeDuration = (day) => {
     return {
       'timeBegin': time1,
       'timeEnd': time2,
+      //https://day.js.org/docs/en/plugin/duration
       'timeDuration': dayjs.utc(dayjs(`${time2}`).diff(dayjs.utc(`${time1}`, 'minute'))),
     };
   } else {
     return {
       'timeBegin': time2,
       'timeEnd': time1,
+      //https://day.js.org/docs/en/plugin/duration
       'timeDuration': dayjs.utc(dayjs(`${time1}`).diff(dayjs.utc(`${time2}`, 'minute'))),
     };
   }

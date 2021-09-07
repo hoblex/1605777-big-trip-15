@@ -15,15 +15,22 @@ const createOfferContainer = (optionsList) => {
 };
 
 export const createTemporaryTripPoint = (point) => {
-  const {pointType, city, time, pointCost: pointCost, additionalOptions, isFavorite} = point;
+  const {
+    pointType,
+    city,
+    time,
+    pointCost: pointCost,
+    additionalOptions,
+    isFavorite,
+  } = point;
 
-  const favoriteClassName = isFavorite
-    ? 'event__favorite-btn--active'
-    : '';
-
-  const eventTimeDuration = time.timeDuration.hour() === 0
-    ? `${dayjs(time.timeDuration).format('mm')}M`
-    : `${dayjs(time.timeDuration).format('HH')}H ${ dayjs(time.timeDuration).format('mm')}M`;
+  const favoriteClassName = isFavorite ?
+    'event__favorite-btn--active' :
+    '';
+  //https://day.js.org/docs/en/plugin/duration
+  const eventTimeDuration = time.timeDuration.hour() === 0 ?
+    `${dayjs(time.timeDuration).format('mm')}M` :
+    `${dayjs(time.timeDuration).format('HH')}H ${ dayjs(time.timeDuration).format('mm')}M`;
 
   return ` <div class="event">
     <time class="event__date" datetime="${time.timeBegin.format('YYYY-MM-DD')}">${time.timeBegin.format('D MMM')}</time>
