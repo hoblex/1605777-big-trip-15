@@ -19,6 +19,7 @@
     "node": "12"
   },
   "dependencies": {
-    "webpack": "^5.51.1"
+    "webpack": "^5.51.1",
+    "dayjs": "^1.9.5"
   }
 }
