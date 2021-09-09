@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import duration from 'dayjs/plugin/duration';
 
 dayjs.extend(utc);
+dayjs.extend(duration);
 
 // Функция из интернета по генерации случайного числа из диапазона
 // Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
@@ -106,17 +108,17 @@ const generateTimeDuration = (day) => {
   const time1 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
   const time2 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
 
-  if (dayjs(`${time2}`).diff(dayjs(`${time1}`,'minute')) >= 0) {
+  if (dayjs(time2).diff(time1,'minute') >= 0) {
     return {
       'timeBegin': time1,
       'timeEnd': time2,
-      'timeDuration': dayjs.utc(dayjs(`${time2}`).diff(dayjs.utc(`${time1}`, 'minute'))),
+      'timeDuration': dayjs.duration(time2.diff(time1)),
     };
   } else {
     return {
       'timeBegin': time2,
       'timeEnd': time1,
-      'timeDuration': dayjs.utc(dayjs(`${time1}`).diff(dayjs.utc(`${time2}`, 'minute'))),
+      'timeDuration': dayjs.duration(time1.diff(time2)),
     };
   }
 };
