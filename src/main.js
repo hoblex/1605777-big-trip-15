@@ -5,11 +5,12 @@ import Filter from './view/filters.js';
 import Sort from './view/sort.js';
 import TripPointsListView from './view/trip-points-list.js';
 import PointItemContainerView from './view/trip-point-item-container.js';
-import PointForm from './view/point-form.js';
-import TripPoint from './view/tripPoint.js';
+import PointFormView from './view/point-form.js';
+import TripPointView from './view/trip-point.js';
 import {generatePoint} from './mock/point';
 import {render, RenderPosition} from './view/utils.js';
 import RouteCitiesContainerView from './view/route-cities-container';
+import TripPointItemContainer from './view/trip-point-item-container.js';
 
 const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
@@ -49,16 +50,16 @@ render(tripEvents, new Sort().getElement());
 const pointsListContainer = new TripPointsListView();
 render(tripEvents, pointsListContainer.getElement());
 
-//Добавляет форму для точки маршрута
-let pointContainer = new PointItemContainerView();
-render(pointsListContainer.getElement(), pointContainer.getElement());
-render(pointContainer.getElement(), new PointForm(pointsList[0]).getElement());
-
 //Добавляет временные точки для отображения в списке точек маршрута
-for (let i = 1; i < POINTS_COUNT; i++) {
-  pointContainer = new PointItemContainerView();
+const renderPoint = (pointListElement, point) => {
+  const pointComponent = new TripPointView(point);
+  const pointFormComponent = new PointFormView(point);
+
+  render(pointListElement, pointComponent.getElement());
+};
+
+for (let i = 0; i < POINTS_COUNT; i++) {
+  const pointContainer = new TripPointItemContainer();
   render(pointsListContainer.getElement(), pointContainer.getElement());
-  render(pointContainer.getElement(), new TripPoint(pointsList[i]).getElement());
+  renderPoint(pointContainer.getElement(), pointsList[i]);
 }
-
-
