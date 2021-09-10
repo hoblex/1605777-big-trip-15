@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import {createElement} from './utils';
 
 const createOfferContainer = (optionsList) => {
   if (optionsList === null) {
@@ -14,7 +14,7 @@ const createOfferContainer = (optionsList) => {
   }
 };
 
-export const createTemporaryTripPoint = (point) => {
+const createTripPoint = (point) => {
   const {
     pointType,
     city,
@@ -32,7 +32,7 @@ export const createTemporaryTripPoint = (point) => {
     `${time.timeDuration.format('mm')}M` :
     `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
 
-  return ` <div class="event">
+  return `<div class="event">
     <time class="event__date" datetime="${time.timeBegin.format('YYYY-MM-DD')}">${time.timeBegin.format('D MMM')}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
@@ -62,3 +62,26 @@ export const createTemporaryTripPoint = (point) => {
     </button>
   </div>`;
 };
+
+export default class TripPoint {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripPoint(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

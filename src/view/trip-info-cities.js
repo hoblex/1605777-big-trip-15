@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {createElement} from './utils';
 
 const BEGINNING_FORMAT_STRING ='MMM DD';
 const END_FORMAT_SAME_MONTH = 'DD';
@@ -17,3 +18,27 @@ export const createTripInfoCities = (cityList, dateList) => {
     <p class="trip-info__dates">${tripDateBeginEnd}</p>
     </div>`;
 };
+
+export default class TripInfoCities {
+  constructor(cityList, dateList) {
+    this._cityList = cityList;
+    this._dateList = dateList;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripInfoCities(this._cityList, this._dateList);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,3 +1,5 @@
+import {createElement} from './utils';
+
 const FilterBy = {
   EVERYTHING: 'everything',
   FUTURE: 'future',
@@ -13,7 +15,7 @@ const filterItem = (value, current) => (
 </div>`
 );
 
-export const createFilters = (current=FilterBy.EVERYTHING) => (
+const createFilters = (current=FilterBy.EVERYTHING) => (
   `<form class="trip-filters" action="#" method="get">
    ${filterItem(FilterBy.EVERYTHING, current)}
   ${filterItem(FilterBy.FUTURE, current)}
@@ -21,3 +23,26 @@ export const createFilters = (current=FilterBy.EVERYTHING) => (
       <button class="visually-hidden" type="submit">Accept filter</button>
    </form>`
 );
+
+export default class Filter {
+  constructor(current) {
+    this._current = current;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilters(this._current);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

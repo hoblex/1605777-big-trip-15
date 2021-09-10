@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {createElement} from './utils';
 
 const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
 const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
@@ -47,7 +48,7 @@ const createPhotosTemplate = (photoList) => (
   photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('')
 );
 
-export const createPointForm = (point = {}) => {
+const createPointForm = (point = {}) => {
   const {
     pointType = 'Taxi',
     city = '',
@@ -120,3 +121,26 @@ export const createPointForm = (point = {}) => {
     </section>
   </form>`;
 };
+
+export default class PointForm {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointForm(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

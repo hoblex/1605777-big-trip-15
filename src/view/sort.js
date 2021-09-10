@@ -1,3 +1,5 @@
+import {createElement} from './utils';
+
 const OrderBy = {
   day: {
     value: 'sort-day',
@@ -39,7 +41,7 @@ const sortItem = ({value, modifier, label, disabled}, current)=>(`<div class="tr
 <label class="trip-sort__btn" for="${value}">${label}</label>
 </div>`);
 
-export const createSort = (current=OrderBy.day.value) => (
+const createSort = (current=OrderBy.day.value) => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   ${sortItem(OrderBy.day,current)}
   ${sortItem(OrderBy.event, current)}
@@ -48,3 +50,26 @@ export const createSort = (current=OrderBy.day.value) => (
   ${sortItem(OrderBy.offer, current)}
   </form>`
 );
+
+export default class Sort {
+  constructor(order) {
+    this._order = order;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createSort(this._order);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}
