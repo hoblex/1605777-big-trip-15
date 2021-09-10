@@ -32,7 +32,8 @@ const createTripPoint = (point) => {
     `${time.timeDuration.format('mm')}M` :
     `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
 
-  return `<div class="event">
+  return `<li class="trip-events__item">
+    <div class="event">
     <time class="event__date" datetime="${time.timeBegin.format('YYYY-MM-DD')}">${time.timeBegin.format('D MMM')}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
@@ -60,7 +61,8 @@ const createTripPoint = (point) => {
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
-  </div>`;
+  </div>
+  </li>`;
 };
 
 export default class TripPoint {
