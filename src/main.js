@@ -7,9 +7,9 @@ import TripPointsListView from './view/trip-points-list.js';
 import PointFormView from './view/point-form.js';
 import TripPointView from './view/trip-point.js';
 import {generatePoint} from './mock/point';
-import {render, RenderPosition} from './view/utils.js';
-import RouteCitiesContainerView from './view/route-cities-container';
 import ListEmpty from './view/list-empty';
+import RouteCitiesContainerView from './view/route-cities-container';
+import {render, RenderPosition} from './view/utils.js';
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
