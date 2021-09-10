@@ -1,15 +1,15 @@
 import SiteMenu from './view/menu';
-import TripInfoContainer from './view/trip-info-container.js';
 import TripInfoCities from './view/trip-info-cities.js';
 import TripInfoPrice from './view/trip-info-price.js';
 import Filter from './view/filters.js';
 import Sort from './view/sort.js';
-import TripPointsList from './view/trip-points-list.js';
-import PointItemContainer from './view/trip-point-item-container.js';
+import TripPointsListView from './view/trip-points-list.js';
+import PointItemContainerView from './view/trip-point-item-container.js';
 import PointForm from './view/point-form.js';
 import TripPoint from './view/tripPoint.js';
 import {generatePoint} from './mock/point';
 import {render, RenderPosition} from './view/utils.js';
+import RouteCitiesContainerView from './view/route-cities-container';
 
 const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
@@ -20,20 +20,20 @@ render(tripControlsNavigation, new SiteMenu().getElement());
 
 //Добавляет контейнер с информацией о маршруте
 const routeInfoContainer = document.querySelector('.trip-main');
-render(routeInfoContainer, new TripInfoContainer().getElement(), RenderPosition.AFTER_BEGIN);
+const routeInfoCitiesContainer = new RouteCitiesContainerView();
+render(routeInfoContainer, routeInfoCitiesContainer.getElement(), RenderPosition.AFTER_BEGIN);
 
 //Добавляет информацию о маршруте: города
-const routeInfoCities = routeInfoContainer.querySelector('.trip-info');
 const routeCityList = new Set();
 const routeDateList = new Set();
 pointsList.forEach((item) => routeCityList.add(item.city));
 pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-render(routeInfoCities, new TripInfoCities(routeCityList, routeDateList).getElement());
+render(routeInfoCitiesContainer.getElement(), new TripInfoCities(routeCityList, routeDateList).getElement());
 
 //Добавляет информацию о маршруте: стоимость
-const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
+// const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
 const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
-render(routeInfoPrice, new TripInfoPrice(tripPrice).getElement());
+render(routeInfoCitiesContainer.getElement(), new TripInfoPrice(tripPrice).getElement());
 
 //Добавляет фильтры
 const filtersContainer = document.querySelector('.trip-controls__filters');
@@ -46,23 +46,19 @@ const tripEvents = document.querySelector('.trip-events');
 render(tripEvents, new Sort().getElement());
 
 //Добавляет контейнер для списка точек маршрута
-render(tripEvents, new TripPointsList().getElement());
+const pointsListContainer = new TripPointsListView();
+render(tripEvents, pointsListContainer.getElement());
 
-//Список точек маршрута
-const tripEventsList = tripEvents.querySelector('.trip-events__list');
-
-//Добавляет контейнер для элемента списка маршрута
-render(tripEventsList, new PointItemContainer().getElement());
-
-//Элемент списка маршрута
-const tripEventItem = tripEventsList.querySelector('.trip-events__item');
-
-//Добавляет форму создания новой точки маршрута
-render(tripEventItem, new PointForm(pointsList[0]).getElement());
+//Добавляет форму для точки маршрута
+let pointContainer = new PointItemContainerView();
+render(pointsListContainer.getElement(), pointContainer.getElement());
+render(pointContainer.getElement(), new PointForm(pointsList[0]).getElement());
 
 //Добавляет временные точки для отображения в списке точек маршрута
 for (let i = 1; i < POINTS_COUNT; i++) {
-  render(tripEventItem, new TripPoint(pointsList[i]).getElement());
+  pointContainer = new PointItemContainerView();
+  render(pointsListContainer.getElement(), pointContainer.getElement());
+  render(pointContainer.getElement(), new TripPoint(pointsList[i]).getElement());
 }
 
 

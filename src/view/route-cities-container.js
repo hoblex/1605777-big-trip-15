@@ -1,17 +1,17 @@
 import {createElement} from './utils';
 
-const createTripInfoContainerTemplate = () => (
+const createRouteCitiesContainer = () => (
   `<section class="trip-main__trip-info  trip-info">
   </section>`
 );
 
-export default class TripInfoContainer {
+export default class RouteCitiesContainer {
   constructor() {
     this._element = null;
   }
 
   getTemplate() {
-    return createTripInfoContainerTemplate();
+    return createRouteCitiesContainer();
   }
 
   getElement() {
@@ -25,7 +25,4 @@ export default class TripInfoContainer {
   removeElement() {
     this._element = null;
   }
-}
-
-export class createTripInfoContainer {
 }
