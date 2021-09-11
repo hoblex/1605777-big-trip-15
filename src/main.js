@@ -72,18 +72,17 @@ if (pointsList.length === 0) {
       }
     };
 
-    pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replacePointViewToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointFormComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    pointFormComponent.setFormSubmitHandler(() => {
       replaceFormToPointView();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    pointFormComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointFormComponent.setFormClickCloseHandler(() => {
       replaceFormToPointView();
     });
 
