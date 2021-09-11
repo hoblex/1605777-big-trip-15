@@ -4,12 +4,12 @@ import {getRandomInteger, generateRandomItem} from '../view/utils.js';
 
 dayjs.extend(duration);
 
-const ADDITIONAL_OPTIONALS = [
-  ['Taxi', [ 'Order Uber' ]],
-  ['Flight', ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train']],
-  ['CheckIn', ['Add breakfast']],
-  ['Sightseeing', ['Book tickets', 'Lunch in city']],
-];
+const ADDITIONAL_OPTIONALS = {
+  'Taxi': [ 'Order Uber' ],
+  'Flight': ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train'],
+  'CheckIn': ['Add breakfast'],
+  'Sightseeing': ['Book tickets', 'Lunch in city'],
+};
 
 const TYPES = [
   'Taxi',
@@ -39,7 +39,7 @@ const generateDescriptionPhrases = (phrases) => {
 };
 
 const generateAdditionalOption = (options, pointType) => {
-  const optionsList = new Map(options);
+  const optionsList = new Map(Object.entries(options));
   if (optionsList.has(pointType)) {
     return optionsList.get(pointType).map((item) => {
       const newItem = new Array(item);

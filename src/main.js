@@ -19,7 +19,7 @@ render(tripControlsNavigation, new SiteMenu().getElement());
 const filtersContainer = document.querySelector('.trip-controls__filters');
 render(filtersContainer, new Filter().getElement());
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 //Контейнер для контента
