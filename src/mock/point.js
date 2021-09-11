@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import {getRandomInteger, generateRandomItem} from '../view/utils.js';
+import {getRandomInteger, generateRandomItem} from '../utils/common';
 
 dayjs.extend(duration);
 
