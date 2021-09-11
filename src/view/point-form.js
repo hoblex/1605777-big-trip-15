@@ -1,4 +1,8 @@
 import dayjs from 'dayjs';
+import {createElement} from './utils';
+
+const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
+const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
 
 const FORM_TYPES = [
   'Taxi',
@@ -44,7 +48,7 @@ const createPhotosTemplate = (photoList) => (
   photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('')
 );
 
-export const createPointForm = (point = {}) => {
+const createPointForm = (point = {}) => {
   const {
     pointType = 'Taxi',
     city = '',
@@ -54,7 +58,8 @@ export const createPointForm = (point = {}) => {
     description = new Array(0),
   } = point;
 
-  return `<form class="event event--edit" action="#" method="post">
+  return `<li class="trip-events__item">
+    <form class="event event--edit" action="#" method="post">
     <header class="event__header">
       <div class="event__type-wrapper">
         <label class="event__type  event__type-btn" for="event-type-toggle-1">
@@ -85,10 +90,10 @@ export const createPointForm = (point = {}) => {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${time.timeBegin.format('DD/MM/YY HH:mm')}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDay(time.timeBegin)}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${time.timeEnd.format('DD/MM/YY HH:mm')}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDay(time.timeEnd)}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -101,6 +106,9 @@ export const createPointForm = (point = {}) => {
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
       <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__rollup-btn" type="button">
+        <span class="visually-hidden">Open event</span>
+      </button>
     </header>
     <section class="event__details">
     ${createAdditionalOptionsTemplate(additionalOptions)}
@@ -115,5 +123,29 @@ export const createPointForm = (point = {}) => {
         </div>
       </section>
     </section>
-  </form>`;
+  </form>
+  </li>`;
 };
+
+export default class PointForm {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createPointForm(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

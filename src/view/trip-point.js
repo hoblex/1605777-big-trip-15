@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+import {createElement} from './utils';
 
 const createOfferContainer = (optionsList) => {
   if (optionsList === null) {
@@ -14,18 +14,26 @@ const createOfferContainer = (optionsList) => {
   }
 };
 
-export const createTemporaryTripPoint = (point) => {
-  const {pointType, city, time, pointCost: pointCost, additionalOptions, isFavorite} = point;
+const createTripPoint = (point) => {
+  const {
+    pointType,
+    city,
+    time,
+    pointCost: pointCost,
+    additionalOptions,
+    isFavorite,
+  } = point;
 
-  const favoriteClassName = isFavorite
-    ? 'event__favorite-btn--active'
-    : '';
+  const favoriteClassName = isFavorite ?
+    'event__favorite-btn--active' :
+    '';
 
-  const eventTimeDuration = time.timeDuration.hour() === 0
-    ? `${dayjs(time.timeDuration).format('mm')}M`
-    : `${dayjs(time.timeDuration).format('HH')}H ${ dayjs(time.timeDuration).format('mm')}M`;
+  const eventTimeDuration = time.timeDuration.hours() === 0 ?
+    `${time.timeDuration.format('mm')}M` :
+    `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
 
-  return ` <div class="event">
+  return `<li class="trip-events__item">
+    <div class="event">
     <time class="event__date" datetime="${time.timeBegin.format('YYYY-MM-DD')}">${time.timeBegin.format('D MMM')}</time>
     <div class="event__type">
       <img class="event__type-icon" width="42" height="42" src="img/icons/${pointType.toLowerCase()}.png" alt="Event type icon">
@@ -53,5 +61,29 @@ export const createTemporaryTripPoint = (point) => {
     <button class="event__rollup-btn" type="button">
       <span class="visually-hidden">Open event</span>
     </button>
-  </div>`;
+  </div>
+  </li>`;
 };
+
+export default class TripPoint {
+  constructor(point) {
+    this._point = point;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createTripPoint(this._point);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

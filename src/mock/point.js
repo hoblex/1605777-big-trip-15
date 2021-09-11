@@ -1,21 +1,8 @@
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
+import duration from 'dayjs/plugin/duration';
+import {getRandomInteger, generateRandomItem} from '../view/utils.js';
 
-dayjs.extend(utc);
-
-// Функция из интернета по генерации случайного числа из диапазона
-// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_random
-const getRandomInteger = (a = 0, b = 1) => {
-  const lower = Math.ceil(Math.min(a, b));
-  const upper = Math.floor(Math.max(a, b));
-
-  return Math.floor(lower + Math.random() * (upper - lower + 1));
-};
-
-const generateRandomItem = (list = []) => {
-  const randomIndex = getRandomInteger(0, list.length - 1);
-  return list[randomIndex];
-};
+dayjs.extend(duration);
 
 const ADDITIONAL_OPTIONALS = [
   ['Taxi', [ 'Order Uber' ]],
@@ -99,17 +86,17 @@ const generateTimeDuration = (day) => {
   const time1 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
   const time2 = dayjs(day).add(getRandomInteger(-maxMinGap, maxMinGap), 'minute');
 
-  if (dayjs(`${time2}`).diff(dayjs(`${time1}`,'minute')) >= 0) {
+  if (dayjs(time2).diff(time1,'minute') >= 0) {
     return {
       'timeBegin': time1,
       'timeEnd': time2,
-      'timeDuration': dayjs.utc(dayjs(`${time2}`).diff(dayjs.utc(`${time1}`, 'minute'))),
+      'timeDuration': dayjs.duration(time2.diff(time1)),
     };
   } else {
     return {
       'timeBegin': time2,
       'timeEnd': time1,
-      'timeDuration': dayjs.utc(dayjs(`${time1}`).diff(dayjs.utc(`${time2}`, 'minute'))),
+      'timeDuration': dayjs.duration(time1.diff(time2)),
     };
   }
 };

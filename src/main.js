@@ -1,78 +1,96 @@
-import {createMenuTemplate} from './view/menu';
-import {createTripInfoContainer} from './view/trip-info-container.js';
-import {createTripInfoCities} from './view/trip-info-cities.js';
-import {createTripInfoPrice} from './view/trip-info-price.js';
-import {createFilters} from './view/filters.js';
-import {createSort} from './view/sort.js';
-import {createTripPointsListContainer} from './view/trip-points-list.js';
-import {createPointItemContainer} from './view/trip-point-item.js';
-import {createPointForm} from './view/point-form.js';
-import {createTemporaryTripPoint} from './view/point.js';
+import SiteMenu from './view/menu';
+import TripInfoCities from './view/trip-info-cities.js';
+import TripInfoPrice from './view/trip-info-price.js';
+import Filter from './view/filters.js';
+import Sort from './view/sort.js';
+import TripPointsListView from './view/trip-points-list.js';
+import PointFormView from './view/point-form.js';
+import TripPointView from './view/trip-point.js';
 import {generatePoint} from './mock/point';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-
-dayjs.extend(utc);
-
-const POINTS_COUNT = 15;
-const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
-
-const render = (container, template, place) => {
-  container.insertAdjacentHTML(place, template);
-};
+import ListEmpty from './view/list-empty';
+import RouteCitiesContainerView from './view/route-cities-container';
+import {render, RenderPosition} from './view/utils.js';
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
-render(tripControlsNavigation, createMenuTemplate(), 'beforeend');
-
-//Добавляет контейнер с информацией о маршруте
-const routeInfoContainer = document.querySelector('.trip-main');
-render(routeInfoContainer, createTripInfoContainer(), 'afterbegin');
-
-//Добавляет информацию о маршруте: города
-const routeInfoCities = routeInfoContainer.querySelector('.trip-info');
-const routeCityList = new Set();
-const routeDateList = new Set();
-pointsList.forEach((item) => routeCityList.add(item.city));
-pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-render(routeInfoCities, createTripInfoCities(routeCityList, routeDateList), 'beforeend');
-
-//Добавляет информацию о маршруте: стоимость
-const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
-const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
-render(routeInfoPrice, createTripInfoPrice(tripPrice), 'beforeend');
+render(tripControlsNavigation, new SiteMenu().getElement());
 
 //Добавляет фильтры
 const filtersContainer = document.querySelector('.trip-controls__filters');
-render(filtersContainer, createFilters(), 'beforeend');
+render(filtersContainer, new Filter().getElement());
+
+const POINTS_COUNT = 0;
+const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
-//Добавляет форму для сортировки
-render(tripEvents, createSort(), 'beforeend');
+if (pointsList.length === 0) {
+  render(tripEvents, new ListEmpty().getElement());
+} else {
+  //Добавляет контейнер с информацией о маршруте
+  const routeInfoContainer = document.querySelector('.trip-main');
+  const routeInfoCitiesContainer = new RouteCitiesContainerView();
+  render(routeInfoContainer, routeInfoCitiesContainer.getElement(), RenderPosition.AFTER_BEGIN);
 
-//Добавляет контейнер для списка точек маршрута
-render(tripEvents, createTripPointsListContainer(), 'beforeend');
+  //Добавляет информацию о маршруте: города
+  const routeCityList = new Set();
+  const routeDateList = new Set();
+  pointsList.forEach((item) => routeCityList.add(item.city));
+  pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
+  render(routeInfoCitiesContainer.getElement(), new TripInfoCities(routeCityList, routeDateList).getElement());
 
-//Список точек маршрута
-const tripEventsList = tripEvents.querySelector('.trip-events__list');
+  //Добавляет информацию о маршруте: стоимость
+  // const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
+  const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
+  render(routeInfoCitiesContainer.getElement(), new TripInfoPrice(tripPrice).getElement());
 
-//Добавляет контейнер для элемента списка маршрута
-render(tripEventsList, createPointItemContainer(), 'beforeend');
+  //Добавляет форму для сортировки
+  render(tripEvents, new Sort().getElement());
+  //Добавляет контейнер для списка точек маршрута
+  const pointsListContainer = new TripPointsListView();
+  render(tripEvents, pointsListContainer.getElement());
 
-//Элемент списка маршрута
-const tripEventItem = tripEventsList.querySelector('.trip-events__item');
+  //Добавляет временные точки для отображения в списке точек маршрута
+  const renderPoint = (pointListElement, point) => {
+    const pointComponent = new TripPointView(point);
+    const pointFormComponent = new PointFormView(point);
 
-//Добавляет форму создания новой точки маршрута
-render(tripEventItem, createPointForm(pointsList[0]), 'beforeend');
+    const replacePointViewToForm = () => {
+      pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
+    };
 
-//Добавляет временные точки для отображения в списке точек маршрута
+    const replaceFormToPointView = () => {
+      pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
+    };
 
-for (let i = 1; i < POINTS_COUNT; i++) {
-  render(tripEventItem, createTemporaryTripPoint(pointsList[i]), 'beforeend');
-  // const offersContainer = document.querySelector('.event__selected-offers');
-  // console.log(offersContainer);
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceFormToPointView();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointViewToForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    pointFormComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceFormToPointView();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    pointFormComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replaceFormToPointView();
+    });
+
+    render(pointListElement, pointComponent.getElement());
+  };
+
+  for (let i = 0; i < POINTS_COUNT; i++) {
+    renderPoint(pointsListContainer.getElement(), pointsList[i]);
+  }
 }
-
-
