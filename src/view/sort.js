@@ -1,4 +1,4 @@
-import {createElement} from './utils';
+import AbstractView from './abstract';
 
 const OrderBy = {
   day: {
@@ -51,25 +51,13 @@ const createSort = (current=OrderBy.day.value) => (
   </form>`
 );
 
-export default class Sort {
+export default class Sort extends AbstractView {
   constructor(order) {
+    super();
     this._order = order;
-    this._element = null;
   }
 
   getTemplate() {
     return createSort(this._order);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }
