@@ -38,15 +38,15 @@ if (pointsList.length === 0) {
   const routeDateList = new Set();
   pointsList.forEach((item) => routeCityList.add(item.city));
   pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-  render(routeInfoCitiesContainer.getElement(), new TripInfoCities(routeCityList, routeDateList));
+  render(routeInfoCitiesContainer, new TripInfoCities(routeCityList, routeDateList));
 
   //Добавляет информацию о маршруте: стоимость
   // const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
   const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
-  render(routeInfoCitiesContainer.getElement(), new TripInfoPrice(tripPrice));
+  render(routeInfoCitiesContainer, new TripInfoPrice(tripPrice));
 
   //Добавляет форму для сортировки
-  render(tripEvents, new Sort().getElement());
+  render(tripEvents, new Sort());
   //Добавляет контейнер для списка точек маршрута
   const pointsListContainer = new TripPointsListView();
   render(tripEvents, pointsListContainer);
@@ -61,7 +61,7 @@ if (pointsList.length === 0) {
     };
 
     const replaceFormToPointView = () => {
-      replace(pointComponent.getElement(), pointFormComponent.getElement());
+      replace(pointComponent, pointFormComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -86,7 +86,7 @@ if (pointsList.length === 0) {
       replaceFormToPointView();
     });
 
-    render(pointListElement, pointComponent.getElement());
+    render(pointListElement, pointComponent);
   };
 
   for (let i = 0; i < POINTS_COUNT; i++) {
