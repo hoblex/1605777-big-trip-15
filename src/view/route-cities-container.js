@@ -1,28 +1,12 @@
-import {createElement} from './utils';
+import AbstractView from './abstract';
 
 const createRouteCitiesContainer = () => (
   `<section class="trip-main__trip-info  trip-info">
   </section>`
 );
 
-export default class RouteCitiesContainer {
-  constructor() {
-    this._element = null;
-  }
-
+export default class RouteCitiesContainer extends AbstractView {
   getTemplate() {
     return createRouteCitiesContainer();
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

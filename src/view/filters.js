@@ -1,4 +1,4 @@
-import {createElement} from './utils';
+import AbstractView from './abstract';
 
 const FilterBy = {
   EVERYTHING: 'everything',
@@ -24,25 +24,13 @@ const createFilters = (current=FilterBy.EVERYTHING) => (
    </form>`
 );
 
-export default class Filter {
+export default class Filter extends AbstractView {
   constructor(current) {
+    super();
     this._current = current;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilters(this._current);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

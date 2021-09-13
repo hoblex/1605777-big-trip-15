@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {createElement} from './utils';
+import AbstractView from './abstract';
 
 const BEGINNING_FORMAT_STRING ='MMM DD';
 const END_FORMAT_SAME_MONTH = 'DD';
@@ -19,26 +19,14 @@ export const createTripInfoCities = (cityList, dateList) => {
     </div>`;
 };
 
-export default class TripInfoCities {
+export default class TripInfoCities extends AbstractView {
   constructor(cityList, dateList) {
+    super();
     this._cityList = cityList;
     this._dateList = dateList;
-    this._element = null;
   }
 
   getTemplate() {
     return createTripInfoCities(this._cityList, this._dateList);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
-  }
-
-  removeElement() {
-    this._element = null;
   }
 }

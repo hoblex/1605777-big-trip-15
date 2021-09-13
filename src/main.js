@@ -9,47 +9,47 @@ import TripPointView from './view/trip-point.js';
 import {generatePoint} from './mock/point';
 import ListEmpty from './view/list-empty';
 import RouteCitiesContainerView from './view/route-cities-container';
-import {render, RenderPosition} from './view/utils.js';
+import {render, RenderPosition, replace} from './utils/render.js';
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
-render(tripControlsNavigation, new SiteMenu().getElement());
+render(tripControlsNavigation, new SiteMenu());
 
 //Добавляет фильтры
 const filtersContainer = document.querySelector('.trip-controls__filters');
-render(filtersContainer, new Filter().getElement());
+render(filtersContainer, new Filter());
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
 if (pointsList.length === 0) {
-  render(tripEvents, new ListEmpty().getElement());
+  render(tripEvents, new ListEmpty());
 } else {
   //Добавляет контейнер с информацией о маршруте
   const routeInfoContainer = document.querySelector('.trip-main');
   const routeInfoCitiesContainer = new RouteCitiesContainerView();
-  render(routeInfoContainer, routeInfoCitiesContainer.getElement(), RenderPosition.AFTER_BEGIN);
+  render(routeInfoContainer, routeInfoCitiesContainer, RenderPosition.AFTER_BEGIN);
 
   //Добавляет информацию о маршруте: города
   const routeCityList = new Set();
   const routeDateList = new Set();
   pointsList.forEach((item) => routeCityList.add(item.city));
   pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-  render(routeInfoCitiesContainer.getElement(), new TripInfoCities(routeCityList, routeDateList).getElement());
+  render(routeInfoCitiesContainer, new TripInfoCities(routeCityList, routeDateList));
 
   //Добавляет информацию о маршруте: стоимость
   // const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
   const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
-  render(routeInfoCitiesContainer.getElement(), new TripInfoPrice(tripPrice).getElement());
+  render(routeInfoCitiesContainer, new TripInfoPrice(tripPrice));
 
   //Добавляет форму для сортировки
-  render(tripEvents, new Sort().getElement());
+  render(tripEvents, new Sort());
   //Добавляет контейнер для списка точек маршрута
   const pointsListContainer = new TripPointsListView();
-  render(tripEvents, pointsListContainer.getElement());
+  render(tripEvents, pointsListContainer);
 
   //Добавляет временные точки для отображения в списке точек маршрута
   const renderPoint = (pointListElement, point) => {
@@ -57,11 +57,11 @@ if (pointsList.length === 0) {
     const pointFormComponent = new PointFormView(point);
 
     const replacePointViewToForm = () => {
-      pointListElement.replaceChild(pointFormComponent.getElement(), pointComponent.getElement());
+      replace(pointFormComponent, pointComponent);
     };
 
     const replaceFormToPointView = () => {
-      pointListElement.replaceChild(pointComponent.getElement(), pointFormComponent.getElement());
+      replace(pointComponent, pointFormComponent);
     };
 
     const onEscKeyDown = (evt) => {
@@ -72,25 +72,24 @@ if (pointsList.length === 0) {
       }
     };
 
-    pointComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointComponent.setEditClickHandler(() => {
       replacePointViewToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    pointFormComponent.getElement().querySelector('form').addEventListener('submit', (evt) => {
-      evt.preventDefault();
+    pointFormComponent.setFormSubmitHandler(() => {
       replaceFormToPointView();
       document.removeEventListener('keydown', onEscKeyDown);
     });
 
-    pointFormComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', () => {
+    pointFormComponent.setFormClickCloseHandler(() => {
       replaceFormToPointView();
     });
 
-    render(pointListElement, pointComponent.getElement());
+    render(pointListElement, pointComponent);
   };
 
   for (let i = 0; i < POINTS_COUNT; i++) {
-    renderPoint(pointsListContainer.getElement(), pointsList[i]);
+    renderPoint(pointsListContainer, pointsList[i]);
   }
 }

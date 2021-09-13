@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {createElement} from './utils';
+import AbstractView from './abstract';
 
 const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
 const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
@@ -127,25 +127,30 @@ const createPointForm = (point = {}) => {
   </li>`;
 };
 
-export default class PointForm {
+export default class PointForm extends AbstractView {
   constructor(point) {
+    super();
     this._point = point;
-    this._element = null;
+
+    this._formSubmitHandler = this._formSubmitHandler.bind(this);
   }
 
   getTemplate() {
     return createPointForm(this._point);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-
-    return this._element;
+  _formSubmitHandler(evt) {
+    evt.preventDefault();
+    this._callback.formSubmit();
   }
 
-  removeElement() {
-    this._element = null;
+  setFormSubmitHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setFormClickCloseHandler(callback) {
+    this._callback.formSubmit = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formSubmitHandler);
   }
 }
