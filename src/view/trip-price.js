@@ -6,7 +6,7 @@ const createTripInfoPrice = (price) => (
    </p>`
 );
 
-export default class TripInfoPrice extends AbstractView{
+export default class TripPrice extends AbstractView{
   constructor(price) {
     super();
     this._price = price;

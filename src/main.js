@@ -1,10 +1,10 @@
 import SiteMenu from './view/menu';
-import TripInfoCities from './view/trip-info-cities.js';
-import TripInfoPrice from './view/trip-info-price.js';
+import TripCities from './view/trip-cities.js';
+import TripPrice from './view/trip-price.js';
 import Filter from './view/filters.js';
 import Sort from './view/sort.js';
 import TripPointsListView from './view/trip-points-list.js';
-import PointFormView from './view/point-form.js';
+import TripPointFormView from './view/trip-point-form.js';
 import TripPointView from './view/trip-point.js';
 import {generatePoint} from './mock/point';
 import ListEmpty from './view/list-empty';
@@ -38,12 +38,12 @@ if (pointsList.length === 0) {
   const routeDateList = new Set();
   pointsList.forEach((item) => routeCityList.add(item.city));
   pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-  render(routeInfoCitiesContainer, new TripInfoCities(routeCityList, routeDateList));
+  render(routeInfoCitiesContainer, new TripCities(routeCityList, routeDateList));
 
   //Добавляет информацию о маршруте: стоимость
   // const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
   const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
-  render(routeInfoCitiesContainer, new TripInfoPrice(tripPrice));
+  render(routeInfoCitiesContainer, new TripPrice(tripPrice));
 
   //Добавляет форму для сортировки
   render(tripEvents, new Sort());
@@ -54,7 +54,7 @@ if (pointsList.length === 0) {
   //Добавляет временные точки для отображения в списке точек маршрута
   const renderPoint = (pointListElement, point) => {
     const pointComponent = new TripPointView(point);
-    const pointFormComponent = new PointFormView(point);
+    const pointFormComponent = new TripPointFormView(point);
 
     const replacePointViewToForm = () => {
       replace(pointFormComponent, pointComponent);
