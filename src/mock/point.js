@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+import {nanoid} from 'nanoid';
 import {getRandomInteger, generateRandomItem} from '../utils/common';
 
 dayjs.extend(duration);
@@ -112,6 +113,7 @@ export const generatePoint = () => {
   const fullPointCost = countAdditionalOptionsCost(additionalOptions) + pointCost;
   return {
 
+    id: nanoid(),
     pointType,
     city: generateRandomItem(CITIES),
     time,

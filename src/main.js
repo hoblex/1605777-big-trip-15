@@ -7,7 +7,7 @@ import TripPointsListView from './view/trip-points-list.js';
 import TripPointFormView from './view/trip-point-form.js';
 import TripPointView from './view/trip-point.js';
 import {generatePoint} from './mock/point';
-import ListEmpty from './view/list-empty';
+import ListEmptyView from './view/list-empty';
 import RouteCitiesContainerView from './view/route-cities-container';
 import {render, RenderPosition, replace} from './utils/render.js';
 
@@ -26,7 +26,7 @@ const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 const tripEvents = document.querySelector('.trip-events');
 
 if (pointsList.length === 0) {
-  render(tripEvents, new ListEmpty());
+  render(tripEvents, new ListEmptyView());
 } else {
   //Добавляет контейнер с информацией о маршруте
   const routeInfoContainer = document.querySelector('.trip-main');
@@ -72,7 +72,7 @@ if (pointsList.length === 0) {
       }
     };
 
-    pointComponent.setEditClickHandler(() => {
+    pointComponent.setFormClickHandler(() => {
       replacePointViewToForm();
       document.addEventListener('keydown', onEscKeyDown);
     });

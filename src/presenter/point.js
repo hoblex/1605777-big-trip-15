@@ -9,21 +9,43 @@ export default class Point {
     this._pointComponent = null;
     this._pointFormComponent = null;
 
-    this._handleEditClick = this._handleEditClick.bind(this);
-    this._handleFormSubmit = this._handleFormSubmit.bind(this);
+    this._onEditClick = this._onEditClick.bind(this);
+    this._onFormSubmit = this._onFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
   }
 
   init(point) {
     this._point = point;
 
+    const prevPointComponent = this._pointComponent;
+    const prevPointFormComponent = this._pointFormComponent;
+
     this._pointComponent = new TripPointView(point);
     this._pointFormComponent = new TripPointFormView(point);
 
-    this._pointComponent.setEditClickHandler(this._handleEditClick);
-    this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
+    this._pointComponent.setEditClickHandler(this._onEditClick);
+    this._pointFormComponent.setFormSubmitHandler(this._onFormSubmit);
 
-    render(this._pointListContainer, this._pointComponent);
+    if (prevPointComponent === null || prevPointFormComponent === null) {
+      render(this._pointListContainer, this._pointComponent);
+      return;
+    }
+
+    if (this._pointListContainer.getElement().contains(prevPointComponent.getElement())) {
+      replace(this._pointComponent, prevPointComponent);
+    }
+
+    if (this._pointListContainer.getElement().contains(prevPointFormComponent.getElement())) {
+      replace(this._pontFormComponent, prevPointFormComponent);
+    }
+
+    remove(prevPointComponent);
+    remove(prevPointFormComponent);
+  }
+
+  destroy() {
+    remove(this._pointComponent);
+    remove(this._pointFormComponent);
   }
 
   _replacePointViewToForm() {
