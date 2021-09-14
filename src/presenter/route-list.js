@@ -11,10 +11,15 @@ import {render} from '../utils/render';
 export default class routeList {
   constructor(routeListContainer) {
     this._routeListContainer = routeListContainer;
+    this._pointPresenter = new Map();
 
     this._tripPointsListCopmonent = new TripPointsListView();
     this._sortComponent = new SortView();
     this._emptyListComponent = new ListEmptyView();
+
+    this._onePointChange = this._onePointChange.bind(this);
+    this._onModeChange = this._onModeChange.bind(this);
+
     this._tripInfoCitiesComponent = new TripCitiesView();
     this._tripPriceComponent = new TripPriceView();
   }
@@ -27,13 +32,18 @@ export default class routeList {
     this._renderRouteList();
   }
 
+  _onModeChange() {
+    this._pointPresenter.forEach((presenter) => presenter.resetView());
+  }
+
   _renderSort() {
     render(this._routeListContainer, this._sortComponent);
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._tripPointsListCopmonent);
+    const pointPresenter = new PointPresenter(this._tripPointsListCopmonent, this._onPointChange, this._onModeChange);
     pointPresenter.init(point);
+    this._pointPresenter.set(point.id, pointPresenter);
   }
 
   _renderPoints () {
@@ -52,6 +62,11 @@ export default class routeList {
 
     this._renderSort();
     this._renderPoints();
+  }
+
+  _clearPointsList() {
+    this._pointPresenter.forEach((presenter) => presenter.destroy());
+    this._pointPresenter.clear();
   }
 
   _renderRouteCities() {

@@ -52,7 +52,7 @@ if (pointsList.length === 0) {
   render(tripEvents, pointsListContainer);
 
   //Добавляет временные точки для отображения в списке точек маршрута
-  const renderPoint = (pointListElement, point) => {
+  const renderPoint = (pointsContainer, point) => {
     const pointComponent = new TripPointView(point);
     const pointFormComponent = new TripPointFormView(point);
 
@@ -86,7 +86,7 @@ if (pointsList.length === 0) {
       replaceFormToPointView();
     });
 
-    render(pointListElement, pointComponent);
+    render(pointsContainer, pointComponent);
   };
 
   for (let i = 0; i < POINTS_COUNT; i++) {
