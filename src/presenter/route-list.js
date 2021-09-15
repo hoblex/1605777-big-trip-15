@@ -1,7 +1,7 @@
 import TripPointsListView from '../view/trip-points-list';
 import SortView from '../view/sort';
 import ListEmptyView from '../view/list-empty';
-import {render} from '../utils/render';
+import {render, RenderPosition} from '../utils/render';
 import {updateItem} from '../utils/common.js';
 import PointPresenter from './point.js';
 
@@ -34,7 +34,7 @@ export default class RouteList {
   }
 
   _renderSort() {
-    render(this._routeListContainer, this._sortComponent);
+    render(this._routeListContainer, this._sortComponent, RenderPosition.AFTER_BEGIN);
   }
 
   _renderPoint(point) {
