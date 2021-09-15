@@ -90,7 +90,6 @@ export default class Point {
   }
 
   _handleFormSubmit() {
-    // this._changeData(point);
     this._replaceFormToPointView();
   }
 

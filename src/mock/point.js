@@ -66,7 +66,7 @@ const countAdditionalOptionsCost = (optionsList) => {
 };
 
 const generateDate = () => {
-  const maxDaysGap = 1;
+  const maxDaysGap = 2;
   const date1 = dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'day');
   const date2 = dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'day');
   if (dayjs(date2).diff(date1,'day') >= 0) {
