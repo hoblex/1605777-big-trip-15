@@ -15,7 +15,7 @@ render(tripControlsNavigation, new SiteMenu());
 const filtersContainer = document.querySelector('.trip-controls__filters');
 render(filtersContainer, new Filter());
 
-const POINTS_COUNT = 0;
+const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 //Контейнер для контента

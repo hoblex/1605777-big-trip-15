@@ -1,9 +1,8 @@
 import TripPointsListView from '../view/trip-points-list';
 import SortView from '../view/sort';
-import TripPointView from '../view/trip-point';
-import TripPointFormView from '../view/trip-point-form';
 import ListEmptyView from '../view/list-empty';
-import {render, replace} from '../utils/render';
+import {render} from '../utils/render';
+import PointPresenter from './point.js';
 
 export default class RouteList {
   constructor(routeListContainer) {
@@ -25,40 +24,8 @@ export default class RouteList {
   }
 
   _renderPoint(point) {
-    const pointComponent = new TripPointView(point);
-    const pointFormComponent = new TripPointFormView(point);
-
-    const replacePointViewToForm = () => {
-      replace(pointFormComponent, pointComponent);
-    };
-
-    const replaceFormToPointView = () => {
-      replace(pointComponent, pointFormComponent);
-    };
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === 'Escape' || evt.key === 'Esc') {
-        evt.preventDefault();
-        replaceFormToPointView();
-        document.removeEventListener('keydown', onEscKeyDown);
-      }
-    };
-
-    pointComponent.setFormClickHandler(() => {
-      replacePointViewToForm();
-      document.addEventListener('keydown', onEscKeyDown);
-    });
-
-    pointFormComponent.setFormSubmitHandler(() => {
-      replaceFormToPointView();
-      document.removeEventListener('keydown', onEscKeyDown);
-    });
-
-    pointFormComponent.setFormClickCloseHandler(() => {
-      replaceFormToPointView();
-    });
-
-    render(this._tripPointsListCopmonent, pointComponent);
+    const pointPresenter = new PointPresenter(this._tripPointsListCopmonent);
+    pointPresenter.init(point);
   }
 
   _renderPoints () {
