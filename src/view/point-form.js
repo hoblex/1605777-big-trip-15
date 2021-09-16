@@ -127,7 +127,7 @@ const createPointForm = (point = {}) => {
   </li>`;
 };
 
-export default class TripPointForm extends AbstractView {
+export default class PointForm extends AbstractView {
   constructor(point) {
     super();
     this._point = point;

@@ -10,7 +10,7 @@ import {SortType} from '../const';
 export default class RouteList {
   constructor(routeListContainer) {
     this._routeListContainer = routeListContainer;
-    this._pointPresenter = new Map();
+    this._pointPresenters = new Map();
 
     this._tripPointsListCopmonent = new TripPointsListView();
     this._sortComponent = new SortView();
@@ -29,13 +29,13 @@ export default class RouteList {
   }
 
   _handleModeChange() {
-    this._pointPresenter.forEach((presenter) => presenter.resetView());
+    this._pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
     this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
-    this._pointPresenter.get(updatedPoint.id).init(updatedPoint);
+    this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 
   _sortPoints(sortType) {
@@ -65,7 +65,7 @@ export default class RouteList {
 
     this._sortPoints(sortType);
 
-    this._clearPointsList();
+    this._clearRouteList();
     this._renderPoints();
   }
 
@@ -77,7 +77,7 @@ export default class RouteList {
   _renderPoint(point) {
     const pointPresenter = new PointPresenter(this._tripPointsListCopmonent, this._handlePointChange, this._handleModeChange);
     pointPresenter.init(point);
-    this._pointPresenter.set(point.id, pointPresenter);
+    this._pointPresenters.set(point.id, pointPresenter);
   }
 
   _renderPoints () {
@@ -88,9 +88,9 @@ export default class RouteList {
     render(this._routeListContainer, this._emptyListComponent);
   }
 
-  _clearPointsList() {
-    this._pointPresenter.forEach((presenter) => presenter.destroy());
-    this._pointPresenter.clear();
+  _clearRouteList() {
+    this._pointPresenters.forEach((presenter) => presenter.destroy());
+    this._pointPresenters.clear();
   }
 
   _renderRouteList() {

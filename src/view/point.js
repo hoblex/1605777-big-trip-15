@@ -65,12 +65,12 @@ const createTripPoint = (point) => {
   </li>`;
 };
 
-export default class TripPoint extends AbstractView {
+export default class Point extends AbstractView {
   constructor(point) {
     super();
     this._point = point;
 
-    this._editClickHandler = this._editClickHandler.bind(this);
+    this._formOpenClickHandler = this._formOpenClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
   }
 
@@ -78,7 +78,7 @@ export default class TripPoint extends AbstractView {
     return createTripPoint(this._point);
   }
 
-  _editClickHandler(evt) {
+  _formOpenClickHandler(evt) {
     evt.preventDefault();
     this._callback.editClick();
   }
@@ -90,7 +90,7 @@ export default class TripPoint extends AbstractView {
 
   setFormClickOpenHandler(callback) {
     this._callback.editClick = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._editClickHandler);
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formOpenClickHandler);
   }
 
   setFavoriteClickHandler(callback) {

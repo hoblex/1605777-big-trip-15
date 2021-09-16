@@ -1,5 +1,5 @@
-import TripPointView from '../view/trip-point';
-import TripPointFormView from '../view/trip-point-form';
+import TripPointView from '../view/point';
+import TripPointFormView from '../view/point-form';
 import {render, replace, remove} from '../utils/render';
 
 const Mode = {
@@ -17,7 +17,7 @@ export default class Point {
     this._pointFormComponent = null;
     this._mode = Mode.DEFAULT;
 
-    this._handleEditClick = this._handleEditClick.bind(this);
+    this._handleFormOpenClick = this._handleFormOpenClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
@@ -32,7 +32,7 @@ export default class Point {
     this._pointComponent = new TripPointView(point);
     this._pointFormComponent = new TripPointFormView(point);
 
-    this._pointComponent.setFormClickOpenHandler(this._handleEditClick);
+    this._pointComponent.setFormClickOpenHandler(this._handleFormOpenClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointFormComponent.setFormClickCloseHandler(this._handleFormSubmit);
@@ -85,7 +85,7 @@ export default class Point {
     }
   }
 
-  _handleEditClick() {
+  _handleFormOpenClick() {
     this._replacePointViewToForm();
   }
 
