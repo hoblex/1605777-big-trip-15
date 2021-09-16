@@ -4,13 +4,14 @@ import ListEmptyView from '../view/list-empty';
 import {render, RenderPosition} from '../utils/render';
 import {updateItem} from '../utils/common';
 import PointPresenter from './point';
-import {sortDatePointUp, sortDatePointDown} from '../utils/point';
+import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils/point';
 import {SortType} from '../const';
 
 export default class RouteList {
   constructor(routeListContainer) {
     this._routeListContainer = routeListContainer;
     this._pointPresenters = new Map();
+    this._currentSortType = SortType.DAY;
 
     this._tripPointsListCopmonent = new TripPointsListView();
     this._sortComponent = new SortView();
@@ -23,7 +24,7 @@ export default class RouteList {
 
   init(points) {
     this._points = points.slice();
-    this._sourcedPoints = points.slice();
+    this._originalOrderByPoints = points.slice();
     render(this._routeListContainer, this._tripPointsListCopmonent);
     this._renderRouteList();
   }
@@ -34,25 +35,23 @@ export default class RouteList {
 
   _handlePointChange(updatedPoint) {
     this._points = updateItem(this._points, updatedPoint);
-    this._sourcedPoints = updateItem(this._sourcedPoints, updatedPoint);
+    this._originalOrderByPoints = updateItem(this._originalOrderByPoints, updatedPoint);
     this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
   }
 
   _sortPoints(sortType) {
-    // 2. Этот исходный массив задач необходим,
-    // потому что для сортировки мы будем мутировать
-    // массив в свойстве _boardTasks
     switch (sortType) {
-      case SortType.DATE_UP:
-        this._points.sort(sortDatePointUp);
-        break;
-      case SortType.DATE_DOWN:
+      case SortType.DAY:
         this._points.sort(sortDatePointDown);
         break;
+      case SortType.TIME:
+        this._points.sort(sortTimePointDown);
+        break;
+      case SortType.PRICE:
+        this._points.sort(sortPricePointDown);
+        break;
       default:
-        // 3. А когда пользователь захочет "вернуть всё, как было",
-        // мы просто запишем в _boardTasks исходный массив
-        this._points = this._sourcedPoints.slice();
+        this._points.sort(sortDatePointDown);
     }
 
     this._currentSortType = sortType;
@@ -64,13 +63,13 @@ export default class RouteList {
     }
 
     this._sortPoints(sortType);
-
     this._clearRouteList();
     this._renderPoints();
   }
 
   _renderSort() {
     render(this._routeListContainer, this._sortComponent, RenderPosition.AFTER_BEGIN);
+    this._sortPoints(SortType.DAY);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 

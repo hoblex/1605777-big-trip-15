@@ -1,6 +1,6 @@
 import AbstractView from './abstract';
 
-const OrderBy = {
+export const OrderBy = {
   day: {
     value: 'sort-day',
     modifier: 'trip-sort__item--day',
@@ -37,11 +37,11 @@ const xchecked = (value, current)=>value===current?'checked':'';
 const xdisabled = (value)=>value?'disabled':'';
 
 const sortItem = ({value, modifier, label, disabled}, current)=>(`<div class="trip-sort__item  ${modifier}">
-<input id="${value}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value="sort-day" ${xchecked(value,current)} ${xdisabled(disabled)}>
+<input id="${value}" class="trip-sort__input  visually-hidden" type="radio" name="trip-sort" value=${value} ${xchecked(value,current)} ${xdisabled(disabled)}>
 <label class="trip-sort__btn" for="${value}">${label}</label>
 </div>`);
 
-const createSort = (current=OrderBy.day.value) => (
+const createSort = (current= OrderBy.day.value) => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
   ${sortItem(OrderBy.day,current)}
   ${sortItem(OrderBy.event, current)}
@@ -65,11 +65,11 @@ export default class Sort extends AbstractView {
 
   _sortTypeChangeHandler(evt) {
     evt.preventDefault();
-    this._callback.sortTypeChange(evt.target.dataset.sortType);
+    this._callback.sortTypeChange(evt.target.value);
   }
 
   setSortTypeChangeHandler(callback) {
     this._callback.sortTypeChange = callback;
-    this.getElement().addEventListener('click', this._sortTypeChangeHandler);
+    this.getElement().addEventListener('input', this._sortTypeChangeHandler);
   }
 }
