@@ -1,6 +1,4 @@
 import SiteMenu from './view/menu';
-import TripCities from './view/trip-cities.js';
-import TripPrice from './view/trip-price.js';
 import Filter from './view/filters.js';
 import {generatePoint} from './mock/point';
 import RouteCitiesContainerView from './view/route-cities-container';
