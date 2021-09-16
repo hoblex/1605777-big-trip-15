@@ -19,7 +19,7 @@ export const createTripInfoCities = (cityList, dateList) => {
     </div>`;
 };
 
-export default class TripInfoCities extends AbstractView {
+export default class TripCities extends AbstractView {
   constructor(cityList, dateList) {
     super();
     this._cityList = cityList;
