@@ -6,6 +6,8 @@ import {generatePoint} from './mock/point';
 import RouteCitiesContainerView from './view/route-cities-container';
 import {render, RenderPosition} from './utils/render.js';
 import RouteList from './presenter/route-list';
+import RouteInfoCities from './presenter/route-info-cities';
+import RouteInfoPrice from './presenter/route-info-price';
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
@@ -21,28 +23,18 @@ const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
-if (pointsList.length !== 0) {
-  const routeListPresenter = new RouteList(tripEvents);
-  //Добавляет контейнер с информацией о маршруте
-  const routeInfoContainer = document.querySelector('.trip-main');
-  const routeInfoCitiesContainer = new RouteCitiesContainerView();
-  render(routeInfoContainer, routeInfoCitiesContainer, RenderPosition.AFTER_BEGIN);
 
-  //Добавляет информацию о маршруте: города
-  const routeCityList = new Set();
-  const routeDateList = new Set();
-  pointsList.forEach((item) => routeCityList.add(item.city));
-  pointsList.forEach((item) => routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-  render(routeInfoCitiesContainer, new TripCities(routeCityList, routeDateList));
+const routeListPresenter = new RouteList(tripEvents);
+//Добавляет контейнер с информацией о маршруте
+const routeInfoContainer = document.querySelector('.trip-main');
+const routeInfoCitiesContainer = new RouteCitiesContainerView();
+render(routeInfoContainer, routeInfoCitiesContainer, RenderPosition.AFTER_BEGIN);
+//Добавляет информацию о маршруте: города
+const routeInfoCities = new RouteInfoCities(routeInfoCitiesContainer);
+//Добавляет информацию о маршруте: стоимость
+const routeInfoPrice = new RouteInfoPrice(routeInfoCitiesContainer);
 
-  //Добавляет информацию о маршруте: стоимость
-  // const routeInfoPrice = routeInfoContainer.querySelector('.trip-info');
-  const tripPrice = pointsList.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
-  render(routeInfoCitiesContainer, new TripPrice(tripPrice));
-
-  routeListPresenter.init(pointsList);
-} else {
-  const routeListPresenter = new RouteList(tripEvents);
-  routeListPresenter.init(pointsList);
-}
+routeListPresenter.init(pointsList);
+routeInfoCities.init(pointsList);
+routeInfoPrice.init(pointsList);
 
