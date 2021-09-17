@@ -8,7 +8,7 @@ dayjs.extend(duration);
 const ADDITIONAL_OPTIONALS = {
   'Taxi': [ 'Order Uber' ],
   'Flight': ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train'],
-  'CheckIn': ['Add breakfast'],
+  'Check-in': ['Add breakfast'],
   'Sightseeing': ['Book tickets', 'Lunch in city'],
 };
 
@@ -39,18 +39,16 @@ const generateDescriptionPhrases = (phrases) => {
   return (new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1))).join('. ');
 };
 
-const generateAdditionalOption = (options, pointType) => {
+const generateAdditionalOption = (options) => {
   const optionsList = new Map(Object.entries(options));
-  if (optionsList.has(pointType)) {
-    return optionsList.get(pointType).map((item) => {
-      const newItem = new Array(item);
-      newItem.push(getRandomInteger(1, 100));
-      newItem.push(Boolean(getRandomInteger(0, 1)));
-      return newItem;
-    });
-  } else {
-    return null;
-  }
+  optionsList.forEach((value, key) => optionsList.set(key, value.map((item) => {
+    const newItem = new Array(item);
+    newItem.push(getRandomInteger(1, 100));
+    newItem.push(Boolean(getRandomInteger(0, 1)));
+    return newItem;
+  })));
+
+  return optionsList;
 };
 
 const countAdditionalOptionsCost = (optionsList) => {
@@ -108,9 +106,9 @@ export const generatePoint = () => {
   const date = generateDate();
   const time = generateTimeDuration(date.dateBegin);
   const pointType = generateRandomItem(TYPES);
-  const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS, pointType);
+  const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS);
   const pointCost = getRandomInteger(1, 10) * 10;
-  const fullPointCost = countAdditionalOptionsCost(additionalOptions) + pointCost;
+  // const fullPointCost = countAdditionalOptionsCost(additionalOptions) + pointCost;
   return {
 
     id: nanoid(),
@@ -119,7 +117,7 @@ export const generatePoint = () => {
     time,
     additionalOptions,
     pointCost,
-    fullPointCost,
+    // fullPointCost,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     description: generateDescriptionPhrases(DESCRIPTION_PHRASES),
     photoList: generatePhotoList(),
