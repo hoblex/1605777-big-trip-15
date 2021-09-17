@@ -165,7 +165,7 @@ export default class PointForm extends AbstractView {
     evt.preventDefault();
     this.updateData({
       selectedCity: evt.target.value,
-    });
+    }, true);
   }
 
   _formSubmitHandler(evt) {
@@ -174,12 +174,17 @@ export default class PointForm extends AbstractView {
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
   }
 
-  updateData(update) {
+  updateData(update, justDataUpdating) {
     this._data = Object.assign(
       {},
       this._data,
       update,
     );
+
+    if (justDataUpdating) {
+      return;
+    }
+
     this.updateElement();
   }
 
