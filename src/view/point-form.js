@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import AbstractView from './abstract';
+import SmartView from './smart';
 
 const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
 const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
@@ -147,7 +147,7 @@ const createPointForm = (data = {}) => {
   </li>`;
 };
 
-export default class PointForm extends AbstractView {
+export default class PointForm extends SmartView {
   constructor(point) {
     super();
     this._data = PointForm.parsePointToData(point);
@@ -205,38 +205,6 @@ export default class PointForm extends AbstractView {
     this.updateData({
       selectedCity: evt.target.value,
     });
-  }
-
-  updateData(update, justDataUpdating) {
-    this._data = Object.assign(
-      {},
-      this._data,
-      update,
-    );
-
-    if (justDataUpdating) {
-      return;
-    }
-
-    this.updateElement();
-  }
-
-  updateElement() {
-    const prevElement = this.getElement();
-    const parent = prevElement.parentElement;
-    this.removeElement();
-
-    const newElement = this.getElement();
-
-    parent.replaceChild(newElement, prevElement);
-
-    this.restoreHandlers();
-  }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setFormClickCloseHandler(this._callback.formSubmit);
   }
 
   _setInnerHandlers() {
