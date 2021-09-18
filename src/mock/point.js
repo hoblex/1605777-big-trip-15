@@ -34,9 +34,14 @@ const DESCRIPTION_PHRASES = 'Lorem ipsum dolor sit amet, consectetur adipiscing 
 
 const PHOTO_ALIAS = 'http://picsum.photos/248/152?r=';
 
-const generateDescriptionPhrases = (phrases) => {
+const generateDescriptionPhrases = (citiesList, phrases) => {
+  const citiesDescriptionList = new Map();
   const phrasesList = phrases.split('. ');
-  return (new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1))).join('. ');
+  citiesList.forEach((item) => {
+    citiesDescriptionList.set(item, (new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1))).join('. '));
+  });
+
+  return citiesDescriptionList;
 };
 
 const generateAdditionalOption = (options) => {
@@ -119,7 +124,7 @@ export const generatePoint = () => {
     pointCost,
     // fullPointCost,
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    description: generateDescriptionPhrases(DESCRIPTION_PHRASES),
+    description: generateDescriptionPhrases(CITIES, DESCRIPTION_PHRASES),
     photoList: generatePhotoList(),
   };
 };

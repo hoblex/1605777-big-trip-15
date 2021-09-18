@@ -47,6 +47,14 @@ const createAdditionalOptionsTemplate = (optionList, pointType, selectedType = p
   }
 };
 
+const createDescription = (descriptionList, pointCity, selectedCity = pointCity) => {
+  if (descriptionList.has(selectedCity)) {
+    return descriptionList.get(selectedCity);
+  } else {
+    return '';
+  }
+};
+
 const createPhotosTemplate = (photoList) => (
   photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('')
 );
@@ -58,7 +66,7 @@ const createPointForm = (data = {}) => {
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = new Map(),
     photoList = new Array(0),
-    description = new Array(0),
+    description = new Map(),
     selectedType = pointType,
     selectedCity = city,
   } = data;
@@ -119,7 +127,7 @@ const createPointForm = (data = {}) => {
     ${createAdditionalOptionsTemplate(additionalOptions, pointType, selectedType)}
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${description}</p>
+        <p class="event__destination-description">${createDescription(description, city, selectedCity)}</p>
 
         <div class="event__photos-container">
           <div class="event__photos-tape">
@@ -138,8 +146,10 @@ export default class PointForm extends AbstractView {
     this._data = PointForm.parsePointToData(point);
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
-    this._selectTypeToggleHandler = this._selectTypeToggleHandler.bind(this);
-    this._selectCityToggleHandler = this._selectCityToggleHandler.bind(this);
+    this._selectPointTypeInputHandler = this._selectPointTypeInputHandler.bind(this);
+    this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
+    this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
+    this._selectedCityFocusOutHandler = this._selectedCityFocusOutHandler.bind(this);
 
     this._setInnerHandlers();
   }
@@ -154,14 +164,14 @@ export default class PointForm extends AbstractView {
     return createPointForm(this._data);
   }
 
-  _selectTypeToggleHandler(evt) {
+  _selectPointTypeInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
       selectedType: evt.target.value,
     });
   }
 
-  _selectCityToggleHandler(evt) {
+  _selectCityInputHandler(evt) {
     evt.preventDefault();
     this.updateData({
       selectedCity: evt.target.value,
@@ -172,6 +182,22 @@ export default class PointForm extends AbstractView {
     evt.preventDefault();
     // this._callback.formSubmit();
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+  }
+
+  _selectedCityEnterKeyDownHandler (evt) {
+    if (evt.key === 'Enter' || evt.keyCode === 13) {
+      evt.preventDefault();
+      // this.updateData({
+      //   selectedCity: evt.target.value,
+      // });
+    }
+  }
+
+  _selectedCityFocusOutHandler (evt) {
+    evt.preventDefault();
+    this.updateData({
+      selectedCity: evt.target.value,
+    });
   }
 
   updateData(update, justDataUpdating) {
@@ -207,8 +233,10 @@ export default class PointForm extends AbstractView {
   }
 
   _setInnerHandlers() {
-    this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectTypeToggleHandler);
-    this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityToggleHandler);
+    this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
+    this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
   }
 
   setFormSubmitHandler(callback) {
