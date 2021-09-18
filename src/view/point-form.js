@@ -55,9 +55,16 @@ const createDescription = (descriptionList, pointCity, selectedCity = pointCity)
   }
 };
 
-const createPhotosTemplate = (photoList) => (
-  photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('')
-);
+const createPhotosTemplate = (photoList, descriptionList, pointCity, selectedCity = pointCity) => {
+  if (descriptionList.has(selectedCity)) {
+    console.log('dfsdfds');
+    return photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('');
+  } else {
+    console.log(descriptionList);
+    console.log('1111111');
+    return '';
+  }
+};
 
 const createPointForm = (data = {}) => {
   const {
@@ -131,7 +138,7 @@ const createPointForm = (data = {}) => {
 
         <div class="event__photos-container">
           <div class="event__photos-tape">
-          ${createPhotosTemplate(photoList)}
+          ${createPhotosTemplate(photoList, description, city, selectedCity)}
           </div>
         </div>
       </section>
