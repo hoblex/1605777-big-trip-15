@@ -56,18 +56,6 @@ const generateAdditionalOption = (options) => {
   return optionsList;
 };
 
-const countAdditionalOptionsCost = (optionsList) => {
-  if (optionsList !== null) {
-    let optionsCost = 0;
-    for (let i = 0; i < optionsList.length; i++) {
-      optionsCost += optionsList[i][1];
-    }
-    return optionsCost;
-  } else {
-    return 0;
-  }
-};
-
 const generateDate = () => {
   const maxDaysGap = 2;
   const date1 = dayjs().add(getRandomInteger(-maxDaysGap, maxDaysGap), 'day');
@@ -113,7 +101,6 @@ export const generatePoint = () => {
   const pointType = generateRandomItem(TYPES);
   const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS);
   const pointCost = getRandomInteger(1, 10) * 10;
-  // const fullPointCost = countAdditionalOptionsCost(additionalOptions) + pointCost;
   return {
 
     id: nanoid(),
