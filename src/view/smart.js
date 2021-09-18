@@ -31,10 +31,4 @@ export default class Smart extends Abstract {
 
     this.restoreHandlers();
   }
-
-  restoreHandlers() {
-    this._setInnerHandlers();
-    this.setFormSubmitHandler(this._callback.formSubmit);
-    this.setFormClickCloseHandler(this._callback.formSubmit);
-  }
 }

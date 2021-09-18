@@ -1,5 +1,8 @@
 import dayjs from 'dayjs';
 import SmartView from './smart';
+import flatpickr from 'flatpickr';
+
+import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
 const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
@@ -57,11 +60,8 @@ const createDescription = (descriptionList, pointCity, selectedCity = pointCity)
 
 const createPhotosTemplate = (photoList, descriptionList, pointCity, selectedCity = pointCity) => {
   if (descriptionList.has(selectedCity)) {
-    console.log('dfsdfds');
     return photoList.map((item) => `<img class="event__photo" src="${item}" alt="Event photo">`).join('');
   } else {
-    console.log(descriptionList);
-    console.log('1111111');
     return '';
   }
 };
@@ -151,14 +151,18 @@ export default class PointForm extends SmartView {
   constructor(point) {
     super();
     this._data = PointForm.parsePointToData(point);
+    this._datepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
+    // this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
     this._selectPointTypeInputHandler = this._selectPointTypeInputHandler.bind(this);
     this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
     this._selectedCityFocusOutHandler = this._selectedCityFocusOutHandler.bind(this);
 
     this._setInnerHandlers();
+    this._setDatepicker();
   }
 
   reset(point) {
@@ -169,6 +173,45 @@ export default class PointForm extends SmartView {
 
   getTemplate() {
     return createPointForm(this._data);
+  }
+
+  _setDatepicker() {
+    if (this._datepicker) {
+      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
+      // которые создает flatpickr при инициализации
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
+
+    this._datepicker = flatpickr(
+      this.getElement().querySelector('#event-start-time-1'),
+      {
+        dateFormat: 'Y/m/d H:i',
+        defaultDate: this._data.timeBegin,
+        onChange: this._timeBeginChangeHandler, // На событие flatpickr передаём наш колбэк
+      },
+    );
+
+    this._datepicker = flatpickr(
+      this.getElement().querySelector('#event-end-time-1'),
+      {
+        dateFormat: 'Y/m/d H:i',
+        defaultDate: this._data.timeEnd,
+        onChange: this._timeEndChangeHandler, // На событие flatpickr передаём наш колбэк
+      },
+    );
+  }
+
+  _timeBeginChangeHandler([userDate]) {
+    this.updateData(({
+      timeBegin: userDate,
+    }));
+  }
+
+  _timeEndChangeHandler([userDate]) {
+    this.updateData(({
+      timeEnd: userDate,
+    }));
   }
 
   _selectPointTypeInputHandler(evt) {
@@ -187,16 +230,12 @@ export default class PointForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    // this._callback.formSubmit();
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
   }
 
   _selectedCityEnterKeyDownHandler (evt) {
     if (evt.key === 'Enter' || evt.keyCode === 13) {
       evt.preventDefault();
-      // this.updateData({
-      //   selectedCity: evt.target.value,
-      // });
     }
   }
 
@@ -205,6 +244,13 @@ export default class PointForm extends SmartView {
     this.updateData({
       selectedCity: evt.target.value,
     });
+  }
+
+  restoreHandlers() {
+    this._setInnerHandlers();
+    this._setDatepicker();
+    this.setFormSubmitHandler(this._callback.formSubmit);
+    this.setFormClickCloseHandler(this._callback.formSubmit);
   }
 
   _setInnerHandlers() {
