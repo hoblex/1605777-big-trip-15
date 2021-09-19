@@ -8,8 +8,9 @@ import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils
 import {SortType} from '../const';
 
 export default class RouteList {
-  constructor(routeListContainer) {
+  constructor(routeListContainer, pointsModel) {
     this._routeListContainer = routeListContainer;
+    this._tasksModel = pointsModel;
     this._pointPresenters = new Map();
     this._currentSortType = SortType.DAY;
 
@@ -27,6 +28,10 @@ export default class RouteList {
     this._originalOrderByPoints = points.slice();
     render(this._routeListContainer, this._tripPointsListCopmonent);
     this._renderRouteList();
+  }
+
+  _getTasks() {
+    return this._pointsModel.getPoints();
   }
 
   _handleModeChange() {
