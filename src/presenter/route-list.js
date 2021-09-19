@@ -10,7 +10,7 @@ import {SortType} from '../const';
 export default class RouteList {
   constructor(routeListContainer, pointsModel) {
     this._routeListContainer = routeListContainer;
-    this._tasksModel = pointsModel;
+    this._pointsModel = pointsModel;
     this._pointPresenters = new Map();
     this._currentSortType = SortType.DAY;
 
