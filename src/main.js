@@ -36,7 +36,7 @@ const routeInfoCities = new RouteInfoCities(routeInfoCitiesContainer);
 //Добавляет информацию о маршруте: стоимость
 const routeInfoPrice = new RouteInfoPrice(routeInfoCitiesContainer);
 
-routeListPresenter.init(pointsList);
+routeListPresenter.init();
 routeInfoCities.init(pointsList);
 routeInfoPrice.init(pointsList);
 

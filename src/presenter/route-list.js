@@ -23,15 +23,21 @@ export default class RouteList {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
   }
 
-  init(points) {
-    this._points = points.slice();
-    this._originalOrderByPoints = points.slice();
+  init() {
     render(this._routeListContainer, this._tripPointsListCopmonent);
     this._renderRouteList();
   }
 
-  _getTasks() {
-    return this._pointsModel.getPoints();
+  _getPoints() {
+    switch (this._currentSortType) {
+      case SortType.DAY:
+        return this._pointsModel.getPoints().slice().sort(sortDatePointDown);
+      case SortType.TIME:
+        return this._pointsModel.getPoints().slice().sort(sortTimePointDown);
+      case SortType.PRICE:
+        this._points.sort(sortPricePointDown);
+        return this._pointsModel.getPoints().slice().sort(sortPricePointDown);
+    }
   }
 
   _handleModeChange() {
@@ -39,27 +45,7 @@ export default class RouteList {
   }
 
   _handlePointChange(updatedPoint) {
-    this._points = updateItem(this._points, updatedPoint);
-    this._originalOrderByPoints = updateItem(this._originalOrderByPoints, updatedPoint);
     this._pointPresenters.get(updatedPoint.id).init(updatedPoint);
-  }
-
-  _sortPoints(sortType) {
-    switch (sortType) {
-      case SortType.DAY:
-        this._points.sort(sortDatePointDown);
-        break;
-      case SortType.TIME:
-        this._points.sort(sortTimePointDown);
-        break;
-      case SortType.PRICE:
-        this._points.sort(sortPricePointDown);
-        break;
-      default:
-        this._points.sort(sortDatePointDown);
-    }
-
-    this._currentSortType = sortType;
   }
 
   _handleSortTypeChange(sortType) {
@@ -67,14 +53,13 @@ export default class RouteList {
       return;
     }
 
-    this._sortPoints(sortType);
+    this._currentSortType = sortType;
     this._clearRouteList();
     this._renderPoints();
   }
 
   _renderSort() {
     render(this._routeListContainer, this._sortComponent, RenderPosition.AFTER_BEGIN);
-    this._sortPoints(SortType.DAY);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
 
@@ -84,8 +69,8 @@ export default class RouteList {
     this._pointPresenters.set(point.id, pointPresenter);
   }
 
-  _renderPoints () {
-    this._points.forEach((point) => this._renderPoint(point));
+  _renderPoints (points) {
+    points.forEach((point) => this._renderPoint(point));
   }
 
   _renderNoPoints() {
@@ -98,7 +83,7 @@ export default class RouteList {
   }
 
   _renderRouteList() {
-    if (this._points.length === 0) {
+    if (this._getPoints().length === 0) {
       this._renderNoPoints();
       return;
     }
