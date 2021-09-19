@@ -25,8 +25,7 @@ pointsModel.setPoints(pointsList);
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
-
-const routeListPresenter = new RouteList(tripEvents);
+const routeListPresenter = new RouteList(tripEvents, pointsModel);
 //Добавляет контейнер с информацией о маршруте
 const routeInfoContainer = document.querySelector('.trip-main');
 const routeInfoCitiesContainer = new RouteCitiesContainerView();

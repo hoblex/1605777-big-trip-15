@@ -1,6 +1,7 @@
 import TripPointView from '../view/point';
 import TripPointFormView from '../view/point-form';
 import {render, replace, remove} from '../utils/render';
+import {UserAction, UpdateType} from '../const.js';
 
 const Mode = {
   DEFAULT: 'DEFAULT',
@@ -20,6 +21,7 @@ export default class Point {
     this._handleFormOpenClick = this._handleFormOpenClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
 
@@ -36,6 +38,7 @@ export default class Point {
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointFormComponent.setFormClickCloseHandler(this._handleFormSubmit);
+    this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevPointFormComponent === null) {
       render(this._pointsContainer, this._pointComponent);
@@ -90,12 +93,28 @@ export default class Point {
     this._replacePointViewToForm();
   }
 
-  _handleFormSubmit() {
+  _handleFormSubmit(update) {
+    const isMinorUpdate = null;
+    this._changeData(
+      UserAction.UPDATE_POINT,
+      isMinorUpdate ? UpdateType.MINOR : UpdateType.PATCH,
+      update,
+    );
     this._replaceFormToPointView();
+  }
+
+  _handleDeleteClick(point) {
+    this._changeData(
+      UserAction.DELETE_POINT,
+      UpdateType.MINOR,
+      point,
+    );
   }
 
   _handleFavoriteClick() {
     this._changeData(
+      UserAction.UPDATE_POINT,
+      UpdateType.PATCH,
       Object.assign(
         {},
         this._point,
