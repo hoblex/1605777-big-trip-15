@@ -1,5 +1,5 @@
 import TripPointsListView from '../view/trip-points-list';
-import SortView from '../view/sort'
+import SortView from '../view/sort';
 import ListEmptyView from '../view/list-empty';
 import {render, RenderPosition, remove} from '../utils/render';
 import PointPresenter from './point';

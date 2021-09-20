@@ -4,8 +4,8 @@ import flatpickr from 'flatpickr';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
-const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
+// const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
+// const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
 
 const FORM_TYPES = [
   'Taxi',
