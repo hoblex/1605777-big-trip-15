@@ -110,10 +110,10 @@ const createPointForm = (data = {}) => {
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDay(time.timeBegin)}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${time.timeBegin}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDay(time.timeEnd)}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${time.timeEnd}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -195,6 +195,7 @@ export default class PointForm extends SmartView {
     this._datepicker = flatpickr(
       this.getElement().querySelector('#event-start-time-1'),
       {
+        enableTime: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeBegin,
         onChange: this._timeBeginChangeHandler, // На событие flatpickr передаём наш колбэк
@@ -204,6 +205,7 @@ export default class PointForm extends SmartView {
     this._datepicker = flatpickr(
       this.getElement().querySelector('#event-end-time-1'),
       {
+        enableTime: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeEnd,
         onChange: this._timeEndChangeHandler, // На событие flatpickr передаём наш колбэк
