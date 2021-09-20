@@ -5,11 +5,13 @@ import {render, RenderPosition, remove} from '../utils/render';
 import PointPresenter from './point';
 import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils/point';
 import {SortType, UpdateType, UserAction} from '../const';
+import {filter} from '../utils/filter.js';
 
 export default class RouteList {
-  constructor(routeListContainer, pointsModel) {
+  constructor(routeListContainer, pointsModel, filterModel) {
     this._routeListContainer = routeListContainer;
     this._pointsModel = pointsModel;
+    this._filterModel = filterModel;
     this._pointPresenters = new Map();
     this._currentSortType = SortType.DAY;
 
@@ -23,6 +25,7 @@ export default class RouteList {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
+    this._filterModel.addObserver(this._handleModelEvent);
   }
 
   init() {
@@ -31,13 +34,18 @@ export default class RouteList {
   }
 
   _getPoints() {
+    const filterType = this._filterModel.getFilter();
+    const points = this._pointsModel.getPoints();
+    const filteredPoints = filter[filterType](points);
+    console.log(filteredPoints);
+
     switch (this._currentSortType) {
       case SortType.DAY:
-        return this._pointsModel.getPoints().slice().sort(sortDatePointDown);
+        return filteredPoints.sort(sortDatePointDown);
       case SortType.TIME:
-        return this._pointsModel.getPoints().slice().sort(sortTimePointDown);
+        return filteredPoints.sort(sortTimePointDown);
       case SortType.PRICE:
-        return this._pointsModel.getPoints().slice().sort(sortPricePointDown);
+        return filteredPoints.sort(sortPricePointDown);
     }
   }
 

@@ -1,5 +1,4 @@
 import SiteMenu from './view/menu';
-import Filter from './view/filters.js';
 import {generatePoint} from './mock/point';
 import RouteCitiesContainerView from './view/route-cities-container';
 import {render, RenderPosition} from './utils/render.js';
@@ -7,14 +6,12 @@ import RouteList from './presenter/route-list';
 import RouteInfoCities from './presenter/route-info-cities';
 import RouteInfoPrice from './presenter/route-info-price';
 import PointsModel from './model/points';
+import FilterPresenter from './presenter/filter.js';
+import FilterModel from './model/filter';
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
 render(tripControlsNavigation, new SiteMenu());
-
-//Добавляет фильтры
-const filtersContainer = document.querySelector('.trip-controls__filters');
-render(filtersContainer, new Filter());
 
 const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
@@ -22,15 +19,16 @@ const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 const pointsModel = new PointsModel();
 pointsModel.setPoints(pointsList);
 
-class FilterModel {
-}
-
 const filterModel = new FilterModel();
+
+//Добавляет фильтры
+const filterContainer = document.querySelector('.trip-controls__filters');
+const filterPresenter = new FilterPresenter(filterContainer, filterModel, pointsModel);
 
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
-const routeListPresenter = new RouteList(tripEvents, pointsModel);
+const routeListPresenter = new RouteList(tripEvents, pointsModel, filterModel);
 //Добавляет контейнер с информацией о маршруте
 const routeInfoContainer = document.querySelector('.trip-main');
 const routeInfoCitiesContainer = new RouteCitiesContainerView();
@@ -40,6 +38,7 @@ const routeInfoCities = new RouteInfoCities(routeInfoCitiesContainer);
 //Добавляет информацию о маршруте: стоимость
 const routeInfoPrice = new RouteInfoPrice(routeInfoCitiesContainer);
 
+filterPresenter.init();
 routeListPresenter.init();
 routeInfoCities.init(pointsList);
 routeInfoPrice.init(pointsList);
