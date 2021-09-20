@@ -1,10 +1,8 @@
 import SiteMenu from './view/menu';
 import {generatePoint} from './mock/point';
-import RouteCitiesContainerView from './view/route-cities-container';
 import {render, RenderPosition} from './utils/render.js';
 import RouteList from './presenter/route-list';
-import RouteInfoCities from './presenter/route-info-cities';
-import RouteInfoPrice from './presenter/route-info-price';
+import RouteInfo from './presenter/route-info';
 import PointsModel from './model/points';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filter';
@@ -25,21 +23,16 @@ const filterModel = new FilterModel();
 const filterContainer = document.querySelector('.trip-controls__filters');
 const filterPresenter = new FilterPresenter(filterContainer, filterModel, pointsModel);
 
-//Контейнер для контента
-const tripEvents = document.querySelector('.trip-events');
-
-const routeListPresenter = new RouteList(tripEvents, pointsModel, filterModel);
 //Добавляет контейнер с информацией о маршруте
 const routeInfoContainer = document.querySelector('.trip-main');
-const routeInfoCitiesContainer = new RouteCitiesContainerView();
-render(routeInfoContainer, routeInfoCitiesContainer, RenderPosition.AFTER_BEGIN);
-//Добавляет информацию о маршруте: города
-const routeInfoCities = new RouteInfoCities(routeInfoCitiesContainer);
-//Добавляет информацию о маршруте: стоимость
-const routeInfoPrice = new RouteInfoPrice(routeInfoCitiesContainer);
+//Добавляет информацию о маршруте: города и стоимость
+const routeInfo = new RouteInfo(routeInfoContainer, pointsModel);
+
+//Контейнер для контента
+const tripEventsContainer = document.querySelector('.trip-events');
+const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, filterModel);
 
 filterPresenter.init();
 routeListPresenter.init();
-routeInfoCities.init(pointsList);
-routeInfoPrice.init(pointsList);
+routeInfo.init();
 

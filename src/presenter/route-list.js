@@ -37,7 +37,6 @@ export default class RouteList {
     const filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
     const filteredPoints = filter[filterType](points);
-    console.log(filteredPoints);
 
     switch (this._currentSortType) {
       case SortType.DAY:
