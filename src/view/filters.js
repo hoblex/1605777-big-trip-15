@@ -1,10 +1,5 @@
 import AbstractView from './abstract';
-
-const FilterBy = {
-  EVERYTHING: 'everything',
-  FUTURE: 'future',
-  PAST: 'past',
-};
+import {FilterBy} from '../const';
 
 const checked = (value, current) => value === current ? 'checked' : '';
 

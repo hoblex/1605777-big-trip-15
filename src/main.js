@@ -22,6 +22,11 @@ const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 const pointsModel = new PointsModel();
 pointsModel.setPoints(pointsList);
 
+class FilterModel {
+}
+
+const filterModel = new FilterModel();
+
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
