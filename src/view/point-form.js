@@ -125,7 +125,7 @@ const createPointForm = (data = {}) => {
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : 'Delete'}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
@@ -155,7 +155,7 @@ export default class PointForm extends SmartView {
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
-    // this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._selectPointTypeInputHandler = this._selectPointTypeInputHandler.bind(this);
     this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
@@ -163,6 +163,15 @@ export default class PointForm extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(point) {
@@ -186,7 +195,7 @@ export default class PointForm extends SmartView {
     this._datepicker = flatpickr(
       this.getElement().querySelector('#event-start-time-1'),
       {
-        dateFormat: 'Y/m/d H:i',
+        dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeBegin,
         onChange: this._timeBeginChangeHandler, // На событие flatpickr передаём наш колбэк
       },
@@ -195,7 +204,7 @@ export default class PointForm extends SmartView {
     this._datepicker = flatpickr(
       this.getElement().querySelector('#event-end-time-1'),
       {
-        dateFormat: 'Y/m/d H:i',
+        dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeEnd,
         onChange: this._timeEndChangeHandler, // На событие flatpickr передаём наш колбэк
       },
@@ -251,6 +260,7 @@ export default class PointForm extends SmartView {
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormClickCloseHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setInnerHandlers() {
@@ -268,6 +278,16 @@ export default class PointForm extends SmartView {
   setFormClickCloseHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formSubmitHandler);
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(PointForm.parseDataToPoint(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   static parsePointToData(point) {

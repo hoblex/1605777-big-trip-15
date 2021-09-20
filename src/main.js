@@ -6,6 +6,7 @@ import {render, RenderPosition} from './utils/render.js';
 import RouteList from './presenter/route-list';
 import RouteInfoCities from './presenter/route-info-cities';
 import RouteInfoPrice from './presenter/route-info-price';
+import PointsModel from './model/points';
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
@@ -18,11 +19,13 @@ render(filtersContainer, new Filter());
 const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
+const pointsModel = new PointsModel();
+pointsModel.setPoints(pointsList);
+
 //Контейнер для контента
 const tripEvents = document.querySelector('.trip-events');
 
-
-const routeListPresenter = new RouteList(tripEvents);
+const routeListPresenter = new RouteList(tripEvents, pointsModel);
 //Добавляет контейнер с информацией о маршруте
 const routeInfoContainer = document.querySelector('.trip-main');
 const routeInfoCitiesContainer = new RouteCitiesContainerView();
@@ -32,7 +35,7 @@ const routeInfoCities = new RouteInfoCities(routeInfoCitiesContainer);
 //Добавляет информацию о маршруте: стоимость
 const routeInfoPrice = new RouteInfoPrice(routeInfoCitiesContainer);
 
-routeListPresenter.init(pointsList);
+routeListPresenter.init();
 routeInfoCities.init(pointsList);
 routeInfoPrice.init(pointsList);
 
