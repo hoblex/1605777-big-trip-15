@@ -8,7 +8,7 @@ dayjs.extend(duration);
 const ADDITIONAL_OPTIONALS = {
   'Taxi': [ 'Order Uber' ],
   'Flight': ['Add luggage', 'Switch to comfort', 'Add meal', 'Choose seats', 'Travel by train'],
-  'CheckIn': ['Add breakfast'],
+  'Check-in': ['Add breakfast'],
   'Sightseeing': ['Book tickets', 'Lunch in city'],
 };
 
@@ -34,35 +34,26 @@ const DESCRIPTION_PHRASES = 'Lorem ipsum dolor sit amet, consectetur adipiscing 
 
 const PHOTO_ALIAS = 'http://picsum.photos/248/152?r=';
 
-const generateDescriptionPhrases = (phrases) => {
+const generateDescriptionPhrases = (citiesList, phrases) => {
+  const citiesDescriptionList = new Map();
   const phrasesList = phrases.split('. ');
-  return (new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1))).join('. ');
+  citiesList.forEach((item) => {
+    citiesDescriptionList.set(item, (new Array(getRandomInteger(1, 5)).fill().map(() => phrasesList.splice(getRandomInteger(0, phrasesList.length - 1), 1))).join('. '));
+  });
+
+  return citiesDescriptionList;
 };
 
-const generateAdditionalOption = (options, pointType) => {
+const generateAdditionalOption = (options) => {
   const optionsList = new Map(Object.entries(options));
-  if (optionsList.has(pointType)) {
-    return optionsList.get(pointType).map((item) => {
-      const newItem = new Array(item);
-      newItem.push(getRandomInteger(1, 100));
-      newItem.push(Boolean(getRandomInteger(0, 1)));
-      return newItem;
-    });
-  } else {
-    return null;
-  }
-};
+  optionsList.forEach((value, key) => optionsList.set(key, value.map((item) => {
+    const newItem = new Array(item);
+    newItem.push(getRandomInteger(1, 100));
+    newItem.push(Boolean(getRandomInteger(0, 1)));
+    return newItem;
+  })));
 
-const countAdditionalOptionsCost = (optionsList) => {
-  if (optionsList !== null) {
-    let optionsCost = 0;
-    for (let i = 0; i < optionsList.length; i++) {
-      optionsCost += optionsList[i][1];
-    }
-    return optionsCost;
-  } else {
-    return 0;
-  }
+  return optionsList;
 };
 
 const generateDate = () => {
@@ -108,9 +99,8 @@ export const generatePoint = () => {
   const date = generateDate();
   const time = generateTimeDuration(date.dateBegin);
   const pointType = generateRandomItem(TYPES);
-  const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS, pointType);
+  const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS);
   const pointCost = getRandomInteger(1, 10) * 10;
-  const fullPointCost = countAdditionalOptionsCost(additionalOptions) + pointCost;
   return {
 
     id: nanoid(),
@@ -119,9 +109,9 @@ export const generatePoint = () => {
     time,
     additionalOptions,
     pointCost,
-    fullPointCost,
+    // fullPointCost,
     isFavorite: Boolean(getRandomInteger(0, 1)),
-    description: generateDescriptionPhrases(DESCRIPTION_PHRASES),
+    description: generateDescriptionPhrases(CITIES, DESCRIPTION_PHRASES),
     photoList: generatePhotoList(),
   };
 };

@@ -1,11 +1,12 @@
 import AbstractView from './abstract';
 
-const createOfferContainer = (optionsList) => {
-  if (optionsList === null) {
+const createOfferContainer = (optionsList, type) => {
+  if (!optionsList.has(type)) {
     return '';
   } else {
+    const offers = optionsList.get(type);
     return `<ul class="event__selected-offers">
-    ${optionsList.map(([offerName, offerPrice]) =>  `<li class="event__offer">
+    ${offers.map(([offerName, offerPrice]) =>  `<li class="event__offer">
        <span class="event__offer-title">${offerName}</span>
        &plus;&euro;&nbsp;
        <span class="event__offer-price">${offerPrice}</span>
@@ -51,7 +52,7 @@ const createTripPoint = (point) => {
       &euro;&nbsp;<span class="event__price-value">${pointCost}</span>
     </p>
     <h4 class="visually-hidden">Offers:</h4>
-    ${createOfferContainer(additionalOptions)}
+    ${createOfferContainer(additionalOptions, pointType)}
     <button class="event__favorite-btn  ${favoriteClassName}" type="button">
       <span class="visually-hidden">Add to favorite</span>
       <svg class="event__favorite-icon" width="28" height="28" viewBox="0 0 28 28">
