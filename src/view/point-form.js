@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
+import {BLANK_POINT} from '../const';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
@@ -35,7 +36,7 @@ const createAdditionalOptionsTemplate = (optionList, pointType, selectedType = p
         <div class="event__available-offers">
         ${offers.map(([offerName, offerCost, offerChecked]) =>
     `<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>f
             <label class="event__offer-label" for="event-offer-luggage-1">
               <span class="event__offer-title">${offerName}</span>
               &plus;&euro;&nbsp;
@@ -72,6 +73,7 @@ const createPointForm = (data = {}) => {
     city = '',
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = new Map(),
+    pointCost = 0,
     photoList = new Array(0),
     description = new Map(),
     selectedType = pointType,
@@ -121,7 +123,7 @@ const createPointForm = (data = {}) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointCost}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
@@ -148,13 +150,14 @@ const createPointForm = (data = {}) => {
 };
 
 export default class PointForm extends SmartView {
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
+    this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._selectPointTypeInputHandler = this._selectPointTypeInputHandler.bind(this);
     this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
@@ -214,15 +217,15 @@ export default class PointForm extends SmartView {
   }
 
   _timeBeginChangeHandler([userDate]) {
-    this.updateData(({
+    this.updateData({
       timeBegin: userDate,
-    }));
+    });
   }
 
   _timeEndChangeHandler([userDate]) {
-    this.updateData(({
+    this.updateData({
       timeEnd: userDate,
-    }));
+    });
   }
 
   _selectPointTypeInputHandler(evt) {

@@ -3,6 +3,7 @@ import SortView from '../view/sort';
 import ListEmptyView from '../view/list-empty';
 import {render, RenderPosition, remove} from '../utils/render';
 import PointPresenter from './point';
+import PointNewPresenter from './point-new.js';
 import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils/point';
 import {SortType, UpdateType, UserAction, FilterBy} from '../const';
 import {filter} from '../utils/filter.js';
@@ -27,11 +28,19 @@ export default class RouteList {
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
+
+    this._pointNewPresenter = new PointNewPresenter(this._tripPointsListCopmonent, this._handleViewAction);
   }
 
   init() {
     render(this._routeListContainer, this._tripPointsListCopmonent);
     this._renderRouteList();
+  }
+
+  createPoint() {
+    this._currentSortType = SortType.DAY;
+    this._filterModel.setFilter(UpdateType.MAJOR, FilterBy.EVERYTHING);
+    this._pointNewPresenter.init();
   }
 
   _getPoints() {
@@ -50,6 +59,7 @@ export default class RouteList {
   }
 
   _handleModeChange() {
+    this._pointNewPresenter.destroy();
     this._pointPresenters.forEach((presenter) => presenter.resetView());
   }
 
@@ -124,6 +134,7 @@ export default class RouteList {
   _clearRouteList(resetSortType = false) {
     this._pointPresenters.forEach((presenter) => presenter.destroy());
     this._pointPresenters.clear();
+    this._pointNewPresenter.destroy();
 
     remove(this._sortComponent);
 

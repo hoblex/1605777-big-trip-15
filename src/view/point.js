@@ -1,4 +1,5 @@
 import AbstractView from './abstract';
+import {BLANK_POINT} from "../const";
 
 const createOfferContainer = (optionsList, type) => {
   if (!optionsList.has(type)) {
@@ -15,7 +16,7 @@ const createOfferContainer = (optionsList, type) => {
   }
 };
 
-const createTripPoint = (point) => {
+const createTripPoint = (point = BLANK_POINT) => {
   const {
     pointType,
     city,
@@ -29,9 +30,17 @@ const createTripPoint = (point) => {
     'event__favorite-btn--active' :
     '';
 
-  const eventTimeDuration = time.timeDuration.hours() === 0 ?
-    `${time.timeDuration.format('mm')}M` :
-    `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
+  const getEventTimeDuration = () => {
+    if (time.timeDuration !== null) {
+      const eventTimeDuration = time.timeDuration.hours() === 0 ?
+        `${time.timeDuration.format('mm')}M` :
+        `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
+      return eventTimeDuration;
+    } else {
+      return '0M';
+    }
+  };
+
 
   return `<li class="trip-events__item">
     <div class="event">
@@ -46,7 +55,7 @@ const createTripPoint = (point) => {
         &mdash;
         <time class="event__end-time" datetime="${time.timeEnd.format('YYYY-MM-DD')}T${time.timeEnd.format('H:mm')}">${time.timeEnd.format('H:mm')}</time>
       </p>
-      <p class="event__duration">${eventTimeDuration}</p>
+      <p class="event__duration">${getEventTimeDuration()}</p>
     </div>
     <p class="event__price">
       &euro;&nbsp;<span class="event__price-value">${pointCost}</span>
