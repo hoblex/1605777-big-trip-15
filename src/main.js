@@ -15,6 +15,9 @@ const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
+const siteMenuComponent = new SiteMenuView();
+
+render(tripControlsNavigation, siteMenuComponent);
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(pointsList);
@@ -52,9 +55,7 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-const menuPresenter = new Menu(tripControlsNavigation, MenuItem.TABLE, handleSiteMenuClick.bind(this));
-menuPresenter.init();
-
+siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
 
 filterPresenter.init();
 routeListPresenter.init();
