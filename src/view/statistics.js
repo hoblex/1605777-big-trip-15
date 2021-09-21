@@ -3,214 +3,208 @@ import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {FORM_TYPES} from '../const';
 import {countAmountByType, countDurationByType, countMoneyByType} from '../utils/statistics';
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
-const renderMoneyByChart = (moneyCtx, points) => {
-  return new Chart(moneyCtx, {
-    plugins: [ChartDataLabels],
-    type: 'horizontalBar',
-    data: {
-      labels: FORM_TYPES.map((item) => item.toUpperCase()),
-      datasets: [{
-        data: FORM_TYPES.map((item) => countMoneyByType(points, item)),
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
-        anchor: 'start',
+const renderMoneyByChart = (moneyCtx, points) => new Chart(moneyCtx, {
+  plugins: [ChartDataLabels],
+  type: 'horizontalBar',
+  data: {
+    labels: FORM_TYPES.map((item) => item.toUpperCase()),
+    datasets: [{
+      data: FORM_TYPES.map((item) => countMoneyByType(points, item)),
+      backgroundColor: '#ffffff',
+      hoverBackgroundColor: '#ffffff',
+      anchor: 'start',
+    }],
+  },
+  options: {
+    plugins: {
+      datalabels: {
+        font: {
+          size: 13,
+        },
+        color: '#000000',
+        anchor: 'end',
+        align: 'start',
+        formatter: points.map((point) => point.pointCost),
+      },
+    },
+    title: {
+      display: true,
+      text: 'MONEY',
+      fontColor: '#000000',
+      fontSize: 23,
+      position: 'left',
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          fontColor: '#000000',
+          padding: 5,
+          fontSize: 13,
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false,
+        },
+        barThickness: 44,
+      }],
+      xAxes: [{
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false,
+        },
+        minBarLength: 50,
       }],
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13,
-          },
-          color: '#000000',
-          anchor: 'end',
-          align: 'start',
-          formatter: points.map((point) => '${point.pointCost}'),
+    legend: {
+      display: false,
+    },
+    tooltips: {
+      enabled: false,
+    },
+  },
+});
+
+
+const renderTypeByChart = (typeCtx, points) => new Chart(typeCtx, {
+  plugins: [ChartDataLabels],
+  type: 'horizontalBar',
+  data: {
+    labels: FORM_TYPES.map((item) => item.toUpperCase()),
+    datasets: [{
+      data: FORM_TYPES.map((item) => countAmountByType(points, item)),
+      backgroundColor: '#ffffff',
+      hoverBackgroundColor: '#ffffff',
+      anchor: 'start',
+    }],
+  },
+  options: {
+    plugins: {
+      datalabels: {
+        font: {
+          size: 13,
         },
-      },
-      title: {
-        display: true,
-        text: 'MONEY',
-        fontColor: '#000000',
-        fontSize: 23,
-        position: 'left',
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          barThickness: 44,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          minBarLength: 50,
-        }],
-      },
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
+        color: '#000000',
+        anchor: 'end',
+        align: 'start',
+        formatter: FORM_TYPES.map((item) => `${countAmountByType(points, item)}k`),
       },
     },
-  });
-};
-
-const renderTypeByChart = (typeCtx, points) => {
-
-  return new Chart(typeCtx, {
-    plugins: [ChartDataLabels],
-    type: 'horizontalBar',
-    data: {
-      labels: FORM_TYPES.map((item) => item.toUpperCase()),
-      datasets: [{
-        data: FORM_TYPES.map((item) => countAmountByType(points, item)),
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
-        anchor: 'start',
+    title: {
+      display: true,
+      text: 'TYPE',
+      fontColor: '#000000',
+      fontSize: 23,
+      position: 'left',
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          fontColor: '#000000',
+          padding: 5,
+          fontSize: 13,
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false,
+        },
+        barThickness: 44,
+      }],
+      xAxes: [{
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false,
+        },
+        minBarLength: 50,
       }],
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13,
-          },
-          color: '#000000',
-          anchor: 'end',
-          align: 'start',
-          formatter: FORM_TYPES.map((item) => `${countAmountByType(points, item)}k`),
+    legend: {
+      display: false,
+    },
+    tooltips: {
+      enabled: false,
+    },
+  },
+});
+
+
+const renderDurationByChart = (typeCtx, points) => new Chart(typeCtx, {
+  plugins: [ChartDataLabels],
+  type: 'horizontalBar',
+  data: {
+    labels: FORM_TYPES.map((item) => item.toUpperCase()),
+    datasets: [{
+      data: FORM_TYPES.map((item) => countDurationByType(points, item)),
+      backgroundColor: '#ffffff',
+      hoverBackgroundColor: '#ffffff',
+      anchor: 'start',
+    }],
+  },
+  options: {
+    plugins: {
+      datalabels: {
+        font: {
+          size: 13,
         },
-      },
-      title: {
-        display: true,
-        text: 'TYPE',
-        fontColor: '#000000',
-        fontSize: 23,
-        position: 'left',
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          barThickness: 44,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          minBarLength: 50,
-        }],
-      },
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
+        color: '#000000',
+        anchor: 'end',
+        align: 'start',
+        formatter: FORM_TYPES.map((item) => dayjs(countAmountByType(points, item)).format('HH')),
       },
     },
-  });
-};
-
-const renderDurationByChart = (typeCtx, points) => {
-
-  return new Chart(typeCtx, {
-    plugins: [ChartDataLabels],
-    type: 'horizontalBar',
-    data: {
-      labels: FORM_TYPES.map((item) => item.toUpperCase()),
-      datasets: [{
-        data: FORM_TYPES.map((item) => countDurationByType(points, item)),
-        backgroundColor: '#ffffff',
-        hoverBackgroundColor: '#ffffff',
-        anchor: 'start',
+    title: {
+      display: true,
+      text: 'TYPE',
+      fontColor: '#000000',
+      fontSize: 23,
+      position: 'left',
+    },
+    scales: {
+      yAxes: [{
+        ticks: {
+          fontColor: '#000000',
+          padding: 5,
+          fontSize: 13,
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false,
+        },
+        barThickness: 44,
+      }],
+      xAxes: [{
+        ticks: {
+          display: false,
+          beginAtZero: true,
+        },
+        gridLines: {
+          display: false,
+          drawBorder: false,
+        },
+        minBarLength: 50,
       }],
     },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 13,
-          },
-          color: '#000000',
-          anchor: 'end',
-          align: 'start',
-          formatter: FORM_TYPES.map((item) => dayjs(countAmountByType(points, item)).format('HH')),
-        },
-      },
-      title: {
-        display: true,
-        text: 'TYPE',
-        fontColor: '#000000',
-        fontSize: 23,
-        position: 'left',
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: '#000000',
-            padding: 5,
-            fontSize: 13,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          barThickness: 44,
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true,
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          minBarLength: 50,
-        }],
-      },
-      legend: {
-        display: false,
-      },
-      tooltips: {
-        enabled: false,
-      },
+    legend: {
+      display: false,
     },
-  });
-};
+    tooltips: {
+      enabled: false,
+    },
+  },
+});
 
-const createStatisticsTemplate = () => {
 
-  return `<section class="statistics">
+const createStatisticsTemplate = () =>
+  `<section class="statistics">
           <h2 class="visually-hidden">Trip statistics</h2>
 
           <div class="statistics__item">
@@ -225,7 +219,7 @@ const createStatisticsTemplate = () => {
             <canvas class="statistics__chart" id="time-spend" width="900"></canvas>
           </div>
         </section>`;
-};
+
 
 export default class Statistics extends SmartView {
   constructor(points) {
