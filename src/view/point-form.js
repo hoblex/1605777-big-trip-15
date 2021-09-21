@@ -1,24 +1,33 @@
 import dayjs from 'dayjs';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
+import {BLANK_POINT, FORM_TYPES} from '../const';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
-const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
+// const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
+// const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
+//
+// const FORM_TYPES = [
+//   'Taxi',
+//   'Bus',
+//   'Train',
+//   'Ship',
+//   'Transport',
+//   'Drive',
+//   'Flight',
+//   'Check-in',
+//   'Sightseeing',
+//   'Restaurant',
+// ];
 
-const FORM_TYPES = [
-  'Taxi',
-  'Bus',
-  'Train',
-  'Ship',
-  'Transport',
-  'Drive',
-  'Flight',
-  'Check-in',
-  'Sightseeing',
-  'Restaurant',
-];
+const CITIES_LIST = ['Amsterdam','Geneva', 'Chamonix'];
+const createCitiesList = (list) => (
+  (list.map((item) => `<option value="${item}"></option>`)).join('')
+);
+const createCitiesPattern = (list) => (
+  (list.map((item) => `${item}`)).join('|')
+);
 
 const xchecked = (value, current)=>value===current?'checked':'';
 const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = pointType) => (typesList.map((item) => `<div class="event__type-item">
@@ -72,6 +81,7 @@ const createPointForm = (data = {}) => {
     city = '',
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = new Map(),
+    pointCost = 0,
     photoList = new Array(0),
     description = new Map(),
     selectedType = pointType,
@@ -100,20 +110,18 @@ const createPointForm = (data = {}) => {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${selectedType}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1" pattern="${createCitiesPattern(CITIES_LIST)}">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+        ${createCitiesList(CITIES_LIST)}
         </datalist>
       </div>
 
       <div class="event__field-group  event__field-group--time">
         <label class="visually-hidden" for="event-start-time-1">From</label>
-        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${formatDay(time.timeBegin)}">
+        <input class="event__input  event__input--time" id="event-start-time-1" type="text" name="event-start-time" value="${time.timeBegin}">
         &mdash;
         <label class="visually-hidden" for="event-end-time-1">To</label>
-        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${formatDay(time.timeEnd)}">
+        <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${time.timeEnd}">
       </div>
 
       <div class="event__field-group  event__field-group--price">
@@ -121,11 +129,11 @@ const createPointForm = (data = {}) => {
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="text" name="event-price" value="">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointCost}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">Cancel</button>
+      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : 'Delete'}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
@@ -148,14 +156,15 @@ const createPointForm = (data = {}) => {
 };
 
 export default class PointForm extends SmartView {
-  constructor(point) {
+  constructor(point = BLANK_POINT) {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
 
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
-    // this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
+    this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
+    this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._selectPointTypeInputHandler = this._selectPointTypeInputHandler.bind(this);
     this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
@@ -163,6 +172,15 @@ export default class PointForm extends SmartView {
 
     this._setInnerHandlers();
     this._setDatepicker();
+  }
+
+  removeElement() {
+    super.removeElement();
+
+    if (this._datepicker) {
+      this._datepicker.destroy();
+      this._datepicker = null;
+    }
   }
 
   reset(point) {
@@ -186,7 +204,8 @@ export default class PointForm extends SmartView {
     this._datepicker = flatpickr(
       this.getElement().querySelector('#event-start-time-1'),
       {
-        dateFormat: 'Y/m/d H:i',
+        enableTime: true,
+        dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeBegin,
         onChange: this._timeBeginChangeHandler, // На событие flatpickr передаём наш колбэк
       },
@@ -195,7 +214,8 @@ export default class PointForm extends SmartView {
     this._datepicker = flatpickr(
       this.getElement().querySelector('#event-end-time-1'),
       {
-        dateFormat: 'Y/m/d H:i',
+        enableTime: true,
+        dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeEnd,
         onChange: this._timeEndChangeHandler, // На событие flatpickr передаём наш колбэк
       },
@@ -203,15 +223,15 @@ export default class PointForm extends SmartView {
   }
 
   _timeBeginChangeHandler([userDate]) {
-    this.updateData(({
+    this.updateData({
       timeBegin: userDate,
-    }));
+    });
   }
 
   _timeEndChangeHandler([userDate]) {
-    this.updateData(({
+    this.updateData({
       timeEnd: userDate,
-    }));
+    });
   }
 
   _selectPointTypeInputHandler(evt) {
@@ -251,6 +271,7 @@ export default class PointForm extends SmartView {
     this._setDatepicker();
     this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormClickCloseHandler(this._callback.formSubmit);
+    this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
   _setInnerHandlers() {
@@ -268,6 +289,16 @@ export default class PointForm extends SmartView {
   setFormClickCloseHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formSubmitHandler);
+  }
+
+  _formDeleteClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.deleteClick(PointForm.parseDataToPoint(this._data));
+  }
+
+  setDeleteClickHandler(callback) {
+    this._callback.deleteClick = callback;
+    this.getElement().querySelector('.event__reset-btn').addEventListener('click', this._formDeleteClickHandler);
   }
 
   static parsePointToData(point) {

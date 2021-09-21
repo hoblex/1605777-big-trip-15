@@ -41,26 +41,26 @@ const sortItem = ({value, modifier, label, disabled}, current)=>(`<div class="tr
 <label class="trip-sort__btn" for="${value}">${label}</label>
 </div>`);
 
-const createSort = (current= OrderBy.day.value) => (
+const createSort = (currentSortType= OrderBy.day.value) => (
   `<form class="trip-events__trip-sort  trip-sort" action="#" method="get">
-  ${sortItem(OrderBy.day,current)}
-  ${sortItem(OrderBy.event, current)}
-  ${sortItem(OrderBy.time, current)}
-  ${sortItem(OrderBy.price, current)}
-  ${sortItem(OrderBy.offer, current)}
+  ${sortItem(OrderBy.day,currentSortType)}
+  ${sortItem(OrderBy.event, currentSortType)}
+  ${sortItem(OrderBy.time, currentSortType)}
+  ${sortItem(OrderBy.price, currentSortType)}
+  ${sortItem(OrderBy.offer, currentSortType)}
   </form>`
 );
 
 export default class Sort extends AbstractView {
-  constructor(order) {
+  constructor(currentSortType) {
     super();
 
     this._sortTypeChangeHandler = this._sortTypeChangeHandler.bind(this);
-    this._order = order;
+    this._currentSortType = currentSortType;
   }
 
   getTemplate() {
-    return createSort(this._order);
+    return createSort(this._currentSortType);
   }
 
   _sortTypeChangeHandler(evt) {
