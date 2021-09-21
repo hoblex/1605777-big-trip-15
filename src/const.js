@@ -1,4 +1,4 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 
 export const SortType = {
   DAY: 'sort-day',
