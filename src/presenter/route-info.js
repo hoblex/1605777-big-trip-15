@@ -30,7 +30,6 @@ export default class routeInfo {
       remove(prevRouteInfoComponent);
     } else {
       remove(this._routeInfoComponent);
-      remove(this._routeInfoContainer);
     }
   }
 

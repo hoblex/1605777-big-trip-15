@@ -7,6 +7,7 @@ export default class Filter {
     this._filterContainer = filterContainer;
     this._filterModel = filterModel;
     this._pointsModel = pointsModel;
+    this._currentFilter = FilterBy.EVERYTHING;
 
     this._filterComponent = null;
 
@@ -17,11 +18,26 @@ export default class Filter {
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  init() {
-    const filters = this._getFilters();
+  init(current = this._currentFilter) {
+    this._renderFilter(current);
+  }
+
+  _handleModelEvent(type, current) {
+    this.init(current);
+  }
+
+  _handleFilterTypeChange(filterType) {
+    if (this._filterModel.getFilter() === filterType) {
+      return;
+    }
+    this._currentFilter = filterType;
+    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
+  }
+
+  _renderFilter(current) {
     const prevFilterComponent = this._filterComponent;
 
-    this._filterComponent = new FilterView(filters);
+    this._filterComponent = new FilterView(current);
     this._filterComponent.setFilterTypeChangeHandler(this._handleFilterTypeChange);
 
     if (prevFilterComponent === null) {
@@ -31,31 +47,5 @@ export default class Filter {
 
     replace(this._filterComponent, prevFilterComponent);
     remove(prevFilterComponent);
-  }
-
-  _handleModelEvent() {
-    this.init();
-  }
-
-  _handleFilterTypeChange(filterType) {
-    if (this._filterModel.getFilter() === filterType) {
-      return;
-    }
-
-    this._filterModel.setFilter(UpdateType.MAJOR, filterType);
-  }
-
-  _getFilters() {
-    return [
-      {
-        type: FilterBy.EVERYTHING,
-      },
-      {
-        type: FilterBy.FUTURE,
-      },
-      {
-        type: FilterBy.PAST,
-      },
-    ];
   }
 }

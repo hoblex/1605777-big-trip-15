@@ -4,7 +4,7 @@ import ListEmptyView from '../view/list-empty';
 import {render, RenderPosition, remove} from '../utils/render';
 import PointPresenter from './point';
 import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils/point';
-import {SortType, UpdateType, UserAction} from '../const';
+import {SortType, UpdateType, UserAction, FilterBy} from '../const';
 import {filter} from '../utils/filter.js';
 
 export default class RouteList {
@@ -13,12 +13,13 @@ export default class RouteList {
     this._pointsModel = pointsModel;
     this._filterModel = filterModel;
     this._pointPresenters = new Map();
+    this._filterType = FilterBy.EVERYTHING;
     this._currentSortType = SortType.DAY;
 
     this._sortComponent = null;
+    this._noPointsComponent = null;
 
     this._tripPointsListCopmonent = new TripPointsListView();
-    this._emptyListComponent = new ListEmptyView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -34,9 +35,9 @@ export default class RouteList {
   }
 
   _getPoints() {
-    const filterType = this._filterModel.getFilter();
+    this._filterType = this._filterModel.getFilter();
     const points = this._pointsModel.getPoints();
-    const filteredPoints = filter[filterType](points);
+    const filteredPoints = filter[this._filterType](points);
 
     switch (this._currentSortType) {
       case SortType.DAY:
@@ -116,7 +117,8 @@ export default class RouteList {
   }
 
   _renderNoPoints() {
-    render(this._routeListContainer, this._emptyListComponent);
+    this._noPointsComponent = new ListEmptyView(this._filterType);
+    render(this._routeListContainer, this._noPointsComponent);
   }
 
   _clearRouteList(resetSortType = false) {
@@ -124,7 +126,10 @@ export default class RouteList {
     this._pointPresenters.clear();
 
     remove(this._sortComponent);
-    remove(this._emptyListComponent);
+
+    if (this._noPointsComponent) {
+      remove(this._noPointsComponent);
+    }
 
     if (resetSortType) {
       this._currentSortType = SortType.DAY;

@@ -11,7 +11,7 @@ import FilterModel from './model/filter';
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
 render(tripControlsNavigation, new SiteMenu());
 
-const POINTS_COUNT = 15;
+const POINTS_COUNT = 5;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 const pointsModel = new PointsModel();
