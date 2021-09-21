@@ -1,6 +1,6 @@
 import SiteMenu from './view/menu';
 import {generatePoint} from './mock/point';
-import {render, RenderPosition} from './utils/render.js';
+import {render} from './utils/render.js';
 import RouteList from './presenter/route-list';
 import RouteInfo from './presenter/route-info';
 import PointsModel from './model/points';
