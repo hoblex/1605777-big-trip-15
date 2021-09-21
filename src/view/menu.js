@@ -15,23 +15,23 @@ const createMenuTemplateView = (current = MenuItem.TABLE) => (
 );
 
 export default class SiteMenu extends AbstractView {
-  constructor() {
+  constructor(menuCurrent) {
     super();
+    this._menuCurrent = menuCurrent;
     this._menuClickHandler = this._menuClickHandler.bind(this);
-    this._current = MenuItem.TABLE;
   }
 
   getTemplate() {
-    return createMenuTemplateView(this._current);
+    return createMenuTemplateView(this._menuCurrent);
   }
 
   _menuClickHandler(evt) {
     evt.preventDefault();
-    this._callback.menuClick(evt.target.value);
+    this._callback.menuClick(MenuItem.STATS);
   }
 
   setMenuClickHandler(callback) {
     this._callback.menuClick = callback;
-    this.getElement().querySelector('.trip-tabs__btn').addEventListener('click', this._menuClickHandler);
+    this.getElement().querySelectorAll('.trip-tabs__btn').forEach((item) => item.addEventListener('click', this._menuClickHandler));
   }
 }

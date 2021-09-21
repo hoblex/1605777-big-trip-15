@@ -8,15 +8,13 @@ import PointsModel from './model/points';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filter';
 import {MenuItem, UpdateType, FilterBy} from './const';
+import Menu from './presenter/menu';
 
 const POINTS_COUNT = 15;
 const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
 
 //Добавляет основное меню
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
-const siteMenuComponent = new SiteMenuView();
-
-render(tripControlsNavigation, siteMenuComponent);
 
 const pointsModel = new PointsModel();
 pointsModel.setPoints(pointsList);
@@ -54,7 +52,9 @@ const handleSiteMenuClick = (menuItem) => {
   }
 };
 
-siteMenuComponent.setMenuClickHandler(handleSiteMenuClick);
+const menuPresenter = new Menu(tripControlsNavigation, MenuItem.TABLE, handleSiteMenuClick.bind(this));
+menuPresenter.init();
+
 
 filterPresenter.init();
 routeListPresenter.init();
