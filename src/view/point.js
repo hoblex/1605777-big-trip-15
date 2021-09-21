@@ -1,5 +1,5 @@
 import AbstractView from './abstract';
-import {BLANK_POINT} from "../const";
+import {BLANK_POINT} from '../const';
 
 const createOfferContainer = (optionsList, type) => {
   if (!optionsList.has(type)) {

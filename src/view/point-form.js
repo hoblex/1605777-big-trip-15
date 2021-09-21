@@ -1,25 +1,25 @@
 import dayjs from 'dayjs';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
-import {BLANK_POINT} from '../const';
+import {BLANK_POINT, FORM_TYPES} from '../const';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 // const DATE_FORMAT_STRING = 'DD/MM/YY HH:mm';
 // const formatDay = (date)=>date.format(DATE_FORMAT_STRING);
-
-const FORM_TYPES = [
-  'Taxi',
-  'Bus',
-  'Train',
-  'Ship',
-  'Transport',
-  'Drive',
-  'Flight',
-  'Check-in',
-  'Sightseeing',
-  'Restaurant',
-];
+//
+// const FORM_TYPES = [
+//   'Taxi',
+//   'Bus',
+//   'Train',
+//   'Ship',
+//   'Transport',
+//   'Drive',
+//   'Flight',
+//   'Check-in',
+//   'Sightseeing',
+//   'Restaurant',
+// ];
 
 const CITIES_LIST = ['Amsterdam','Geneva', 'Chamonix'];
 const createCitiesList = (list) => (

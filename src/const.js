@@ -35,3 +35,23 @@ export const BLANK_POINT = {
   photoList: new Array(0),
   description: new Map(),
 };
+
+export const MenuItem = {
+  TABLE: 'Table',
+  STATS: 'Stats',
+};
+
+
+export const Type = {
+  TAXI: 'Taxi',
+  BUS:'Bus',
+  TRAIN:'Train',
+  SHIP:'Ship',
+  DRIVE:'Drive',
+  FLIGHT:'Flight',
+  CHECK_IN:'Check-in',
+  SIGHTSEEING:'Sightseeing',
+  RESTAURANT:'Restaurant',
+};
+
+export const FORM_TYPES = Object.values(Type);
