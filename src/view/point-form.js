@@ -21,6 +21,14 @@ const FORM_TYPES = [
   'Restaurant',
 ];
 
+const CITIES_LIST = ['Amsterdam','Geneva', 'Chamonix'];
+const createCitiesList = (list) => (
+  (list.map((item) => `<option value="${item}"></option>`)).join('')
+);
+const createCitiesPattern = (list) => (
+  (list.map((item) => `${item}`)).join('|')
+);
+
 const xchecked = (value, current)=>value===current?'checked':'';
 const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = pointType) => (typesList.map((item) => `<div class="event__type-item">
                 <input id="event-type-${item.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.toLowerCase()}" ${xchecked(item.toLowerCase(), selectedType)}>
@@ -36,7 +44,7 @@ const createAdditionalOptionsTemplate = (optionList, pointType, selectedType = p
         <div class="event__available-offers">
         ${offers.map(([offerName, offerCost, offerChecked]) =>
     `<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>f
+            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>
             <label class="event__offer-label" for="event-offer-luggage-1">
               <span class="event__offer-title">${offerName}</span>
               &plus;&euro;&nbsp;
@@ -102,11 +110,9 @@ const createPointForm = (data = {}) => {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${selectedType}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1" pattern="${createCitiesPattern(CITIES_LIST)}">
         <datalist id="destination-list-1">
-          <option value="Amsterdam"></option>
-          <option value="Geneva"></option>
-          <option value="Chamonix"></option>
+        ${createCitiesList(CITIES_LIST)}
         </datalist>
       </div>
 
