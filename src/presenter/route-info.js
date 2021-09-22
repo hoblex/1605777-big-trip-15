@@ -7,11 +7,13 @@ export default class routeInfo {
     this._pointsModel = pointsModel;
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._pointsModel.addObserver(this._handleModelEvent);
-
     this._routeInfoComponent = null;
   }
 
   init() {
+    if(this._pointsModel.getPoints().length === 0) {
+      return;
+    }
     this._points = this._pointsModel.getPoints().slice();
     if (this._points.length !== 0) {
       this._tripPrice = this._points.reduce((accumulator, item) => (accumulator + item.pointCost), 0);

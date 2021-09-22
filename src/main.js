@@ -8,12 +8,22 @@ import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filter';
 import {MenuItem, UpdateType, FilterBy} from './const';
 import MenuPresenter from './presenter/menu';
+import Api from './api';
 
-const POINTS_COUNT = 15;
-const pointsList = new Array(POINTS_COUNT).fill().map(() => generatePoint());
+// const POINTS_COUNT = 15;
+// console.log(new Array(POINTS_COUNT).fill().map(() => generatePoint()));
+
+const AUTHORIZATION = 'Basic gL3df6yrPwhf5dp5b';
+const END_POINT = 'https://15.ecmascript.pages.academy/big-trip/';
+const api = new Api(END_POINT, AUTHORIZATION);
+
+//Добавляет основное меню
+const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
 
 const pointsModel = new PointsModel();
-pointsModel.setPoints(pointsList);
+// pointsModel.setPoints(pointsList);
+
+const siteMenu = new MenuPresenter(tripControlsNavigation, pointsModel);
 
 const filterModel = new FilterModel();
 
@@ -31,9 +41,6 @@ const tripEventsContainer = document.querySelector('.trip-events');
 const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, filterModel);
 
 let statisticsComponent = null;
-//Добавляет основное меню
-const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
-const siteMenu = new MenuPresenter(tripControlsNavigation);
 
 const handleSiteMenuClick = (menuItem) => {
   switch (menuItem) {
@@ -54,7 +61,6 @@ const handleSiteMenuClick = (menuItem) => {
 };
 
 siteMenu.init(MenuItem.TABLE, handleSiteMenuClick.bind(this));
-// siteMenuComponent.setMenuClickHandler();
 
 filterPresenter.init();
 routeListPresenter.init();
@@ -65,3 +71,25 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   routeListPresenter.createPoint();
 });
 
+api.getPoints()
+  .then((points) => {
+    const cityList = new Set();
+    const descriptionList = new Map();
+    const additionalOptionsList = new Map();
+    points.forEach((item)=> cityList.add(item.city));
+    points.forEach((item) => item.cityList = cityList);
+
+    points.forEach((item) => descriptionList.set(item.destination[0], item.destination[1]));
+    points.forEach((item) => item.description = descriptionList);
+
+    points.forEach((item) => additionalOptionsList.set(item.pointType, item.offers.map((one) => Object.values(one))));
+    points.forEach((item) => item.additionalOptions = additionalOptionsList);
+
+    return points;
+  })
+  .then((points) => {
+    pointsModel.setPoints(UpdateType.INIT, points);
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+  });

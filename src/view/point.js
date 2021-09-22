@@ -1,5 +1,6 @@
 import AbstractView from './abstract';
 import {BLANK_POINT} from '../const';
+import dayjs from 'dayjs';
 
 const createOfferContainer = (optionsList, type) => {
   if (!optionsList.has(type)) {
@@ -16,6 +17,12 @@ const createOfferContainer = (optionsList, type) => {
   }
 };
 
+const generateTimeDuration = (time) => {
+  const {timeBegin , timeEnd} = time;
+  const timeDuration = dayjs.duration(timeEnd.diff(timeBegin));
+  return timeDuration;
+};
+
 const createTripPoint = (point = BLANK_POINT) => {
   const {
     pointType,
@@ -26,6 +33,7 @@ const createTripPoint = (point = BLANK_POINT) => {
     isFavorite,
   } = point;
 
+  time.timeDuration = generateTimeDuration(time);
   const favoriteClassName = isFavorite ?
     'event__favorite-btn--active' :
     '';

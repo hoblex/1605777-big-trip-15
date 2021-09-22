@@ -7,6 +7,7 @@ import PointNewPresenter from './point-new.js';
 import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils/point';
 import {SortType, UpdateType, UserAction, FilterBy} from '../const';
 import {filter} from '../utils/filter.js';
+import LoadingView from '../view/loading.js';
 
 export default class RouteList {
   constructor(routeListContainer, pointsModel, filterModel) {
@@ -16,11 +17,13 @@ export default class RouteList {
     this._pointPresenters = new Map();
     this._filterType = FilterBy.EVERYTHING;
     this._currentSortType = SortType.DAY;
+    this._isLoading = true;
 
     this._sortComponent = null;
     this._noPointsComponent = null;
 
     this._tripPointsListCopmonent = new TripPointsListView();
+    this._loadingComponent = new LoadingView();
 
     this._handleViewAction = this._handleViewAction.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
@@ -100,6 +103,11 @@ export default class RouteList {
         this._clearRouteList({resetSortType: true});
         this._renderRouteList();
         break;
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderRouteList();
+        break;
     }
   }
 
@@ -135,6 +143,10 @@ export default class RouteList {
     points.forEach((point) => this._renderPoint(point));
   }
 
+  _renderLoading() {
+    render(this._routeListContainer, this._loadingComponent, RenderPosition.AFTER_BEGIN);
+  }
+
   _renderNoPoints() {
     this._noPointsComponent = new ListEmptyView(this._filterType);
     render(this._routeListContainer, this._noPointsComponent);
@@ -146,6 +158,7 @@ export default class RouteList {
     this._pointNewPresenter.destroy();
 
     remove(this._sortComponent);
+    remove(this._loadingComponent);
 
     if (this._noPointsComponent) {
       remove(this._noPointsComponent);
@@ -157,6 +170,11 @@ export default class RouteList {
   }
 
   _renderRouteList() {
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
+
     const points = this._getPoints();
     const pointCount = points.length;
 
