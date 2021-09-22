@@ -15,23 +15,35 @@ const createMenuTemplateView = (current = MenuItem.TABLE) => (
 );
 
 export default class SiteMenu extends AbstractView {
-  constructor() {
+  constructor(menuCurrent) {
     super();
-    this._menuClickHandler = this._menuClickHandler.bind(this);
-    this._current = MenuItem.TABLE;
+    this._menuCurrent = menuCurrent;
+    this._menuClickTableHandler = this._menuClickTableHandler.bind(this);
+    this._menuClickStatsHandler = this._menuClickStatsHandler.bind(this);
   }
 
   getTemplate() {
-    return createMenuTemplateView(this._current);
+    // console.log(this._menuCurrent);
+    return createMenuTemplateView(this._menuCurrent);
   }
 
-  _menuClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.menuClick(evt.target.value);
+  _menuClickTableHandler(evt) {
+    if(this._menuCurrent !== MenuItem.TABLE) {
+      evt.preventDefault();
+      this._callback.menuClick(MenuItem.TABLE);
+    }
+  }
+
+  _menuClickStatsHandler(evt) {
+    if(this._menuCurrent !== MenuItem.STATS) {
+      evt.preventDefault();
+      this._callback.menuClick(MenuItem.STATS);
+    }
   }
 
   setMenuClickHandler(callback) {
     this._callback.menuClick = callback;
-    this.getElement().querySelector('.trip-tabs__btn').addEventListener('click', this._menuClickHandler);
+    this.getElement().querySelector('.trip-tabs :first-child').addEventListener('click', this._menuClickTableHandler);
+    this.getElement().querySelector('.trip-tabs :last-child').addEventListener('click', this._menuClickStatsHandler);
   }
 }

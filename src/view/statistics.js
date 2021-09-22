@@ -26,7 +26,7 @@ const renderMoneyByChart = (moneyCtx, points) => new Chart(moneyCtx, {
         color: '#000000',
         anchor: 'end',
         align: 'start',
-        formatter: points.map((point) => point.pointCost),
+        formatter: (pointCost) =>`€ ${pointCost}`,
       },
     },
     title: {
@@ -92,7 +92,7 @@ const renderTypeByChart = (typeCtx, points) => new Chart(typeCtx, {
         color: '#000000',
         anchor: 'end',
         align: 'start',
-        formatter: FORM_TYPES.map((item) => `${countAmountByType(points, item)}k`),
+        formatter: (val) => `${val}k`,
       },
     },
     title: {
@@ -158,7 +158,7 @@ const renderDurationByChart = (typeCtx, points) => new Chart(typeCtx, {
         color: '#000000',
         anchor: 'end',
         align: 'start',
-        formatter: FORM_TYPES.map((item) => dayjs(countAmountByType(points, item)).format('HH')),
+        formatter: (val) => `${dayjs.duration(val * 60  * 1000).format('HH')}H ${dayjs.duration(val * 60 * 1000).format('mm')}M`,
       },
     },
     title: {
@@ -227,8 +227,8 @@ export default class Statistics extends SmartView {
     this._data = points;
 
     this._moneyChart = null;
-    // this._typeChart = null;
-    // this._timeChart = null;
+    this._typeChart = null;
+    this._timeChart = null;
 
     this._setCharts();
   }
@@ -250,6 +250,14 @@ export default class Statistics extends SmartView {
       this._moneyChart = null;
     }
 
+    if (this._typeChart !== null) {
+      this._typeChart = null;
+    }
+
+    if (this._timeChart !== null) {
+      this._timeChart = null;
+    }
+
     const BAR_HEIGHT = 55;
     const moneyCtx = this.getElement().querySelector('#money');
     moneyCtx.height = BAR_HEIGHT * 5;
@@ -259,8 +267,9 @@ export default class Statistics extends SmartView {
 
     const durationCtx = this.getElement().querySelector('#time-spend');
     durationCtx.height = BAR_HEIGHT * 5;
+
     this._moneyChart = renderMoneyByChart(moneyCtx, this._data);
-    this._moneyChart = renderTypeByChart(typeCtx, this._data);
+    this._typeChart = renderTypeByChart(typeCtx, this._data);
     this._timeChart = renderDurationByChart(durationCtx, this._data);
 
   }
