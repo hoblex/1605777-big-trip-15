@@ -23,17 +23,22 @@ export default class SiteMenu extends AbstractView {
   }
 
   getTemplate() {
+    // console.log(this._menuCurrent);
     return createMenuTemplateView(this._menuCurrent);
   }
 
   _menuClickTableHandler(evt) {
-    evt.preventDefault();
-    this._callback.menuClick(MenuItem.TABLE);
+    if(this._menuCurrent !== MenuItem.TABLE) {
+      evt.preventDefault();
+      this._callback.menuClick(MenuItem.TABLE);
+    }
   }
 
   _menuClickStatsHandler(evt) {
-    evt.preventDefault();
-    this._callback.menuClick(MenuItem.STATS);
+    if(this._menuCurrent !== MenuItem.STATS) {
+      evt.preventDefault();
+      this._callback.menuClick(MenuItem.STATS);
+    }
   }
 
   setMenuClickHandler(callback) {
