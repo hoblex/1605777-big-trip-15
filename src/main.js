@@ -1,5 +1,5 @@
 import StatisticsView from './view/statistics';
-import {generatePoint} from './mock/point';
+// import {generatePoint} from './mock/point';
 import {render, remove} from './utils/render.js';
 import RouteList from './presenter/route-list';
 import RouteInfo from './presenter/route-info';

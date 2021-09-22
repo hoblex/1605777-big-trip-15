@@ -49,9 +49,7 @@ const createDescription = (descriptionList, pointCity, selectedCity = pointCity)
   }
 };
 
-const createPhotosTemplate = (photoList) => {
-  return photoList.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
-};
+const createPhotosTemplate = (photoList) => photoList.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
 
 const createPointForm = (data = {}) => {
   const {
