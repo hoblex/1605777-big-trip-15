@@ -1,6 +1,8 @@
 import AbstractView from './abstract';
 import {BLANK_POINT} from '../const';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 const createOfferContainer = (optionsList, type) => {
   if (!optionsList.has(type)) {
@@ -41,8 +43,9 @@ const createTripPoint = (point = BLANK_POINT) => {
   const getEventTimeDuration = () => {
     if (time.timeDuration !== null) {
       const eventTimeDuration = time.timeDuration.hours() === 0 ?
-        `${time.timeDuration.format('mm')}M` :
-        `${time.timeDuration.format('HH')}H ${ time.timeDuration.format('mm')}M`;
+        `${time.timeDuration.minutes()}M` :
+        `${time.timeDuration.hours()}H ${ time.timeDuration.minutes()}M`;
+      console.log(time.timeDuration);
       return eventTimeDuration;
     } else {
       return '0M';

@@ -89,7 +89,4 @@ api.getPoints()
   })
   .then((points) => {
     pointsModel.setPoints(UpdateType.INIT, points);
-  })
-  .catch(() => {
-    pointsModel.setPoints(UpdateType.INIT, []);
   });

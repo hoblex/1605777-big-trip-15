@@ -2,7 +2,7 @@ import SmartView from './smart.js';
 import Chart from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {FORM_TYPES} from '../const';
-import {countAmountByType, countDurationByType, countMoneyByType} from '../utils/statistics';
+import {countAmountByType, countDurationByTime, countMoneyByType} from '../utils/statistics';
 import dayjs from 'dayjs';
 
 const renderMoneyByChart = (moneyCtx, points) => new Chart(moneyCtx, {
@@ -143,7 +143,7 @@ const renderDurationByChart = (typeCtx, points) => new Chart(typeCtx, {
   data: {
     labels: FORM_TYPES.map((item) => item.toUpperCase()),
     datasets: [{
-      data: FORM_TYPES.map((item) => countDurationByType(points, item)),
+      data: FORM_TYPES.map((item) => countDurationByTime(points, item)),
       backgroundColor: '#ffffff',
       hoverBackgroundColor: '#ffffff',
       anchor: 'start',
@@ -158,7 +158,7 @@ const renderDurationByChart = (typeCtx, points) => new Chart(typeCtx, {
         color: '#000000',
         anchor: 'end',
         align: 'start',
-        formatter: (val) => `${dayjs.duration(val * 60  * 1000).format('HH')}H ${dayjs.duration(val * 60 * 1000).format('mm')}M`,
+        formatter: (val) => `${dayjs.duration(val).days()}D ${dayjs.duration(val).hours()}H ${dayjs.duration(val).minutes()}M`,
       },
     },
     title: {
