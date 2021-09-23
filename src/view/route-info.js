@@ -22,9 +22,7 @@ const createCityList = (cityList) => {
 
 };
 
-export const createTripInfo = (cityList, dateList, price) => {
-
-  return `<section class="trip-main__trip-info  trip-info">
+export const createTripInfo = (cityList, dateList, price) => (`<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
     <h1 class="trip-info__title">${createCityList(cityList)}</h1>
     <p class="trip-info__dates">${createDateInfo(dateList)}</p>
@@ -32,8 +30,7 @@ export const createTripInfo = (cityList, dateList, price) => {
     <p class="trip-info__cost">
     Total: &euro;&nbsp;<span class="trip-info__cost-value">${price}</span>
    </p>
-    </section>`;
-};
+    </section>`);
 
 export default class RouteInfo extends AbstractView {
   constructor(cityList, dateList, price) {
