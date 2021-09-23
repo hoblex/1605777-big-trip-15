@@ -158,7 +158,15 @@ const renderDurationByChart = (typeCtx, points) => new Chart(typeCtx, {
         color: '#000000',
         anchor: 'end',
         align: 'start',
-        formatter: (val) => `${dayjs.duration(val).days()}D ${dayjs.duration(val).hours()}H ${dayjs.duration(val).minutes()}M`,
+        formatter: function (val) {
+          if (dayjs.duration(val).days() > 0) {
+            return `${dayjs.duration(val).days()}D ${dayjs.duration(val).hours()}H ${dayjs.duration(val).minutes()}M`;
+          } else if (dayjs.duration(val).days() === 0 && dayjs.duration(val).hours() > 0) {
+            return  `${dayjs.duration(val).hours()}H ${dayjs.duration(val).minutes()}M`;
+          } else {
+            return `${dayjs.duration(val).minutes()}M`;
+          }
+        },
       },
     },
     title: {
