@@ -9,7 +9,7 @@ export const createTripInfo = (cityList, dateList, price) => {
   const arr = Array.from(dateList);
   const [tripBegin] = arr[0];
   const [, tripEnd] = arr[arr.length - 1];
-  const tripDateBeginEnd = dayjs(tripBegin).diff(tripEnd, 'month') === 0
+  const tripDateBeginEnd = tripBegin.month() === tripEnd.month()
     ? `${dayjs(tripBegin).format(BEGINNING_FORMAT_STRING)}&nbsp;&mdash;&nbsp;${dayjs(tripEnd).format(END_FORMAT_SAME_MONTH)}`
     : `${dayjs(tripBegin).format(BEGINNING_FORMAT_STRING)}&nbsp;&mdash;&nbsp;${dayjs(tripEnd).format(END_FORMAT_OTHER_MONTH)}`;
 

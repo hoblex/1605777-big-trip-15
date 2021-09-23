@@ -45,7 +45,6 @@ const createTripPoint = (point = BLANK_POINT) => {
       const eventTimeDuration = time.timeDuration.hours() === 0 ?
         `${time.timeDuration.minutes()}M` :
         `${time.timeDuration.hours()}H ${ time.timeDuration.minutes()}M`;
-      console.log(time.timeDuration);
       return eventTimeDuration;
     } else {
       return '0M';
