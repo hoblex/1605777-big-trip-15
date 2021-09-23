@@ -1,14 +1,15 @@
 import dayjs from 'dayjs';
 import AbstractView from './abstract';
+import {sortDatePointUp} from '../utils/point';
 
 const BEGINNING_FORMAT_STRING ='MMM DD';
 const END_FORMAT_SAME_MONTH = 'DD';
 const END_FORMAT_OTHER_MONTH ='MMM DD';
 
-const createDateInfo = (dateList) => {
-  const dateArray = Array.from(dateList);
-  const [tripBegin] = dateArray[0];
-  const [, tripEnd] = dateArray[dateArray.length - 1];
+const createDateInfo = (pointsList) => {
+  const dateArray = Array.from(pointsList).sort(sortDatePointUp);
+  const tripBegin = dateArray[0].time.timeBegin;
+  const tripEnd = dateArray[dateArray.length - 1].time.timeEnd;
   const tripDateBeginEnd = tripBegin.month() === tripEnd.month()
     ? `${dayjs(tripBegin).format(BEGINNING_FORMAT_STRING)}&nbsp;&mdash;&nbsp;${dayjs(tripEnd).format(END_FORMAT_SAME_MONTH)}`
     : `${dayjs(tripBegin).format(BEGINNING_FORMAT_STRING)}&nbsp;&mdash;&nbsp;${dayjs(tripEnd).format(END_FORMAT_OTHER_MONTH)}`;
@@ -16,16 +17,16 @@ const createDateInfo = (dateList) => {
   return tripDateBeginEnd;
 };
 
-const createCityList = (cityList) => {
-  const cityArray = Array.from(cityList);
-  return [cityArray[0], '...', cityArray[cityArray.length - 1]].join(' &mdash; ');
+const createCityList = (pointsList) => {
+  const cityArray = Array.from(pointsList).sort(sortDatePointUp);
+  return [cityArray[0].city, '...', cityArray[cityArray.length - 1].city].join(' &mdash; ');
 
 };
 
-export const createTripInfo = (cityList, dateList, price) => (`<section class="trip-main__trip-info  trip-info">
+export const createTripInfo = (points, price) => (`<section class="trip-main__trip-info  trip-info">
     <div class="trip-info__main">
-    <h1 class="trip-info__title">${createCityList(cityList)}</h1>
-    <p class="trip-info__dates">${createDateInfo(dateList)}</p>
+    <h1 class="trip-info__title">${createCityList(points)}</h1>
+    <p class="trip-info__dates">${createDateInfo(points)}</p>
     </div>
     <p class="trip-info__cost">
     Total: &euro;&nbsp;<span class="trip-info__cost-value">${price}</span>
@@ -33,14 +34,13 @@ export const createTripInfo = (cityList, dateList, price) => (`<section class="t
     </section>`);
 
 export default class RouteInfo extends AbstractView {
-  constructor(cityList, dateList, price) {
+  constructor(points, price) {
     super();
-    this._cityList = cityList;
-    this._dateList = dateList;
+    this._cityList = points;
     this._price = price;
   }
 
   getTemplate() {
-    return createTripInfo(this._cityList, this._dateList, this._price);
+    return createTripInfo(this._cityList, this._price);
   }
 }

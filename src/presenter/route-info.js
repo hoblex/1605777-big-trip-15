@@ -18,11 +18,7 @@ export default class routeInfo {
     if (this._points.length !== 0) {
       this._tripPrice = this._points.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
       const prevRouteInfoComponent = this._routeInfoComponent;
-      this._routeCityList = new Set();
-      this._routeDateList = new Set();
-      this._points.forEach((item) => this._routeCityList.add(item.city));
-      this._points.forEach((item) => this._routeDateList.add([item.time.timeBegin, item.time.timeEnd]));
-      this._routeInfoComponent = new RouteInfo(this._routeCityList, this._routeDateList, this._tripPrice);
+      this._routeInfoComponent = new RouteInfo(this._points, this._tripPrice);
 
       if (prevRouteInfoComponent === null) {
         render(this._routeInfoContainer, this._routeInfoComponent, RenderPosition.AFTER_BEGIN);
