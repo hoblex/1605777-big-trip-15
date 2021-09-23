@@ -4,7 +4,7 @@ import ListEmptyView from '../view/list-empty';
 import {render, RenderPosition, remove} from '../utils/render';
 import PointPresenter from './point';
 import PointNewPresenter from './point-new.js';
-import {sortTimePointDown, sortDatePointDown, sortPricePointDown} from '../utils/point';
+import {sortTimePointDown, sortDatePointUp, sortPricePointDown} from '../utils/point';
 import {SortType, UpdateType, UserAction, FilterBy} from '../const';
 import {filter} from '../utils/filter.js';
 import LoadingView from '../view/loading.js';
@@ -62,7 +62,7 @@ export default class RouteList {
 
     switch (this._currentSortType) {
       case SortType.DAY:
-        return filteredPoints.sort(sortDatePointDown);
+        return filteredPoints.sort(sortDatePointUp);
       case SortType.TIME:
         return filteredPoints.sort(sortTimePointDown);
       case SortType.PRICE:
