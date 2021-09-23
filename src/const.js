@@ -37,7 +37,7 @@ export const BLANK_POINT = {
   description: new Map(),
 };
 
-export const MenuItem = {
+export const TableStatsItems = {
   TABLE: 'Table',
   STATS: 'Stats',
 };

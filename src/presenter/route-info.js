@@ -1,7 +1,7 @@
 import {remove, render, RenderPosition, replace} from '../utils/render';
-import RouteInfo from '../view/route-info';
+import RouteInfoView from '../view/route-info';
 
-export default class routeInfo {
+export default class RouteInfo {
   constructor(routeInfoContainer, pointsModel) {
     this._routeInfoContainer = routeInfoContainer;
     this._pointsModel = pointsModel;
@@ -18,7 +18,7 @@ export default class routeInfo {
     if (this._points.length !== 0) {
       this._tripPrice = this._points.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
       const prevRouteInfoComponent = this._routeInfoComponent;
-      this._routeInfoComponent = new RouteInfo(this._points, this._tripPrice);
+      this._routeInfoComponent = new RouteInfoView(this._points, this._tripPrice);
 
       if (prevRouteInfoComponent === null) {
         render(this._routeInfoContainer, this._routeInfoComponent, RenderPosition.AFTER_BEGIN);
