@@ -171,8 +171,6 @@ export default class PointForm extends SmartView {
 
   _setDatepicker() {
     if (this._datepicker) {
-      // В случае обновления компонента удаляем вспомогательные DOM-элементы,
-      // которые создает flatpickr при инициализации
       this._datepicker.destroy();
       this._datepicker = null;
     }
@@ -183,7 +181,7 @@ export default class PointForm extends SmartView {
         enableTime: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeBegin,
-        onChange: this._timeBeginChangeHandler, // На событие flatpickr передаём наш колбэк
+        onChange: this._timeBeginChangeHandler,
       },
     );
 
@@ -193,7 +191,7 @@ export default class PointForm extends SmartView {
         enableTime: true,
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.timeEnd,
-        onChange: this._timeEndChangeHandler, // На событие flatpickr передаём наш колбэк
+        onChange: this._timeEndChangeHandler,
       },
     );
   }

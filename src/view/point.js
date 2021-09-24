@@ -21,8 +21,7 @@ const createOfferContainer = (optionsList, type) => {
 
 const generateTimeDuration = (time) => {
   const {timeBegin , timeEnd} = time;
-  const timeDuration = dayjs.duration(timeEnd.diff(timeBegin));
-  return timeDuration;
+  return dayjs.duration(timeEnd.diff(timeBegin));
 };
 
 const createTripPoint = (point = BLANK_POINT) => {
@@ -42,10 +41,9 @@ const createTripPoint = (point = BLANK_POINT) => {
 
   const getEventTimeDuration = () => {
     if (time.timeDuration !== null) {
-      const eventTimeDuration = time.timeDuration.hours() === 0 ?
+      return time.timeDuration.hours() === 0 ?
         `${time.timeDuration.minutes()}M` :
         `${time.timeDuration.hours()}H ${ time.timeDuration.minutes()}M`;
-      return eventTimeDuration;
     } else {
       return '0M';
     }

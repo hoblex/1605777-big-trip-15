@@ -109,7 +109,6 @@ export const generatePoint = () => {
     time,
     additionalOptions,
     pointCost,
-    // fullPointCost,
     isFavorite: Boolean(getRandomInteger(0, 1)),
     description: generateDescriptionPhrases(CITIES, DESCRIPTION_PHRASES),
     photoList: generatePhotoList(),
