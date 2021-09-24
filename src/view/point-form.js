@@ -6,10 +6,10 @@ import {BLANK_POINT, FORM_TYPES} from '../const';
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
 const createCitiesList = (list) => (
-  (Array.from(list).map((item) => `<option value="${item}"></option>`)).join('')
+  (Array.from(list.keys()).map((item) => `<option value="${item}"></option>`)).join('')
 );
 const createCitiesPattern = (list) => (
-  (Array.from(list).map((item) => `${item}`)).join('|')
+  (Array.from(list.keys()).map((item) => `${item}`)).join('|')
 );
 
 const xchecked = (value, current)=>value===current?'checked':'';
@@ -40,30 +40,21 @@ const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) 
     </section>`;
 };
 
-const createDescription = (descriptionList, pointCity, selectedCity = pointCity) => {
-  if (descriptionList.has(selectedCity)) {
-    return descriptionList.get(selectedCity);
-  } else {
-    return '';
-  }
-};
-
-const createPhotosTemplate = (photoList) => photoList.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
+const createPhotosTemplate = (photoList) => photoList.pictures.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
 
 const createPointForm = (data = {}) => {
   const {
     pointType = 'Taxi',
     city = '',
-    cityList,
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = new Map(),
-    additionalOptionsList,
+    fullAdditionalOptionsList,
+    fullDestinationsDescriptionList,
     pointCost = 0,
-    photoList = new Array(0),
-    description = new Map(),
     selectedType = pointType,
     selectedCity = city,
   } = data;
+
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -86,9 +77,9 @@ const createPointForm = (data = {}) => {
         <label class="event__label  event__type-output" for="event-destination-1">
           ${selectedType}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1" pattern="${createCitiesPattern(cityList)}">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1" pattern="${createCitiesPattern(fullDestinationsDescriptionList)}">
         <datalist id="destination-list-1">
-        ${createCitiesList(cityList)}
+        ${createCitiesList(fullDestinationsDescriptionList)}
         </datalist>
       </div>
 
@@ -115,14 +106,14 @@ const createPointForm = (data = {}) => {
       </button>
     </header>
     <section class="event__details">
-    ${createAdditionalOptionsTemplate(additionalOptionsList.get(selectedType), additionalOptions)}
+    ${createAdditionalOptionsTemplate(fullAdditionalOptionsList.get(selectedType), additionalOptions)}
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${createDescription(description, city, selectedCity)}</p>
+        <p class="event__destination-description">${fullDestinationsDescriptionList.get(selectedCity).description}</p>
 
         <div class="event__photos-container">
           <div class="event__photos-tape">
-          ${createPhotosTemplate(photoList)}
+          ${createPhotosTemplate(fullDestinationsDescriptionList.get(selectedCity))}
           </div>
         </div>
       </section>

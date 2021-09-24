@@ -69,9 +69,6 @@ export default class Points extends AbstractObserver {
         time: Object.fromEntries([['timeBegin', dayjs(point['date_from'])], ['timeEnd', dayjs(point['date_to'])], ['timeDuration', dayjs.duration(dayjs(point['date_to']).diff(dayjs(point['date_from'])))]]),
         pointCost: point['base_price'],
         isFavorite: point['is_favorite'],
-        photoList: point['destination']['pictures'],
-        destination: [point['destination']['name'], point['destination']['description']],
-        offers: point['offers'],
       },
     );
 

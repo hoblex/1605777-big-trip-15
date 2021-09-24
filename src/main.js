@@ -62,13 +62,7 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
 });
 
 const getPointsPromise = api.getPoints()
-  .then((points) => {
-    const cityList = new Set();
-    points.forEach((item)=> cityList.add(item.city));
-    points.forEach((item) => item.cityList = cityList);
-
-    return points;
-  });
+  .then((points) => points);
 
 const getDestinationsPromise = api.getDestination()
   .then((destinations) => {
@@ -92,8 +86,8 @@ const getOffersPromise = api.getOffers()
 Promise.all([getPointsPromise, getDestinationsPromise, getOffersPromise])
   .then((values) => {
     values[0].forEach((item) => {
-      item.destinationsDescriptionList = values[1];
-      item.additionalOptionsList = values[2];
+      item.fullDestinationsDescriptionList = values[1];
+      item.fullAdditionalOptionsList = values[2];
     });
     pointsModel.setPoints(UpdateType.INIT, values[0]);
   });
