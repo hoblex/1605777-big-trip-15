@@ -19,7 +19,7 @@ const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = po
             </div>`).join(''));
 
 const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) => {
-  optionsList.forEach((item) => item.isChecked = choosedAdditionalOptions.some((elem) => item.title === elem.title));
+  optionsList.forEach((item) => item.isChecked = choosedAdditionalOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price)));
   return `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
