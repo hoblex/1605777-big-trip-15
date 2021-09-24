@@ -18,27 +18,26 @@ const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = po
                 <label class="event__type-label  event__type-label--${item.toLowerCase()}" for="event-type-${item.toLowerCase()}-1">${item}</label>
             </div>`).join(''));
 
-const createAdditionalOptionsTemplate = (optionList, pointType, selectedType = pointType) => {
-  if (optionList.has(selectedType)) {
-    const offers  = optionList.get(selectedType);
-    return `<section class="event__section  event__section--offers">
-        <h3 class="event__section-title  event__section-title--offers">Offers</h3>
-        <div class="event__available-offers">
-        ${offers.map(([offerName, offerCost, offerChecked]) =>
-    `<div class="event__offer-selector">
-            <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>
-            <label class="event__offer-label" for="event-offer-luggage-1">
-              <span class="event__offer-title">${offerName}</span>
-              &plus;&euro;&nbsp;
-              <span class="event__offer-price">${offerCost}</span>
-            </label>
-          </div>`,
-  ).join('')}
+const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) => {
+  optionsList.forEach((item) => item.isChecked = choosedAdditionalOptions.some((elem) => item.title === elem.title));
+  return `<section class="event__section  event__section--offers">
+      <h3 class="event__section-title  event__section-title--offers">Offers</h3>
+      <div class="event__available-offers">
+      ${optionsList.map((item) => {
+    const offerName = item.title;
+    const offerCost= item.price;
+    const offerChecked = item.isChecked;
+    return `<div class="event__offer-selector">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>
+          <label class="event__offer-label" for="event-offer-luggage-1">
+            <span class="event__offer-title">${offerName}</span>
+            &plus;&euro;&nbsp;
+            <span class="event__offer-price">${offerCost}</span>
+          </label>
+        </div>`;
+  }).join('')}
     </div>
     </section>`;
-  } else {
-    return '';
-  }
 };
 
 const createDescription = (descriptionList, pointCity, selectedCity = pointCity) => {
@@ -58,6 +57,7 @@ const createPointForm = (data = {}) => {
     cityList,
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = new Map(),
+    additionalOptionsList,
     pointCost = 0,
     photoList = new Array(0),
     description = new Map(),
@@ -115,7 +115,7 @@ const createPointForm = (data = {}) => {
       </button>
     </header>
     <section class="event__details">
-    ${createAdditionalOptionsTemplate(additionalOptions, pointType, selectedType)}
+    ${createAdditionalOptionsTemplate(additionalOptionsList.get(selectedType), additionalOptions)}
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
         <p class="event__destination-description">${createDescription(description, city, selectedCity)}</p>

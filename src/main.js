@@ -61,22 +61,39 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   routeListPresenter.createPoint();
 });
 
-api.getPoints()
+const getPointsPromise = api.getPoints()
   .then((points) => {
     const cityList = new Set();
-    const descriptionList = new Map();
-    const additionalOptionsList = new Map();
     points.forEach((item)=> cityList.add(item.city));
     points.forEach((item) => item.cityList = cityList);
 
-    points.forEach((item) => descriptionList.set(item.destination[0], item.destination[1]));
-    points.forEach((item) => item.description = descriptionList);
-
-    points.forEach((item) => additionalOptionsList.set(item.pointType, item.offers.map((one) => Object.values(one))));
-    points.forEach((item) => item.additionalOptions = additionalOptionsList);
-
     return points;
-  })
-  .then((points) => {
-    pointsModel.setPoints(UpdateType.INIT, points);
+  });
+
+const getDestinationsPromise = api.getDestination()
+  .then((destinations) => {
+    const descriptionListMap = new Map();
+    destinations.forEach((item) => descriptionListMap.set(item.name, Object.assign(
+      {},
+      {
+        description: item.description,
+        pictures: item.pictures,
+      })));
+    return descriptionListMap;
+  });
+
+const getOffersPromise = api.getOffers()
+  .then((offers) => {
+    const offersMap = new Map();
+    offers.forEach((item) => offersMap.set(item.type, item.offers));
+    return offersMap;
+  });
+
+Promise.all([getPointsPromise, getDestinationsPromise, getOffersPromise])
+  .then((values) => {
+    values[0].forEach((item) => {
+      item.destinationsDescriptionList = values[1];
+      item.additionalOptionsList = values[2];
+    });
+    pointsModel.setPoints(UpdateType.INIT, values[0]);
   });

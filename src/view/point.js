@@ -4,19 +4,18 @@ import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
-const createOfferContainer = (optionsList, type) => {
-  if (!optionsList.has(type)) {
-    return '';
-  } else {
-    const offers = optionsList.get(type);
-    return `<ul class="event__selected-offers">
-    ${offers.map(([offerName, offerPrice]) =>  `<li class="event__offer">
+const createOfferContainer = (optionsList) => {
+  return `<ul class="event__selected-offers">
+  ${optionsList.map((item) =>  {
+    const offerName = item.title;
+    const offerPrice = item.price;
+    return `<li class="event__offer">
        <span class="event__offer-title">${offerName}</span>
        &plus;&euro;&nbsp;
        <span class="event__offer-price">${offerPrice}</span>
-     </li>`).join('')}
+     </li>`;
+  }).join('')}
   </ul>`;
-  }
 };
 
 const generateTimeDuration = (time) => {

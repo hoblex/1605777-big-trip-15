@@ -9,8 +9,8 @@ export default class Points extends AbstractObserver {
     this._points = [];
   }
 
-  setPoints(updateType, points) {
-    this._points = points.slice();
+  setPoints(updateType, pointsList) {
+    this._points = pointsList.slice();
     this._notify(updateType);
   }
 
@@ -64,7 +64,7 @@ export default class Points extends AbstractObserver {
       point,
       {
         pointType: point['type'],
-        additionalOptions: new Map(),
+        additionalOptions: point['offers'],
         city: point['destination']['name'],
         time: Object.fromEntries([['timeBegin', dayjs(point['date_from'])], ['timeEnd', dayjs(point['date_to'])], ['timeDuration', dayjs.duration(dayjs(point['date_to']).diff(dayjs(point['date_from'])))]]),
         pointCost: point['base_price'],
