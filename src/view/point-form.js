@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
-import {BLANK_POINT, FORM_TYPES} from '../const';
+import {BLANK_POINT, FORM_TYPES, UpdateType, UserAction} from '../const';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
@@ -28,8 +28,8 @@ const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) 
     const offerCost= item.price;
     const offerChecked = item.isChecked;
     return `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-luggage-1" type="checkbox" name="event-offer-luggage" ${offerChecked ? 'checked' : ''}>
-          <label class="event__offer-label" for="event-offer-luggage-1">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-1" type="checkbox" name="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-1" ${offerChecked ? 'checked' : ''}>
+          <label class="event__offer-label" for="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-1">
             <span class="event__offer-title">${offerName}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offerCost}</span>
@@ -136,6 +136,7 @@ export default class PointForm extends SmartView {
     this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
     this._selectedCityFocusOutHandler = this._selectedCityFocusOutHandler.bind(this);
+    this._changeAdditionOptionClickHandler = this._changeAdditionOptionClickHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepicker();
@@ -231,19 +232,41 @@ export default class PointForm extends SmartView {
     });
   }
 
+  _changeAdditionOptionClickHandler(evt) {
+    evt.preventDefault();
+    // this._changeData(
+    //   UserAction.UPDATE_POINT,
+    //   UpdateType.PATCH,
+    //   Object.assign(
+    //     {},
+    //     this._point,
+    //     {
+    //       isFavorite: !this._point.isFavorite,
+    //     },
+    //   ),
+    // );
+  }
+
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatepicker();
-    this.setFormSubmitHandler(this._callback.formSubmit);
     this.setFormClickCloseHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setChangeAdditionOptionHandler(this._callback.optionClick);
   }
 
   _setInnerHandlers() {
+    console.log(this.getElement());
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
+    this.getElement().querySelector('.event__offer-checkbox').addEventListener('click', this._changeAdditionOptionClickHandler);
+  }
+
+  setChangeAdditionOptionHandler(callback) {
+    this._callback.optionClick = callback;
+    this.getElement().querySelector('.event__offer-selector').addEventListener('click', this._changeAdditionOptionClickHandler);
   }
 
   setFormSubmitHandler(callback) {
