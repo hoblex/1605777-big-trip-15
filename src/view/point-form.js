@@ -127,7 +127,7 @@ export default class PointForm extends SmartView {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
-
+    this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType);
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
     this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
@@ -216,7 +216,7 @@ export default class PointForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+    this._callback.formSubmit(PointForm.parseDataToPoint(this._data, this._fullAdditionOptionsList));
   }
 
   _selectedCityEnterKeyDownHandler (evt) {
@@ -232,19 +232,11 @@ export default class PointForm extends SmartView {
     });
   }
 
-  _changeAdditionOptionClickHandler(evt) {
-    evt.preventDefault();
-    // this._changeData(
-    //   UserAction.UPDATE_POINT,
-    //   UpdateType.PATCH,
-    //   Object.assign(
-    //     {},
-    //     this._point,
-    //     {
-    //       isFavorite: !this._point.isFavorite,
-    //     },
-    //   ),
-    // );
+  _changeAdditionOptionClickHandler(evt, list, actualList, place) {
+    return function(evt) {
+      actualList[Array.from(list).indexOf(evt.target)].isChecked = !actualList[Array.from(list).indexOf(evt.target)].isChecked;
+      place._fullAdditionOptionsList = actualList.filter((item) => item.isChecked).slice();
+    };
   }
 
   restoreHandlers() {
@@ -252,21 +244,17 @@ export default class PointForm extends SmartView {
     this._setDatepicker();
     this.setFormClickCloseHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
-    this.setChangeAdditionOptionHandler(this._callback.optionClick);
   }
 
   _setInnerHandlers() {
-    console.log(this.getElement());
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    this.getElement().querySelector('.event__offer-checkbox').addEventListener('click', this._changeAdditionOptionClickHandler);
-  }
-
-  setChangeAdditionOptionHandler(callback) {
-    this._callback.optionClick = callback;
-    this.getElement().querySelector('.event__offer-selector').addEventListener('click', this._changeAdditionOptionClickHandler);
+    if (this._fullAdditionOptionsList.length) {
+      const additionOptionsSelectors = this.getElement().querySelectorAll('.event__offer-checkbox');
+      this.getElement().querySelectorAll('.event__offer-checkbox').forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullAdditionOptionsList, this)));
+    }
   }
 
   setFormSubmitHandler(callback) {
@@ -300,14 +288,16 @@ export default class PointForm extends SmartView {
     );
   }
 
-  static parseDataToPoint(data) {
+  static parseDataToPoint(data, optionList) {
     data = Object.assign({}, data);
     data.pointType = data.selectedType;
     data.city = data.selectedCity;
+    data.offers = optionList.slice();
 
     delete data.selectedType;
     delete  data.selectedCity;
 
+    console.log(data);
     return data;
   }
 }
