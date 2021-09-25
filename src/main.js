@@ -50,8 +50,6 @@ const handleTableStatsClick = (tableStatsItem) => {
   }
 };
 
-tableStats.init(TableStatsItems.TABLE, handleTableStatsClick.bind(this));
-
 filterPresenter.init();
 routeListPresenter.init();
 routeInfo.init();
@@ -62,7 +60,9 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
 });
 
 const getPointsPromise = api.getPoints()
-  .then((points) => points);
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
+  });
 
 const getDestinationsPromise = api.getDestination()
   .then((destinations) => {
@@ -74,6 +74,9 @@ const getDestinationsPromise = api.getDestination()
         pictures: item.pictures,
       })));
     return descriptionListMap;
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
   });
 
 const getOffersPromise = api.getOffers()
@@ -81,13 +84,17 @@ const getOffersPromise = api.getOffers()
     const offersMap = new Map();
     offers.forEach((item) => offersMap.set(item.type, item.offers));
     return offersMap;
+  })
+  .catch(() => {
+    pointsModel.setPoints(UpdateType.INIT, []);
   });
 
-Promise.all([getPointsPromise, getDestinationsPromise, getOffersPromise])
+Promise.all([getDestinationsPromise, getOffersPromise, getPointsPromise])
   .then((values) => {
-    values[0].forEach((item) => {
-      item.fullDestinationsDescriptionList = values[1];
-      item.fullAdditionalOptionsList = values[2];
+    values[2].forEach((item) => {
+      item.fullDestinationsDescriptionList = values[0];
+      item.fullAdditionalOptionsList = values[1];
     });
-    pointsModel.setPoints(UpdateType.INIT, values[0]);
+    pointsModel.setPoints(UpdateType.INIT, values[2]);
+    tableStats.init(TableStatsItems.TABLE, handleTableStatsClick.bind(this));
   });
