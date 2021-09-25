@@ -247,13 +247,9 @@ export default class PointForm extends SmartView {
 
   _changeAdditionOptionClickHandler(evt, selectorsList, fullActionList, fullStoreList, toChangeOptions) {
     return function(evt) {
-      if (fullActionList[Array.from(selectorsList).indexOf(evt.target)] !== null) {
-        fullActionList[Array.from(selectorsList).indexOf(evt.target)] = null;
-      } else {
-        fullActionList[Array.from(selectorsList).indexOf(evt.target)] = fullStoreList[Array.from(selectorsList).indexOf(evt.target)];
-      }
+      fullActionList[Array.from(selectorsList).indexOf(evt.target)] === null ? fullActionList[Array.from(selectorsList).indexOf(evt.target)] = fullStoreList[Array.from(selectorsList).indexOf(evt.target)] : fullActionList[Array.from(selectorsList).indexOf(evt.target)] = null;
+      console.log(fullActionList);
       const actualAdditionalOptions = fullActionList.filter((item) => item !== null);
-      console.log(evt.target);
       // console.log(this._additionOptions);
       toChangeOptions(evt, actualAdditionalOptions);
     };
