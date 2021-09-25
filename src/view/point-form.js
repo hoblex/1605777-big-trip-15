@@ -128,6 +128,7 @@ export default class PointForm extends SmartView {
       this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType);
     }
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
+    this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
     this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
@@ -215,7 +216,12 @@ export default class PointForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(PointForm.parseDataToPoint(this._data, this._fullAdditionOptionsList));
+    this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+  }
+
+  _formCloseClickHandler (evt) {
+    evt.preventDefault();
+    this._callback.formCloseClick();
   }
 
   _selectedCityEnterKeyDownHandler (evt) {
@@ -242,6 +248,7 @@ export default class PointForm extends SmartView {
     this._setInnerHandlers();
     this._setDatepicker();
     this.setDeleteClickHandler(this._callback.deleteClick);
+    this.setFormCloseClickHandler(this._callback.formCloseClick);
   }
 
   _setInnerHandlers() {
@@ -249,7 +256,7 @@ export default class PointForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    if (this._additionalOptions) {
+    if (this._additionalOptions.length) {
       const additionOptionsSelectors = this.getElement().querySelectorAll('.event__offer-checkbox');
       this.getElement().querySelectorAll('.event__offer-checkbox').forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullAdditionOptionsList, this)));
     }
@@ -258,6 +265,11 @@ export default class PointForm extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
+  }
+
+  setFormCloseClickHandler(callback) {
+    this._callback.formCloseClick = callback;
+    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formCloseClickHandler);
   }
 
   _formDeleteClickHandler(evt) {
