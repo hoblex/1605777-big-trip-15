@@ -2,7 +2,7 @@ import TripPointsListView from '../view/trip-points-list';
 import SortView from '../view/sort';
 import ListEmptyView from '../view/list-empty';
 import {render, RenderPosition, remove} from '../utils/render';
-import PointPresenter from './point';
+import PointPresenters, {State as PointPresenterViewState} from './point';
 import PointNewPresenter from './point-new.js';
 import {sortTimePointDown, sortDatePointUp, sortPricePointDown} from '../utils/point';
 import {SortType, UpdateType, UserAction, FilterBy} from '../const';
@@ -79,17 +79,19 @@ export default class RouteList {
   _handleViewAction(actionType, updateType, update) {
     switch (actionType) {
       case UserAction.UPDATE_POINT:
-        console.log(this._api.updatePoint);
+        this._pointPresenters.get(update.id).setViewState(PointPresenterViewState.SAVING);
         this._api.updatePoint(update).then((response) => {
           this._pointsModel.updatePoint(updateType, response);
         });
         break;
       case UserAction.ADD_POINT:
+        this._pointNewPresenter.setSaving();
         this._api.addPoint(update).then((response) => {
           this._pointsModel.addPoint(updateType, response);
         });
         break;
       case UserAction.DELETE_POINT:
+        this._pointPresenters.get(update.id).setViewState(PointPresenterViewState.DELETING);
         this._api.deletePoint(update).then(() => {
           this._pointsModel.deletePoint(updateType, update);
         });
@@ -142,7 +144,7 @@ export default class RouteList {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenter(this._tripPointsListCopmonent, this._handleViewAction, this._handleModeChange);
+    const pointPresenter = new PointPresenters(this._tripPointsListCopmonent, this._handleViewAction, this._handleModeChange);
     pointPresenter.init(point);
     this._pointPresenters.set(point.id, pointPresenter);
   }

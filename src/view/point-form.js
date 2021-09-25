@@ -292,7 +292,7 @@ export default class PointForm extends SmartView {
     data = Object.assign({}, data);
     data.pointType = data.selectedType;
     data.city = data.selectedCity;
-    data.offers = optionList.slice();
+    data.offers = optionList;
 
     delete data.selectedType;
     delete  data.selectedCity;
