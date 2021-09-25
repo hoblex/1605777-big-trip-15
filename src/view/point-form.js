@@ -15,17 +15,15 @@ const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = po
             </div>`).join(''));
 
 const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) => {
-  optionsList.forEach((item) => item.isChecked = choosedAdditionalOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price)));
   return `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
       ${optionsList.map((item) => {
     const offerName = item.title;
     const offerCost= item.price;
-    const offerChecked = item.isChecked;
     return `<div class="event__offer-selector">
-          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-1" type="checkbox" name="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-1" ${offerChecked ? 'checked' : ''}>
-          <label class="event__offer-label" for="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-1">
+          <input class="event__offer-checkbox  visually-hidden" id="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-${item.price}-1" type="checkbox" name="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-${item.price}-1" ${choosedAdditionalOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price)) ? 'checked' : ''}>
+          <label class="event__offer-label" for="event-offer-${item.title.replace(/[^A-Z0-9]+/ig, '-').toLowerCase()}-${item.price}-1">
             <span class="event__offer-title">${offerName}</span>
             &plus;&euro;&nbsp;
             <span class="event__offer-price">${offerCost}</span>
@@ -123,9 +121,10 @@ export default class PointForm extends SmartView {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
-    this._additionalOptions = this._data.additionalOptions;
-    if (this._additionalOptions.length) {
-      this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType);
+    this._additionOptions = this._data.additionalOptions.slice();
+    if (this._additionOptions.length) {
+      this._fullActualAdditionalOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
+      this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).slice();
     }
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
@@ -137,6 +136,7 @@ export default class PointForm extends SmartView {
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
     this._selectedCityFocusOutHandler = this._selectedCityFocusOutHandler.bind(this);
     this._changeAdditionOptionClickHandler = this._changeAdditionOptionClickHandler.bind(this);
+    this._changeAdditionOptionsHandler = this._changeAdditionOptionsHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepicker();
@@ -237,11 +237,31 @@ export default class PointForm extends SmartView {
     });
   }
 
-  _changeAdditionOptionClickHandler(evt, list, actualList, place) {
+  _changeAdditionOptionsHandler(evt, actualAdditionalOptions) {
+    evt.preventDefault();
+    this.updateData({
+      additionalOptions: actualAdditionalOptions,
+    });
+  }
+
+
+  _changeAdditionOptionClickHandler(evt, selectorsList, fullActionList, fullStoreList, toChangeOptions) {
     return function(evt) {
-      actualList[Array.from(list).indexOf(evt.target)].isChecked = !actualList[Array.from(list).indexOf(evt.target)].isChecked;
-      place._fullAdditionOptionsList = actualList.filter((item) => item.isChecked).slice();
+      if (fullActionList[Array.from(selectorsList).indexOf(evt.target)] !== null) {
+        fullActionList[Array.from(selectorsList).indexOf(evt.target)] = null;
+      } else {
+        fullActionList[Array.from(selectorsList).indexOf(evt.target)] = fullStoreList[Array.from(selectorsList).indexOf(evt.target)];
+      }
+      const actualAdditionalOptions = fullActionList.filter((item) => item !== null);
+      console.log(evt.target);
+      // console.log(this._additionOptions);
+      toChangeOptions(evt, actualAdditionalOptions);
     };
+  }
+
+  createAdditionOptionsHanlers () {
+    const additionOptionsSelectors = this.getElement().querySelectorAll('.event__offer-checkbox');
+    this.getElement().querySelectorAll('.event__offer-checkbox').forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullActualAdditionalOptionsList, this._fullAdditionOptionsList, this._changeAdditionOptionsHandler.bind(this))));
   }
 
   restoreHandlers() {
@@ -249,6 +269,9 @@ export default class PointForm extends SmartView {
     this._setDatepicker();
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setFormCloseClickHandler(this._callback.formCloseClick);
+    if (this._additionOptions.length) {
+      this.createAdditionOptionsHanlers();
+    }
   }
 
   _setInnerHandlers() {
@@ -256,9 +279,8 @@ export default class PointForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    if (this._additionalOptions.length) {
-      const additionOptionsSelectors = this.getElement().querySelectorAll('.event__offer-checkbox');
-      this.getElement().querySelectorAll('.event__offer-checkbox').forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullAdditionOptionsList, this)));
+    if (this._additionOptions.length) {
+      this.createAdditionOptionsHanlers();
     }
   }
 
@@ -293,15 +315,17 @@ export default class PointForm extends SmartView {
     );
   }
 
-  static parseDataToPoint(data, optionList) {
+  static parseDataToPoint(data) {
     data = Object.assign({}, data);
     data.pointType = data.selectedType;
     data.city = data.selectedCity;
-    data.offers = optionList;
+    // data.time.timeBegin = data.timeBegin;
+    // data.time.timeEnd = data.timeEnd;
 
     delete data.selectedType;
     delete  data.selectedCity;
 
+    console.log(data);
     return data;
   }
 }

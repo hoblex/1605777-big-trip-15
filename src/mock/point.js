@@ -99,7 +99,7 @@ export const generatePoint = () => {
   const date = generateDate();
   const time = generateTimeDuration(date.dateBegin);
   const pointType = generateRandomItem(TYPES);
-  const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS);
+  // const additionalOptions = generateAdditionalOption(ADDITIONAL_OPTIONALS);
   const pointCost = getRandomInteger(1, 10) * 10;
   return {
 

@@ -76,10 +76,6 @@ const getOffersPromise = api.getOffers()
 
 Promise.all([getPointsPromise, getDescriptionsPromise, getOffersPromise])
   .then((values) => {
-    // values[0].forEach((item) => {
-    //   item.fullDestinationsDescriptionList = values[1];
-    //   item.fullAdditionalOptionsList = values[2];
-    // });
     pointsModel.setPoints(UpdateType.INIT, values[0], values[1], values[2]);
     tableStats.init(TableStatsItems.TABLE, handleTableStatsClick.bind(this));
   });

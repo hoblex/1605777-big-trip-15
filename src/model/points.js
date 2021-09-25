@@ -88,6 +88,7 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint['date_from'];
     delete adaptedPoint['date_to'];
     delete adaptedPoint['is_favorite'];
+    delete adaptedPoint['offers'];
 
     return adaptedPoint;
   }
@@ -101,7 +102,7 @@ export default class Points extends AbstractObserver {
         'date_from': point.time.timeBegin.toISOString(),
         'date_to': point.time.timeEnd.toISOString(),
         'is_favorite': point.isFavorite,
-        'offers': point.offers,
+        'offers': point.additionalOptions,
         'destination': point.destination,
         'type': point.pointType,
       },
