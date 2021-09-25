@@ -5,12 +5,8 @@ import {BLANK_POINT, FORM_TYPES, UpdateType, UserAction} from '../const';
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
-const createCitiesList = (list) => (
-  (Array.from(list.keys()).map((item) => `<option value="${item}"></option>`)).join('')
-);
-const createCitiesPattern = (list) => {
-  return (Array.from(list.keys()).map((item) => `${item}`)).join('|')
-};
+const createCitiesList = (list) => (Array.from(list.keys()).map((item) => `<option value="${item}"></option>`)).join('');
+const createCitiesPattern = (list) => (Array.from(list.keys()).map((item) => `${item}`)).join('|');
 
 const xchecked = (value, current)=>value===current?'checked':'';
 const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = pointType) => (typesList.map((item) => `<div class="event__type-item">
