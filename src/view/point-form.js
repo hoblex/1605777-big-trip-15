@@ -242,7 +242,6 @@ export default class PointForm extends SmartView {
   restoreHandlers() {
     this._setInnerHandlers();
     this._setDatepicker();
-    this.setFormClickCloseHandler(this._callback.formSubmit);
     this.setDeleteClickHandler(this._callback.deleteClick);
   }
 
@@ -260,11 +259,6 @@ export default class PointForm extends SmartView {
   setFormSubmitHandler(callback) {
     this._callback.formSubmit = callback;
     this.getElement().querySelector('form').addEventListener('submit', this._formSubmitHandler);
-  }
-
-  setFormClickCloseHandler(callback) {
-    this._callback.formSubmit = callback;
-    this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formSubmitHandler);
   }
 
   _formDeleteClickHandler(evt) {
@@ -297,6 +291,7 @@ export default class PointForm extends SmartView {
     delete data.selectedType;
     delete  data.selectedCity;
 
+    console.log(data);
     return data;
   }
 }

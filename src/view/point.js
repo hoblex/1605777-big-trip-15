@@ -105,7 +105,7 @@ export default class Point extends AbstractView {
     this._callback.favoriteClick();
   }
 
-  setFormClickOpenHandler(callback) {
+  setFormOpenClickHandler(callback) {
     this._callback.editClick = callback;
     this.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._formOpenClickHandler);
   }

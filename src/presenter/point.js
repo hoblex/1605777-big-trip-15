@@ -26,6 +26,7 @@ export default class Point {
     this._handleFormOpenClick = this._handleFormOpenClick.bind(this);
     this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
+    this._handleFormCLoseClick = this._handleFormCLoseClick.bind(this);
     this._handleDeleteClick = this._handleDeleteClick.bind(this);
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
   }
@@ -39,10 +40,9 @@ export default class Point {
     this._pointComponent = new TripPointView(point);
     this._pointFormComponent = new TripPointFormView(point);
 
-    this._pointComponent.setFormClickOpenHandler(this._handleFormOpenClick);
+    this._pointComponent.setFormOpenClickHandler(this._handleFormOpenClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
-    this._pointFormComponent.setFormClickCloseHandler(this._handleFormSubmit);
     this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
 
     if (prevPointComponent === null || prevPointFormComponent === null) {
@@ -98,6 +98,8 @@ export default class Point {
   _replacePointViewToForm() {
     replace(this._pointFormComponent, this._pointComponent);
     document.addEventListener('keydown', this._escKeyDownHandler);
+    this._pointFormComponent.getElement().querySelector('.event__rollup-btn').addEventListener('click', this._handleFormCLoseClick);
+
     this._changeMode();
     this._mode = Mode.EDITING;
   }
@@ -118,6 +120,11 @@ export default class Point {
 
   _handleFormOpenClick() {
     this._replacePointViewToForm();
+  }
+
+  _handleFormCLoseClick() {
+    this._pointFormComponent.reset(this._point);
+    this._replaceFormToPointView();
   }
 
   _handleFormSubmit(update) {
