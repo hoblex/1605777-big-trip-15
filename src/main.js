@@ -64,37 +64,22 @@ const getPointsPromise = api.getPoints()
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 
-const getDestinationsPromise = api.getDestination()
-  .then((destinations) => {
-    const descriptionListMap = new Map();
-    destinations.forEach((item) => descriptionListMap.set(item.name, Object.assign(
-      {},
-      {
-        description: item.description,
-        pictures: item.pictures,
-      })));
-    return descriptionListMap;
-  })
+const getDescriptionsPromise = api.getDestination()
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 
 const getOffersPromise = api.getOffers()
-  .then((offers) => {
-    const offersMap = new Map();
-    offers.forEach((item) => offersMap.set(item.type, item.offers));
-    return offersMap;
-  })
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 
-Promise.all([getDestinationsPromise, getOffersPromise, getPointsPromise])
+Promise.all([getPointsPromise, getDescriptionsPromise, getOffersPromise])
   .then((values) => {
-    values[2].forEach((item) => {
-      item.fullDestinationsDescriptionList = values[0];
-      item.fullAdditionalOptionsList = values[1];
-    });
-    pointsModel.setPoints(UpdateType.INIT, values[2]);
+    // values[0].forEach((item) => {
+    //   item.fullDestinationsDescriptionList = values[1];
+    //   item.fullAdditionalOptionsList = values[2];
+    // });
+    pointsModel.setPoints(UpdateType.INIT, values[0], values[1], values[2]);
     tableStats.init(TableStatsItems.TABLE, handleTableStatsClick.bind(this));
   });

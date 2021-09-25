@@ -26,13 +26,28 @@ export default class Api {
 
   getDestination() {
     return this._load({url: 'destinations'})
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((descriptions) => {
+        const descriptionListMap = new Map();
+        descriptions.forEach((item) => descriptionListMap.set(item.name, Object.assign(
+          {},
+          {
+            description: item.description,
+            pictures: item.pictures,
+          })));
+        return descriptionListMap;
+      });
     // .then((points) => points.map(PointsModel.adaptToClient));
   }
 
   getOffers() {
     return this._load({url: 'offers'})
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then((offers) => {
+        const offersMap = new Map();
+        offers.forEach((item) => offersMap.set(item.type, item.offers));
+        return offersMap;
+      });
     // .then((points) => points.map(PointsModel.adaptToClient));
   }
 

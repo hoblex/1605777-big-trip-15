@@ -7,10 +7,18 @@ export default class Points extends AbstractObserver {
   constructor() {
     super();
     this._points = [];
+    this._fullDestinationsDescriptionList = null;
+    this._fullAdditionalOptionsList = null;
   }
 
-  setPoints(updateType, pointsList) {
+  setPoints(updateType, pointsList, descriptionList, offersList) {
     this._points = pointsList.slice();
+    this._points.forEach((item) => {
+      this._fullDestinationsDescriptionList = descriptionList;
+      this._fullAdditionalOptionsList = offersList;
+      item.fullDestinationsDescriptionList = this._fullDestinationsDescriptionList;
+      item.fullAdditionalOptionsList = this._fullAdditionalOptionsList;
+    });
     this._notify(updateType);
   }
 
@@ -24,6 +32,9 @@ export default class Points extends AbstractObserver {
     if (index === -1) {
       throw new Error('Can\'t update unexisting point');
     }
+
+    update.fullDestinationsDescriptionList = this._fullDestinationsDescriptionList;
+    update.fullAdditionalOptionsList = this._fullAdditionalOptionsList;
 
     this._points = [
       ...this._points.slice(0, index),
@@ -87,8 +98,8 @@ export default class Points extends AbstractObserver {
       point,
       {
         'base_price': point.pointCost,
-        'date_from': point.time.timeBegin.toISOString,
-        'date_to': point.time.timeEnd.toISOString,
+        'date_from': point.time.timeBegin.toISOString(),
+        'date_to': point.time.timeEnd.toISOString(),
         'is_favorite': point.isFavorite,
         'offers': point.offers,
         'destination': point.destination,
@@ -103,6 +114,7 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.fullDestinationsDescriptionList;
     delete adaptedPoint.pointCost;
     delete adaptedPoint.pointType;
+    delete adaptedPoint.time;
 
     return adaptedPoint;
   }

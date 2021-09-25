@@ -8,9 +8,9 @@ import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 const createCitiesList = (list) => (
   (Array.from(list.keys()).map((item) => `<option value="${item}"></option>`)).join('')
 );
-const createCitiesPattern = (list) => (
-  (Array.from(list.keys()).map((item) => `${item}`)).join('|')
-);
+const createCitiesPattern = (list) => {
+  return (Array.from(list.keys()).map((item) => `${item}`)).join('|')
+};
 
 const xchecked = (value, current)=>value===current?'checked':'';
 const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = pointType) => (typesList.map((item) => `<div class="event__type-item">
@@ -127,7 +127,10 @@ export default class PointForm extends SmartView {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
-    this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType);
+    this._additionalOptions = this._data.additionalOptions;
+    if (this._additionalOptions.length) {
+      this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType);
+    }
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
     this._timeEndChangeHandler = this._timeEndChangeHandler.bind(this);
@@ -250,7 +253,7 @@ export default class PointForm extends SmartView {
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    if (this._fullAdditionOptionsList.length) {
+    if (this._additionalOptions) {
       const additionOptionsSelectors = this.getElement().querySelectorAll('.event__offer-checkbox');
       this.getElement().querySelectorAll('.event__offer-checkbox').forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullAdditionOptionsList, this)));
     }
@@ -291,7 +294,6 @@ export default class PointForm extends SmartView {
     delete data.selectedType;
     delete  data.selectedCity;
 
-    console.log(data);
     return data;
   }
 }
