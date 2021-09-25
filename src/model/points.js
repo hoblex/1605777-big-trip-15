@@ -86,17 +86,23 @@ export default class Points extends AbstractObserver {
       {},
       point,
       {
-        'due_date': point.dueDate instanceof Date ? point.dueDate.toISOString() : null, // На сервере дата хранится в ISO формате
-        'is_archived': point.isArchive,
+        'base_price': point.pointCost,
+        'date_from': point.time.timeBegin.toISOString,
+        'date_to': point.time.timeEnd.toISOString,
         'is_favorite': point.isFavorite,
-        'repeating_days': point.repeating,
+        'offers': point.offers,
+        'destination': point.destination,
+        'type': point.pointType,
       },
     );
 
-    delete adaptedPoint.dueDate;
-    delete adaptedPoint.isArchive;
+    delete adaptedPoint.additionalOptions;
+    delete adaptedPoint.city;
     delete adaptedPoint.isFavorite;
-    delete adaptedPoint.repeating;
+    delete adaptedPoint.fullAdditionalOptionsList;
+    delete adaptedPoint.fullDestinationsDescriptionList;
+    delete adaptedPoint.pointCost;
+    delete adaptedPoint.pointType;
 
     return adaptedPoint;
   }

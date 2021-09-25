@@ -297,7 +297,6 @@ export default class PointForm extends SmartView {
     delete data.selectedType;
     delete  data.selectedCity;
 
-    console.log(data);
     return data;
   }
 }

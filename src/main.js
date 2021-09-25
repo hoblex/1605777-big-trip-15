@@ -28,7 +28,7 @@ const routeInfoContainer = document.querySelector('.trip-main');
 const routeInfo = new RouteInfo(routeInfoContainer, pointsModel);
 
 const tripEventsContainer = document.querySelector('.trip-events');
-const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, filterModel);
+const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, filterModel, api);
 
 let statisticsComponent = null;
 

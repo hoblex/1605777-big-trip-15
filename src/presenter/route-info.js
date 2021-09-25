@@ -16,7 +16,7 @@ export default class RouteInfo {
     }
     this._points = this._pointsModel.getPoints().slice();
     if (this._points.length !== 0) {
-      this._tripPrice = this._points.reduce((accumulator, item) => (accumulator + item.pointCost), 0);
+      this._tripPrice = this._points.reduce((accumulator, item) => (accumulator + item.pointCost + item.offers.reduce((summ, elem) => (summ + elem.price),0)), 0);
       const prevRouteInfoComponent = this._routeInfoComponent;
       this._routeInfoComponent = new RouteInfoView(this._points, this._tripPrice);
 
