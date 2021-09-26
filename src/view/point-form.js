@@ -122,10 +122,8 @@ export default class PointForm extends SmartView {
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
     this._additionOptions = this._data.additionalOptions.slice();
-    if (this._additionOptions.length) {
-      this._fullActualAdditionalOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
-      this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).slice();
-    }
+    this._fullActualAdditionalOptionsList = null;
+    this._fullAdditionOptionsList = null;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
@@ -133,6 +131,7 @@ export default class PointForm extends SmartView {
     this._formDeleteClickHandler = this._formDeleteClickHandler.bind(this);
     this._selectPointTypeInputHandler = this._selectPointTypeInputHandler.bind(this);
     this._selectCityInputHandler = this._selectCityInputHandler.bind(this);
+    this._selectPriceInputHandler = this._selectPriceInputHandler.bind(this);
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
     this._selectedCityFocusOutHandler = this._selectedCityFocusOutHandler.bind(this);
     this._changeAdditionOptionClickHandler = this._changeAdditionOptionClickHandler.bind(this);
@@ -214,6 +213,13 @@ export default class PointForm extends SmartView {
     }, true);
   }
 
+  _selectPriceInputHandler(evt) {
+    evt.preventDefault();
+    this.updateData({
+      pointCost: evt.target.value,
+    }, true);
+  }
+
   _formSubmitHandler(evt) {
     evt.preventDefault();
     this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
@@ -244,7 +250,6 @@ export default class PointForm extends SmartView {
     }, true);
   }
 
-
   _changeAdditionOptionClickHandler(evt, selectorsList, fullActionList, fullStoreList, toChangeOptions) {
     return function(evt) {
       fullActionList[Array.from(selectorsList).indexOf(evt.target)] === null ? fullActionList[Array.from(selectorsList).indexOf(evt.target)] = fullStoreList[Array.from(selectorsList).indexOf(evt.target)] : fullActionList[Array.from(selectorsList).indexOf(evt.target)] = null;
@@ -263,17 +268,18 @@ export default class PointForm extends SmartView {
     this._setDatepicker();
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setFormCloseClickHandler(this._callback.formCloseClick);
-    if (this._additionOptions.length) {
-      this.createAdditionOptionsHanlers();
-    }
   }
 
   _setInnerHandlers() {
+    this._fullActualAdditionalOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
+    this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).slice();
+
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
+    this.getElement().querySelector('.event__input--price').addEventListener('change', this._selectPriceInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    if (this._additionOptions.length) {
+    if (this._fullAdditionOptionsList) {
       this.createAdditionOptionsHanlers();
     }
   }
@@ -319,7 +325,6 @@ export default class PointForm extends SmartView {
     delete data.selectedType;
     delete  data.selectedCity;
 
-    console.log(data);
     return data;
   }
 }
