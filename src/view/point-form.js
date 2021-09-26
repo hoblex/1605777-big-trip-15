@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
-import {BLANK_POINT, FORM_TYPES, UpdateType, UserAction} from '../const';
+import {BLANK_POINT, FORM_TYPES} from '../const';
 import duration from 'dayjs/plugin/duration';
 dayjs.extend(duration);
 
@@ -17,8 +17,8 @@ const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = po
                 <label class="event__type-label  event__type-label--${item.toLowerCase()}" for="event-type-${item.toLowerCase()}-1">${item}</label>
             </div>`).join(''));
 
-const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) => {
-  return `<section class="event__section  event__section--offers">
+const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) => (
+  `<section class="event__section  event__section--offers">
       <h3 class="event__section-title  event__section-title--offers">Offers</h3>
       <div class="event__available-offers">
       ${optionsList.map((item) => {
@@ -34,8 +34,8 @@ const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) 
         </div>`;
   }).join('')}
     </div>
-    </section>`;
-};
+    </section>`
+);
 
 const createPhotosTemplate = (photoList) => {
   if (photoList) {
@@ -54,7 +54,6 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
     pointCost = 0,
     selectedType = pointType,
     selectedCity = city,
-    isDisabled,
     isSaving,
     isDeleting,
   } = data;

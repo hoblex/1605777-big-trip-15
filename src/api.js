@@ -37,7 +37,6 @@ export default class Api {
           })));
         return descriptionListMap;
       });
-    // .then((points) => points.map(PointsModel.adaptToClient));
   }
 
   getOffers() {
@@ -48,11 +47,9 @@ export default class Api {
         offers.forEach((item) => offersMap.set(item.type, item.offers));
         return offersMap;
       });
-    // .then((points) => points.map(PointsModel.adaptToClient));
   }
 
   updatePoint(point) {
-    console.log(point);
 
     return this._load({
       url: `points/${point.id}`,
@@ -65,7 +62,6 @@ export default class Api {
   }
 
   addPoint(point) {
-    console.log(point);
     return this._load({
       url: 'points',
       method: Method.POST,

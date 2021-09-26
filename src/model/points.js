@@ -26,9 +26,6 @@ export default class Points extends AbstractObserver {
       throw new Error('Can\'t update unexisting point');
     }
 
-    update.fullDestinationsDescriptionList = this._fullDestinationsDescriptionList;
-    update.fullAdditionalOptionsList = this._fullAdditionalOptionsList;
-
     this._points = [
       ...this._points.slice(0, index),
       update,

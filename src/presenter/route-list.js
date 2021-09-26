@@ -102,7 +102,6 @@ export default class RouteList {
   _handleModelEvent(updateType, data) {
     switch (updateType) {
       case UpdateType.PATCH:
-        // - обновить часть списка (например, когда поменялось описание)
         this._pointPresenters.get(data.id).init(data);
         break;
       case UpdateType.MINOR:
