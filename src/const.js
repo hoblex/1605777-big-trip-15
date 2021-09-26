@@ -35,7 +35,6 @@ export const BLANK_POINT = {
   pointCost: 0,
   photoList: new Array(0),
   description: '',
-  fullAdditionalOptionsList: new Map(),
 };
 
 export const TableStatsItems = {
