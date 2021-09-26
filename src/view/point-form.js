@@ -49,8 +49,12 @@ const createPointForm = (data = {}) => {
     pointCost = 0,
     selectedType = pointType,
     selectedCity = city,
+    isDisabled,
+    isSaving,
+    isDeleting,
   } = data;
 
+  console.log(data);
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -87,6 +91,7 @@ const createPointForm = (data = {}) => {
         <input class="event__input  event__input--time" id="event-end-time-1" type="text" name="event-end-time" value="${time.timeEnd}">
       </div>
 
+
       <div class="event__field-group  event__field-group--price">
         <label class="event__label" for="event-price-1">
           <span class="visually-hidden">Price</span>
@@ -95,8 +100,8 @@ const createPointForm = (data = {}) => {
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointCost}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">Save</button>
-      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : 'Delete'}</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'saving...' : 'save'}</button>
+      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : isDeleting ? 'Deleting...' : 'Delete'}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
@@ -325,6 +330,9 @@ export default class PointForm extends SmartView {
       {
         selectedType: point.pointType,
         selectedCity: point.city,
+        isDisabled: false,
+        isSaving: false,
+        isDeleting: false,
       },
     );
   }
@@ -338,6 +346,9 @@ export default class PointForm extends SmartView {
 
     delete data.selectedType;
     delete  data.selectedCity;
+    delete data.isDisabled;
+    delete data.isSaving;
+    delete data.isDeleting;
 
     return data;
   }
