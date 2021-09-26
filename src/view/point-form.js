@@ -11,6 +11,7 @@ const createCitiesList = (list) => (Array.from(list.keys()).map((item) => `<opti
 const createCitiesPattern = (list) => (Array.from(list.keys()).map((item) => `${item}`)).join('|');
 
 const xchecked = (value, current)=>value===current?'checked':'';
+const xdelete = (state)=> state ? 'Deleting...' : 'Delete';
 const createEventTypeCheckboxTemplate = (typesList, pointType, selectedType = pointType) => (typesList.map((item) => `<div class="event__type-item">
                 <input id="event-type-${item.toLowerCase()}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${item.toLowerCase()}" ${xchecked(item.toLowerCase(), selectedType)}>
                 <label class="event__type-label  event__type-label--${item.toLowerCase()}" for="event-type-${item.toLowerCase()}-1">${item}</label>
@@ -100,8 +101,8 @@ const createPointForm = (data = {}) => {
         <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointCost}">
       </div>
 
-      <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'saving...' : 'save'}</button>
-      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : isDeleting ? 'Deleting...' : 'Delete'}</button>
+      <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
+      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : xdelete(isDeleting)}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
