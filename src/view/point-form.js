@@ -215,6 +215,7 @@ export default class PointForm extends SmartView {
 
   _selectPriceInputHandler(evt) {
     evt.preventDefault();
+    console.log(evt.target.value)
     this.updateData({
       pointCost: evt.target.value,
     }, true);

@@ -98,7 +98,7 @@ export default class Points extends AbstractObserver {
       {},
       point,
       {
-        'base_price': point.pointCost,
+        'base_price': parseInt(point.pointCost, 10),
         'date_from': point.time.timeBegin.toISOString(),
         'date_to': point.time.timeEnd.toISOString(),
         'is_favorite': point.isFavorite,
@@ -116,6 +116,8 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.pointCost;
     delete adaptedPoint.pointType;
     delete adaptedPoint.time;
+
+    console.log(adaptedPoint);
 
     return adaptedPoint;
   }
