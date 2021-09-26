@@ -37,11 +37,17 @@ const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) 
     </section>`;
 };
 
-const createPhotosTemplate = (photoList) => photoList.pictures.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
+const createPhotosTemplate = (photoList) => {
+  if (photoList) {
+    return photoList.pictures.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
+  } else {
+    return '';
+  }
+};
 
 const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffersList = new Map()) => {
   const {
-    pointType = 'Taxi',
+    pointType = 'taxi',
     city = '',
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = [],
@@ -111,7 +117,7 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
     ${createAdditionalOptionsTemplate(fullAdditionalOptionsList.get(selectedType), additionalOptions)}
       <section class="event__section  event__section--destination">
         <h3 class="event__section-title  event__section-title--destination">Destination</h3>
-        <p class="event__destination-description">${fullDestinationsDescriptionList.get(selectedCity).description}</p>
+        <p class="event__destination-description">${selectedCity !== '' ? fullDestinationsDescriptionList.get(selectedCity).description : ''}</p>
 
         <div class="event__photos-container">
           <div class="event__photos-tape">
@@ -125,7 +131,7 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
 };
 
 export default class PointForm extends SmartView {
-  constructor(point = BLANK_POINT, descriptionsList, offersList) {
+  constructor(descriptionsList, offersList, point = BLANK_POINT) {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
@@ -257,8 +263,8 @@ export default class PointForm extends SmartView {
       destination: Object.assign(
         {},
         {name: evt.target.value,
-          description: this._data.fullDestinationsDescriptionList.get(evt.target.value).description,
-          pictures: this._data.fullDestinationsDescriptionList.get(evt.target.value).pictures,
+          description: this._fullDestinationsDescriptionList.get(evt.target.value).description,
+          pictures: this._fullDestinationsDescriptionList.get(evt.target.value).pictures,
         },
       ),
     });
@@ -293,7 +299,7 @@ export default class PointForm extends SmartView {
   }
 
   _setInnerHandlers() {
-    this._fullAdditionOptionsList = this._fullOffersList.get(this._data.selectedType).slice();
+    this._fullAdditionOptionsList = this._fullOffersList.get(this._data.pointType).slice();
     this._fullActualAdditionalOptionsList = this._fullOffersList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
 
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);

@@ -40,7 +40,7 @@ export default class Point {
     const prevPointFormComponent = this._pointFormComponent;
 
     this._pointComponent = new TripPointView(point);
-    this._pointFormComponent = new TripPointFormView(point, this._descriptionsList, this._offersList);
+    this._pointFormComponent = new TripPointFormView(this._descriptionsList, this._offersList, point);
 
     this._pointComponent.setFormOpenClickHandler(this._handleFormOpenClick);
     this._pointComponent.setFavoriteClickHandler(this._handleFavoriteClick);

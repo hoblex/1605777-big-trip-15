@@ -28,13 +28,17 @@ export const FilterBy = {
 };
 
 export const BLANK_POINT = {
-  pointType: 'Taxi',
+  pointType: 'taxi',
   city: '',
   time: {timeBegin: dayjs(), timeEnd:dayjs(), timeDuration:null},
   additionalOptions: [],
   pointCost: 0,
-  photoList: new Array(0),
-  description: '',
+  destination: {
+    description: '',
+    name: '',
+    pictures: [],
+  },
+  isFavorite: false,
 };
 
 export const TableStatsItems = {

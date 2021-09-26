@@ -33,7 +33,7 @@ export default class RouteList {
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
 
-    this._pointNewPresenter = new PointNewPresenter(this._tripPointsListCopmonent, this._handleViewAction);
+    // this._pointNewPresenter = new PointNewPresenter(this._tripPointsListCopmonent, this._handleViewAction, this._descriptionsList, this._offersList);
   }
 
   init() {
@@ -153,6 +153,7 @@ export default class RouteList {
 
   _renderPoints (points) {
     points.forEach((point) => this._renderPoint(point));
+    this._pointNewPresenter = new PointNewPresenter(this._tripPointsListCopmonent, this._handleViewAction, this._descriptionsList, this._offersList);
   }
 
   _renderLoading() {
