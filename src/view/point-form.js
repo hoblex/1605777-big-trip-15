@@ -2,6 +2,8 @@ import dayjs from 'dayjs';
 import SmartView from './smart';
 import flatpickr from 'flatpickr';
 import {BLANK_POINT, FORM_TYPES, UpdateType, UserAction} from '../const';
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 import '../../node_modules/flatpickr/dist/flatpickr.min.css';
 
@@ -41,7 +43,7 @@ const createPointForm = (data = {}) => {
     pointType = 'Taxi',
     city = '',
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
-    additionalOptions = new Map(),
+    additionalOptions = [],
     fullAdditionalOptionsList,
     fullDestinationsDescriptionList,
     pointCost = 0,
@@ -122,7 +124,6 @@ export default class PointForm extends SmartView {
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
     this._additionOptions = this._data.additionalOptions.slice();
-    this._destinationsDescriptionList = null;
     this._fullActualAdditionalOptionsList = null;
     this._fullAdditionOptionsList = null;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -172,7 +173,7 @@ export default class PointForm extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/Y H:i',
-        defaultDate: this._data.timeBegin,
+        defaultDate: this._data.time.timeBegin.toISOString(),
         onChange: this._timeBeginChangeHandler,
       },
     );
@@ -182,7 +183,7 @@ export default class PointForm extends SmartView {
       {
         enableTime: true,
         dateFormat: 'd/m/Y H:i',
-        defaultDate: this._data.timeEnd,
+        defaultDate: this._data.time.timeEnd.toISOString(),
         onChange: this._timeEndChangeHandler,
       },
     );
@@ -190,14 +191,18 @@ export default class PointForm extends SmartView {
 
   _timeBeginChangeHandler([userDate]) {
     this.updateData({
-      timeBegin: userDate,
-    });
+      time: Object.assign(
+        {},
+        this._data.time,
+        {timeBegin: dayjs(userDate), timeDuration: dayjs.duration((this._data.time.timeEnd).diff(dayjs(userDate)))},
+      ),
+    }, true);
   }
 
   _timeEndChangeHandler([userDate]) {
     this.updateData({
-      timeEnd: userDate,
-    });
+      time: Object.assign({}, this._data.time, {timeEnd: dayjs(userDate)}),
+    }, true);
   }
 
   _selectPointTypeInputHandler(evt) {

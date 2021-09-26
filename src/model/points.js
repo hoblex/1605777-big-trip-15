@@ -116,6 +116,8 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.pointCost;
     delete adaptedPoint.pointType;
     delete adaptedPoint.time;
+    delete adaptedPoint.timeBegin;
+    delete adaptedPoint.timeEnd;
 
     console.log(adaptedPoint);
 

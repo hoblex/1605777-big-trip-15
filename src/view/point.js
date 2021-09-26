@@ -39,12 +39,13 @@ const createTripPoint = (point = BLANK_POINT) => {
     '';
 
   const getEventTimeDuration = () => {
-    if (time.timeDuration !== null) {
-      return time.timeDuration.hours() === 0 ?
-        `${time.timeDuration.minutes()}M` :
-        `${time.timeDuration.hours()}H ${ time.timeDuration.minutes()}M`;
+
+    if (time.timeDuration.days() > 0) {
+      return `${time.timeDuration.days()}D ${time.timeDuration.hours()}H ${time.timeDuration.minutes()}M`;
+    } else if (time.timeDuration.days() === 0 && time.timeDuration.hours() > 0) {
+      return  `${time.timeDuration.hours()}H ${time.timeDuration.minutes()}M`;
     } else {
-      return '0M';
+      return `${time.timeDuration.minutes()}M`;
     }
   };
 
