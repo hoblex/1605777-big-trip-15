@@ -24,6 +24,7 @@ export default class PointNew {
     this._pointFormComponent = new PointFormView(this._descriptionsList, this._offersList);
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
+    this._pointFormComponent.setFormCloseClickHandler(this._handleDeleteClick);
 
     render(this._pointsContainer, this._pointFormComponent, RenderPosition.AFTER_BEGIN);
 

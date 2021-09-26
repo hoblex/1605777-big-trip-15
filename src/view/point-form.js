@@ -108,7 +108,7 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
-      <button class="event__reset-btn" type="reset">${data === {} ? 'Cancel' : xdelete(isDeleting)}</button>
+      <button class="event__reset-btn" type="reset">${city === '' ? 'Cancel' : xdelete(isDeleting)}</button>
       <button class="event__rollup-btn" type="button">
         <span class="visually-hidden">Open event</span>
       </button>
