@@ -122,6 +122,7 @@ export default class PointForm extends SmartView {
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
     this._additionOptions = this._data.additionalOptions.slice();
+    this._destinationsDescriptionList = null;
     this._fullActualAdditionalOptionsList = null;
     this._fullAdditionOptionsList = null;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -215,7 +216,6 @@ export default class PointForm extends SmartView {
 
   _selectPriceInputHandler(evt) {
     evt.preventDefault();
-    console.log(evt.target.value)
     this.updateData({
       pointCost: evt.target.value,
     }, true);
@@ -240,7 +240,14 @@ export default class PointForm extends SmartView {
   _selectedCityFocusOutHandler (evt) {
     evt.preventDefault();
     this.updateData({
-      selectedCity: evt.target.value,
+      city: evt.target.value,
+      destination: Object.assign(
+        {},
+        {name: evt.target.value,
+          description: this._data.fullDestinationsDescriptionList.get(evt.target.value).description,
+          pictures: this._data.fullDestinationsDescriptionList.get(evt.target.value).pictures,
+        },
+      ),
     });
   }
 
@@ -269,6 +276,7 @@ export default class PointForm extends SmartView {
     this._setDatepicker();
     this.setDeleteClickHandler(this._callback.deleteClick);
     this.setFormCloseClickHandler(this._callback.formCloseClick);
+    this.setFormSubmitHandler(this._callback.formSubmit);
   }
 
   _setInnerHandlers() {
