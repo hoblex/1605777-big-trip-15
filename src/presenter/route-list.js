@@ -10,9 +10,11 @@ import {filter} from '../utils/filter.js';
 import LoadingView from '../view/loading.js';
 
 export default class RouteList {
-  constructor(routeListContainer, pointsModel, filterModel, api) {
+  constructor(routeListContainer, pointsModel, descriptionsList, offersList, filterModel, api) {
     this._routeListContainer = routeListContainer;
     this._pointsModel = pointsModel;
+    this._descriptionsList = descriptionsList;
+    this._offersList = offersList;
     this._filterModel = filterModel;
     this._pointPresenters = new Map();
     this._filterType = FilterBy.EVERYTHING;
@@ -144,7 +146,7 @@ export default class RouteList {
   }
 
   _renderPoint(point) {
-    const pointPresenter = new PointPresenters(this._tripPointsListCopmonent, this._handleViewAction, this._handleModeChange);
+    const pointPresenter = new PointPresenters(this._tripPointsListCopmonent, this._handleViewAction, this._handleModeChange, this._descriptionsList, this._offersList);
     pointPresenter.init(point);
     this._pointPresenters.set(point.id, pointPresenter);
   }

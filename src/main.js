@@ -3,6 +3,8 @@ import {render, remove} from './utils/render.js';
 import RouteList from './presenter/route-list';
 import RouteInfo from './presenter/route-info';
 import PointsModel from './model/points';
+import Descriptions from './presenter/descriptions';
+import Offers from './presenter/offers';
 import FilterPresenter from './presenter/filter.js';
 import FilterModel from './model/filter';
 import {TableStatsItems, UpdateType, FilterBy} from './const';
@@ -16,6 +18,8 @@ const api = new Api(END_POINT, AUTHORIZATION);
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
 
 const pointsModel = new PointsModel();
+const descriptionsList = new Descriptions();
+const offersList = new Offers();
 
 const tableStats = new TableStatsPresenter(tripControlsNavigation, pointsModel);
 
@@ -28,7 +32,7 @@ const routeInfoContainer = document.querySelector('.trip-main');
 const routeInfo = new RouteInfo(routeInfoContainer, pointsModel);
 
 const tripEventsContainer = document.querySelector('.trip-events');
-const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, filterModel, api);
+const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, descriptionsList, offersList, filterModel, api);
 
 let statisticsComponent = null;
 
@@ -64,18 +68,14 @@ const getPointsPromise = api.getPoints()
     pointsModel.setPoints(UpdateType.INIT, []);
   });
 
-const getDescriptionsPromise = api.getDestination()
-  .catch(() => {
-    pointsModel.setPoints(UpdateType.INIT, []);
-  });
+const getDescriptionsPromise = api.getDestination();
 
-const getOffersPromise = api.getOffers()
-  .catch(() => {
-    pointsModel.setPoints(UpdateType.INIT, []);
-  });
+const getOffersPromise = api.getOffers();
 
 Promise.all([getPointsPromise, getDescriptionsPromise, getOffersPromise])
   .then((values) => {
-    pointsModel.setPoints(UpdateType.INIT, values[0], values[1], values[2]);
+    descriptionsList.setDescriptions(values[1]);
+    offersList.setOffers(values[2]);
+    pointsModel.setPoints(UpdateType.INIT, values[0]);
     tableStats.init(TableStatsItems.TABLE, handleTableStatsClick.bind(this));
   });

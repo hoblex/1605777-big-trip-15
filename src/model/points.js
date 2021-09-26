@@ -7,18 +7,11 @@ export default class Points extends AbstractObserver {
   constructor() {
     super();
     this._points = [];
-    this._fullDestinationsDescriptionList = null;
-    this._fullAdditionalOptionsList = null;
   }
 
-  setPoints(updateType, pointsList, descriptionList, offersList) {
+  setPoints(updateType, pointsList) {
     this._points = pointsList.slice();
-    this._points.forEach((item) => {
-      this._fullDestinationsDescriptionList = descriptionList;
-      this._fullAdditionalOptionsList = offersList;
-      item.fullDestinationsDescriptionList = this._fullDestinationsDescriptionList;
-      item.fullAdditionalOptionsList = this._fullAdditionalOptionsList;
-    });
+
     this._notify(updateType);
   }
 
@@ -118,8 +111,6 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.time;
     delete adaptedPoint.timeBegin;
     delete adaptedPoint.timeEnd;
-
-    console.log(adaptedPoint);
 
     return adaptedPoint;
   }

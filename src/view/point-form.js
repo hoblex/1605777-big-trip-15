@@ -39,14 +39,12 @@ const createAdditionalOptionsTemplate = (optionsList, choosedAdditionalOptions) 
 
 const createPhotosTemplate = (photoList) => photoList.pictures.map((item) => `<img class="event__photo" src="${item.src}" alt="${item.description}">`).join('');
 
-const createPointForm = (data = {}) => {
+const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffersList = new Map()) => {
   const {
     pointType = 'Taxi',
     city = '',
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = [],
-    fullAdditionalOptionsList,
-    fullDestinationsDescriptionList,
     pointCost = 0,
     selectedType = pointType,
     selectedCity = city,
@@ -55,7 +53,9 @@ const createPointForm = (data = {}) => {
     isDeleting,
   } = data;
 
-  console.log(data);
+  const fullAdditionalOptionsList = fullOffersList;
+  const fullDestinationsDescriptionList = fullDescriptionsList;
+
   return `<li class="trip-events__item">
     <form class="event event--edit" action="#" method="post">
     <header class="event__header">
@@ -125,13 +125,15 @@ const createPointForm = (data = {}) => {
 };
 
 export default class PointForm extends SmartView {
-  constructor(point = BLANK_POINT) {
+  constructor(point = BLANK_POINT, descriptionsList, offersList) {
     super();
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
-    this._additionOptions = this._data.additionalOptions.slice();
+    this._additionOptions = this._data.additionalOptions;
     this._fullActualAdditionalOptionsList = null;
     this._fullAdditionOptionsList = null;
+    this._fullDestinationsDescriptionList = descriptionsList;
+    this._fullOffersList = offersList;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
     this._formCloseClickHandler = this._formCloseClickHandler.bind(this);
     this._timeBeginChangeHandler = this._timeBeginChangeHandler.bind(this);
@@ -165,7 +167,7 @@ export default class PointForm extends SmartView {
   }
 
   getTemplate() {
-    return createPointForm(this._data);
+    return createPointForm(this._data, this._fullDestinationsDescriptionList, this._fullOffersList);
   }
 
   _setDatepicker() {
@@ -291,8 +293,8 @@ export default class PointForm extends SmartView {
   }
 
   _setInnerHandlers() {
-    this._fullActualAdditionalOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
-    this._fullAdditionOptionsList = this._data.fullAdditionalOptionsList.get(this._data.selectedType).slice();
+    this._fullAdditionOptionsList = this._fullOffersList.get(this._data.selectedType).slice();
+    this._fullActualAdditionalOptionsList = this._fullOffersList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
 
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);

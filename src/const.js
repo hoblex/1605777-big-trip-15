@@ -31,10 +31,11 @@ export const BLANK_POINT = {
   pointType: 'Taxi',
   city: '',
   time: {timeBegin: dayjs(), timeEnd:dayjs(), timeDuration:null},
-  additionalOptions: new Map(),
+  additionalOptions: [],
   pointCost: 0,
   photoList: new Array(0),
-  description: new Map(),
+  description: '',
+  fullAdditionalOptionsList: new Map(),
 };
 
 export const TableStatsItems = {
