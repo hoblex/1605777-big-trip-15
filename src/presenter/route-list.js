@@ -32,8 +32,6 @@ export default class RouteList {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._handleModeChange = this._handleModeChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
-
-    // this._pointNewPresenter = new PointNewPresenter(this._tripPointsListCopmonent, this._handleViewAction, this._descriptionsList, this._offersList);
   }
 
   init() {

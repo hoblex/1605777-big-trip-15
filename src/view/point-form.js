@@ -104,7 +104,7 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
           <span class="visually-hidden">Price</span>
           &euro;
         </label>
-        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" value="${pointCost}">
+        <input class="event__input  event__input--price" id="event-price-1" type="number" name="event-price" min = 0 value="${pointCost}">
       </div>
 
       <button class="event__save-btn  btn  btn--blue" type="submit">${isSaving ? 'Saving...' : 'Save'}</button>
@@ -228,9 +228,11 @@ export default class PointForm extends SmartView {
 
   _selectCityInputHandler(evt) {
     evt.preventDefault();
-    this.updateData({
-      selectedCity: evt.target.value,
-    }, true);
+    if (this._fullDestinationsDescriptionList.has(evt.target.value)) {
+      this.updateData({
+        selectedCity: evt.target.value,
+      }, true);
+    }
   }
 
   _selectPriceInputHandler(evt) {
@@ -242,7 +244,9 @@ export default class PointForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+    if (this._fullDestinationsDescriptionList.has(this._data.city)) {
+      this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
+    }
   }
 
   _formCloseClickHandler (evt) {
@@ -258,16 +262,18 @@ export default class PointForm extends SmartView {
 
   _selectedCityFocusOutHandler (evt) {
     evt.preventDefault();
-    this.updateData({
-      city: evt.target.value,
-      destination: Object.assign(
-        {},
-        {name: evt.target.value,
-          description: this._fullDestinationsDescriptionList.get(evt.target.value).description,
-          pictures: this._fullDestinationsDescriptionList.get(evt.target.value).pictures,
-        },
-      ),
-    });
+    if (this._fullDestinationsDescriptionList.has(evt.target.value)) {
+      this.updateData({
+        city: evt.target.value,
+        destination: Object.assign(
+          {},
+          {name: evt.target.value,
+            description: this._fullDestinationsDescriptionList.get(evt.target.value).description,
+            pictures: this._fullDestinationsDescriptionList.get(evt.target.value).pictures,
+          },
+        ),
+      });
+    }
   }
 
   _changeAdditionOptionsHandler(evt, actualAdditionalOptions) {
