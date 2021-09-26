@@ -241,23 +241,21 @@ export default class PointForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       additionalOptions: actualAdditionalOptions,
-    });
+    }, true);
   }
 
 
   _changeAdditionOptionClickHandler(evt, selectorsList, fullActionList, fullStoreList, toChangeOptions) {
     return function(evt) {
       fullActionList[Array.from(selectorsList).indexOf(evt.target)] === null ? fullActionList[Array.from(selectorsList).indexOf(evt.target)] = fullStoreList[Array.from(selectorsList).indexOf(evt.target)] : fullActionList[Array.from(selectorsList).indexOf(evt.target)] = null;
-      console.log(fullActionList);
       const actualAdditionalOptions = fullActionList.filter((item) => item !== null);
-      // console.log(this._additionOptions);
       toChangeOptions(evt, actualAdditionalOptions);
     };
   }
 
   createAdditionOptionsHanlers () {
-    const additionOptionsSelectors = this.getElement().querySelectorAll('.event__offer-checkbox');
-    this.getElement().querySelectorAll('.event__offer-checkbox').forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullActualAdditionalOptionsList, this._fullAdditionOptionsList, this._changeAdditionOptionsHandler.bind(this))));
+    const additionOptionsSelectors = Array.from(this.getElement().querySelectorAll('.event__offer-checkbox'));
+    additionOptionsSelectors.forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullActualAdditionalOptionsList, this._fullAdditionOptionsList, this._changeAdditionOptionsHandler.bind(this))));
   }
 
   restoreHandlers() {
