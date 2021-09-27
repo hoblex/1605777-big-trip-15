@@ -135,8 +135,6 @@ export default class PointForm extends SmartView {
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
     this._additionOptions = this._data.additionalOptions;
-    this._fullActualAdditionalOptionsList = null;
-    this._fullAdditionOptionsList = null;
     this._fullDestinationsDescriptionList = descriptionsList;
     this._fullOffersList = offersList;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -149,8 +147,6 @@ export default class PointForm extends SmartView {
     this._selectPriceInputHandler = this._selectPriceInputHandler.bind(this);
     this._selectedCityEnterKeyDownHandler = this._selectedCityEnterKeyDownHandler.bind(this);
     this._selectedCityFocusOutHandler = this._selectedCityFocusOutHandler.bind(this);
-    this._changeAdditionOptionClickHandler = this._changeAdditionOptionClickHandler.bind(this);
-    this._changeAdditionOptionsHandler = this._changeAdditionOptionsHandler.bind(this);
 
     this._setInnerHandlers();
     this._setDatepicker();
@@ -173,6 +169,14 @@ export default class PointForm extends SmartView {
 
   getTemplate() {
     return createPointForm(this._data, this._fullDestinationsDescriptionList, this._fullOffersList);
+  }
+
+  _setActualOffersStorage() {
+    const fullOfferMap = this._fullOffersList;
+    const typeFullOfferList = this._fullOffersList.get(this._data.selectedType).slice();
+    const actualOffers = this._additionOptions.slice();
+    const actualOffersTypeStorage = typeFullOfferList.map((item) => (actualOffers.some((elem) => (item.title === elem.title) && (item.price === elem.price))) ? item : null);
+    return {fullOfferMap, typeFullOfferList, actualOffersTypeStorage};
   }
 
   _setDatepicker() {
@@ -222,6 +226,7 @@ export default class PointForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       selectedType: evt.target.value,
+      additionalOptions: [],
     });
   }
 
@@ -243,9 +248,7 @@ export default class PointForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    if (this._fullDestinationsDescriptionList.has(this._data.city)) {
-      this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
-    }
+    this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
   }
 
   _formCloseClickHandler (evt) {
@@ -275,24 +278,21 @@ export default class PointForm extends SmartView {
     }
   }
 
-  _changeAdditionOptionsHandler(evt, actualAdditionalOptions) {
-    evt.preventDefault();
-    this.updateData({
-      additionalOptions: actualAdditionalOptions,
-    }, true);
-  }
-
-  _changeAdditionOptionClickHandler(evt, selectorsList, fullActionList, fullStoreList, toChangeOptions) {
-    return function(evt) {
-      fullActionList[Array.from(selectorsList).indexOf(evt.target)] === null ? fullActionList[Array.from(selectorsList).indexOf(evt.target)] = fullStoreList[Array.from(selectorsList).indexOf(evt.target)] : fullActionList[Array.from(selectorsList).indexOf(evt.target)] = null;
-      const actualAdditionalOptions = fullActionList.filter((item) => item !== null);
-      toChangeOptions(evt, actualAdditionalOptions);
-    };
-  }
-
-  createAdditionOptionsHanlers () {
+  createAdditionOptionsHandlers (offerStorage) {
     const additionOptionsSelectors = Array.from(this.getElement().querySelectorAll('.event__offer-checkbox'));
-    additionOptionsSelectors.forEach((item) => item.addEventListener('input', this._changeAdditionOptionClickHandler(event, additionOptionsSelectors, this._fullActualAdditionalOptionsList, this._fullAdditionOptionsList, this._changeAdditionOptionsHandler.bind(this))));
+    additionOptionsSelectors.forEach((item) => item.addEventListener('input', (evt) => {
+      const selectedIndex = additionOptionsSelectors.indexOf(evt.target);
+      offerStorage.actualOffersTypeStorage[selectedIndex] === null ?
+        offerStorage.actualOffersTypeStorage[selectedIndex] = offerStorage.typeFullOfferList[selectedIndex] :
+        offerStorage.actualOffersTypeStorage[selectedIndex] = null;
+
+      const actualAdditionalOptions = offerStorage.actualOffersTypeStorage.filter((elem) => elem !== null);
+
+      evt.preventDefault();
+      this.updateData({
+        additionalOptions: actualAdditionalOptions,
+      }, true);
+    }));
   }
 
   restoreHandlers() {
@@ -304,17 +304,12 @@ export default class PointForm extends SmartView {
   }
 
   _setInnerHandlers() {
-    this._fullAdditionOptionsList = this._fullOffersList.get(this._data.pointType).slice();
-    this._fullActualAdditionalOptionsList = this._fullOffersList.get(this._data.selectedType).map((item) => this._additionOptions.some((elem) => (item.title === elem.title) && (item.price === elem.price))? item : null);
-
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('change', this._selectPriceInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    if (this._fullAdditionOptionsList) {
-      this.createAdditionOptionsHanlers();
-    }
+    this.createAdditionOptionsHandlers(this._setActualOffersStorage());
   }
 
   setFormSubmitHandler(callback) {
@@ -355,8 +350,6 @@ export default class PointForm extends SmartView {
     data = Object.assign({}, data);
     data.pointType = data.selectedType;
     data.city = data.selectedCity;
-    // data.time.timeBegin = data.timeBegin;
-    // data.time.timeEnd = data.timeEnd;
 
     delete data.selectedType;
     delete  data.selectedCity;

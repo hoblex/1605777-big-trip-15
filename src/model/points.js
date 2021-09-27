@@ -101,8 +101,6 @@ export default class Points extends AbstractObserver {
     delete adaptedPoint.additionalOptions;
     delete adaptedPoint.city;
     delete adaptedPoint.isFavorite;
-    delete adaptedPoint.fullAdditionalOptionsList;
-    delete adaptedPoint.fullDestinationsDescriptionList;
     delete adaptedPoint.pointCost;
     delete adaptedPoint.pointType;
     delete adaptedPoint.time;
