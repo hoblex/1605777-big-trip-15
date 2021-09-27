@@ -172,11 +172,11 @@ export default class PointForm extends SmartView {
   }
 
   _setActualOffersStorage() {
-    const fullOfferMap = this._fullOffersList;
+    const fullOfferList = this._fullOffersList;
     const typeFullOfferList = this._fullOffersList.get(this._data.selectedType).slice();
     const actualOffers = this._additionOptions.slice();
     const actualOffersTypeStorage = typeFullOfferList.map((item) => (actualOffers.some((elem) => (item.title === elem.title) && (item.price === elem.price))) ? item : null);
-    return {fullOfferMap, typeFullOfferList, actualOffersTypeStorage};
+    return {fullOfferList, typeFullOfferList, actualOffersTypeStorage};
   }
 
   _setDatepicker() {

@@ -7,9 +7,9 @@ const END_FORMAT_SAME_MONTH = 'DD';
 const END_FORMAT_OTHER_MONTH ='MMM DD';
 
 const createDateInfo = (pointsList) => {
-  const dateArray = Array.from(pointsList).sort(sortDatePointUp);
-  const tripBegin = dateArray[0].time.timeBegin;
-  const tripEnd = dateArray[dateArray.length - 1].time.timeEnd;
+  const dateHolder = Array.from(pointsList).sort(sortDatePointUp);
+  const tripBegin = dateHolder[0].time.timeBegin;
+  const tripEnd = dateHolder[dateHolder.length - 1].time.timeEnd;
   const tripDateBeginEnd = tripBegin.month() === tripEnd.month()
     ? `${dayjs(tripBegin).format(BEGINNING_FORMAT_STRING)}&nbsp;&mdash;&nbsp;${dayjs(tripEnd).format(END_FORMAT_SAME_MONTH)}`
     : `${dayjs(tripBegin).format(BEGINNING_FORMAT_STRING)}&nbsp;&mdash;&nbsp;${dayjs(tripEnd).format(END_FORMAT_OTHER_MONTH)}`;
@@ -18,8 +18,8 @@ const createDateInfo = (pointsList) => {
 };
 
 const createCityList = (pointsList) => {
-  const cityArray = Array.from(pointsList).sort(sortDatePointUp);
-  return [cityArray[0].city, '...', cityArray[cityArray.length - 1].city].join(' &mdash; ');
+  const cityList = Array.from(pointsList).sort(sortDatePointUp);
+  return [cityList[0].city, '...', cityList[cityList.length - 1].city].join(' &mdash; ');
 
 };
 
