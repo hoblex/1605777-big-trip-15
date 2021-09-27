@@ -120,6 +120,7 @@ export default class Point {
   }
 
   _replaceFormToPointView() {
+    this._pointFormComponent.reset(this._point);
     replace(this._pointComponent, this._pointFormComponent);
     document.removeEventListener('keydown', this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
