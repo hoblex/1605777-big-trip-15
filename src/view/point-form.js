@@ -248,9 +248,7 @@ export default class PointForm extends SmartView {
 
   _formSubmitHandler(evt) {
     evt.preventDefault();
-    if (this._fullDestinationsDescriptionList.has(this._data.city)) {
-      this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
-    }
+    this._callback.formSubmit(PointForm.parseDataToPoint(this._data));
   }
 
   _formCloseClickHandler (evt) {
