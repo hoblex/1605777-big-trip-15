@@ -135,7 +135,6 @@ export default class PointForm extends SmartView {
     this._data = PointForm.parsePointToData(point);
     this._datepicker = null;
     this._additionOptions = this._data.additionalOptions;
-    this._fullAdditionOptionsList = null;
     this._fullDestinationsDescriptionList = descriptionsList;
     this._fullOffersList = offersList;
     this._formSubmitHandler = this._formSubmitHandler.bind(this);
@@ -227,6 +226,7 @@ export default class PointForm extends SmartView {
     evt.preventDefault();
     this.updateData({
       selectedType: evt.target.value,
+      additionalOptions: [],
     });
   }
 
@@ -306,16 +306,12 @@ export default class PointForm extends SmartView {
   }
 
   _setInnerHandlers() {
-    this._fullAdditionOptionsList = this._fullOffersList.get(this._data.pointType).slice();
-
     this.getElement().querySelector('.event__type-group').addEventListener('input', this._selectPointTypeInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('input', this._selectCityInputHandler);
     this.getElement().querySelector('.event__input--price').addEventListener('change', this._selectPriceInputHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('keydown', this._selectedCityEnterKeyDownHandler);
     this.getElement().querySelector('.event__input--destination').addEventListener('focusout', this._selectedCityFocusOutHandler);
-    if (this._fullAdditionOptionsList) {
-      this.createAdditionOptionsHandlers(this._setActualOffersStorage());
-    }
+    this.createAdditionOptionsHandlers(this._setActualOffersStorage());
   }
 
   setFormSubmitHandler(callback) {
