@@ -160,11 +160,11 @@ const renderDurationByChart = (typeCtx, points) => new Chart(typeCtx, {
         align: 'start',
         formatter: function (val) {
           if (dayjs.duration(val).days() > 0) {
-            return `${dayjs.duration(val).days()}D ${dayjs.duration(val).hours()}H ${dayjs.duration(val).minutes()}M`;
+            return `${dayjs.duration(val).days().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}D ${dayjs.duration(val).hours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}H ${dayjs.duration(val).minutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}M`;
           } else if (dayjs.duration(val).days() === 0 && dayjs.duration(val).hours() > 0) {
-            return  `${dayjs.duration(val).hours()}H ${dayjs.duration(val).minutes()}M`;
+            return  `${dayjs.duration(val).hours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}H ${dayjs.duration(val).minutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}M`;
           } else {
-            return `${dayjs.duration(val).minutes()}M`;
+            return `${dayjs.duration(val).minutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}M`;
           }
         },
       },
