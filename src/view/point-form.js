@@ -281,8 +281,6 @@ export default class PointForm extends SmartView {
   }
 
   createAdditionOptionsHandlers (offerStorage) {
-    // const actualSelectedType = this._data.selectedType;
-    // const previousSelectedType = this._data.pointType;
     const additionOptionsSelectors = Array.from(this.getElement().querySelectorAll('.event__offer-checkbox'));
     additionOptionsSelectors.forEach((item) => item.addEventListener('input', (evt) => {
       const selectedIndex = additionOptionsSelectors.indexOf(evt.target);
@@ -291,7 +289,6 @@ export default class PointForm extends SmartView {
         offerStorage.actualOffersTypeStorage[selectedIndex] = null;
 
       const actualAdditionalOptions = offerStorage.actualOffersTypeStorage.filter((elem) => elem !== null);
-      console.log(actualAdditionalOptions);
 
       evt.preventDefault();
       this.updateData({
