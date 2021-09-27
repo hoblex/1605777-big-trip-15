@@ -41,11 +41,11 @@ const createTripPoint = (point = BLANK_POINT) => {
   const getEventTimeDuration = () => {
 
     if (time.timeDuration.days() > 0) {
-      return `${time.timeDuration.days()}D ${time.timeDuration.hours()}H ${time.timeDuration.minutes()}M`;
+      return `${time.timeDuration.days().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}D ${time.timeDuration.hours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}H ${time.timeDuration.minutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}M`;
     } else if (time.timeDuration.days() === 0 && time.timeDuration.hours() > 0) {
-      return  `${time.timeDuration.hours()}H ${time.timeDuration.minutes()}M`;
+      return  `${time.timeDuration.hours().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}H ${time.timeDuration.minutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}M`;
     } else {
-      return `${time.timeDuration.minutes()}M`;
+      return `${time.timeDuration.minutes().toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping: false})}M`;
     }
   };
 
