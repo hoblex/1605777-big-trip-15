@@ -51,7 +51,7 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
     city = '',
     time = {timeBegin: dayjs(), timeEnd:dayjs()},
     additionalOptions = [],
-    pointCost = 0,
+    pointCost,
     selectedType = pointType,
     selectedCity = city,
     isSaving,
@@ -83,7 +83,7 @@ const createPointForm = (data = {}, fullDescriptionsList = new Map(), fullOffers
         <label class="event__label  event__type-output" for="event-destination-1">
           ${selectedType}
         </label>
-        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" list="destination-list-1" pattern="${createCitiesPattern(fullDestinationsDescriptionList)}">
+        <input class="event__input  event__input--destination" id="event-destination-1" type="text" name="event-destination" value="${selectedCity}" minlength = 1 list="destination-list-1" pattern="${createCitiesPattern(fullDestinationsDescriptionList)}">
         <datalist id="destination-list-1">
         ${createCitiesList(fullDestinationsDescriptionList)}
         </datalist>
@@ -192,6 +192,7 @@ export default class PointForm extends SmartView {
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.time.timeBegin.toISOString(),
         onChange: this._timeBeginChangeHandler,
+        maxDate: this._data.time.timeEnd.toISOString(),
       },
     );
 
@@ -202,6 +203,7 @@ export default class PointForm extends SmartView {
         dateFormat: 'd/m/Y H:i',
         defaultDate: this._data.time.timeEnd.toISOString(),
         onChange: this._timeEndChangeHandler,
+        minDate: this._data.time.timeBegin.toISOString(),
       },
     );
   }
@@ -213,13 +215,13 @@ export default class PointForm extends SmartView {
         this._data.time,
         {timeBegin: dayjs(userDate), timeDuration: dayjs.duration((this._data.time.timeEnd).diff(dayjs(userDate)))},
       ),
-    }, true);
+    });
   }
 
   _timeEndChangeHandler([userDate]) {
     this.updateData({
       time: Object.assign({}, this._data.time, {timeEnd: dayjs(userDate)}),
-    }, true);
+    });
   }
 
   _selectPointTypeInputHandler(evt) {
@@ -274,6 +276,10 @@ export default class PointForm extends SmartView {
             pictures: this._fullDestinationsDescriptionList.get(evt.target.value).pictures,
           },
         ),
+      });
+    } else {
+      this.updateData({
+        pointCity: '',
       });
     }
   }
@@ -339,6 +345,7 @@ export default class PointForm extends SmartView {
       {
         selectedType: point.pointType,
         selectedCity: point.city,
+        pointCost: point.pointCost,
         isDisabled: false,
         isSaving: false,
         isDeleting: false,
@@ -352,7 +359,7 @@ export default class PointForm extends SmartView {
     data.city = data.selectedCity;
 
     delete data.selectedType;
-    delete  data.selectedCity;
+    delete data.selectedCity;
     delete data.isDisabled;
     delete data.isSaving;
     delete data.isDeleting;
