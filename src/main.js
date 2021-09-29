@@ -79,3 +79,7 @@ Promise.all([getPointsPromise, getDescriptionsPromise, getOffersPromise])
     pointsModel.setPoints(UpdateType.INIT, values[0]);
     tableStats.init(TableStatsItems.TABLE, handleTableStatsClick.bind(this));
   });
+
+window.addEventListener('load', () => {
+  navigator.serviceWorker.register('/sw.js');
+});
