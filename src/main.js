@@ -6,14 +6,24 @@ import PointsModel from './model/points';
 import Descriptions from './presenter/descriptions';
 import Offers from './presenter/offers';
 import FilterPresenter from './presenter/filter.js';
+import {isOnline} from './utils/common.js';
 import FilterModel from './model/filter';
 import {TableStatsItems, UpdateType, FilterBy} from './const';
+import {toast} from './utils/toast.js';
 import TableStatsPresenter from './presenter/table-stats';
-import Api from './api';
+import Api from './api/api';
+import Store from './api/store.js';
+import Provider from './api/provider.js';
 
 const AUTHORIZATION = 'Basic gL3df6yrPwhf5dp5b';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip/';
 const api = new Api(END_POINT, AUTHORIZATION);
+const STORE_PREFIX = 'taskmanager-localstorage';
+const STORE_VER = 'v15';
+const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
+
+const store = new Store(STORE_NAME, window.localStorage);
+const apiWithProvider = new Provider(api, store);
 
 const tripControlsNavigation = document.querySelector('.trip-controls__navigation');
 
@@ -32,7 +42,7 @@ const routeInfoContainer = document.querySelector('.trip-main');
 const routeInfo = new RouteInfo(routeInfoContainer, pointsModel);
 
 const tripEventsContainer = document.querySelector('.trip-events');
-const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, descriptionsList, offersList, filterModel, api);
+const routeListPresenter = new RouteList(tripEventsContainer, pointsModel, descriptionsList, offersList, filterModel, apiWithProvider);
 
 let statisticsComponent = null;
 
@@ -44,6 +54,11 @@ const handleTableStatsClick = (tableStatsItem) => {
       routeListPresenter.destroy();
       filterModel.setFilter(UpdateType.MAJOR, FilterBy.EVERYTHING);
       routeListPresenter.init();
+      if (!isOnline()) {
+        toast('You can\'t create new point offline');
+        // statisticsComponent.set(MenuItem.TASKS);
+        break;
+      }
       break;
     case TableStatsItems.STATS:
       tableStats.init(tableStatsItem);
@@ -63,7 +78,7 @@ document.querySelector('.trip-main__event-add-btn').addEventListener('click', (e
   routeListPresenter.createPoint();
 });
 
-const getPointsPromise = api.getPoints()
+const getPointsPromise = apiWithProvider.getPoints()
   .catch(() => {
     pointsModel.setPoints(UpdateType.INIT, []);
   });
@@ -82,4 +97,13 @@ Promise.all([getPointsPromise, getDescriptionsPromise, getOffersPromise])
 
 window.addEventListener('load', () => {
   navigator.serviceWorker.register('/sw.js');
+});
+
+window.addEventListener('online', () => {
+  document.title = document.title.replace(' [offline]', '');
+  apiWithProvider.sync();
+});
+
+window.addEventListener('offline', () => {
+  document.title += ' [offline]';
 });
