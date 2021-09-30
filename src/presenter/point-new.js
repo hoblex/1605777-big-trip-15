@@ -21,7 +21,6 @@ export default class PointNew {
       return;
     }
 
-    document.querySelector('.trip-main__event-add-btn').disabled = true;
     this._pointFormComponent = new PointFormView(this._descriptionsList, this._offersList);
     this._pointFormComponent.setFormSubmitHandler(this._handleFormSubmit);
     this._pointFormComponent.setDeleteClickHandler(this._handleDeleteClick);
@@ -40,7 +39,7 @@ export default class PointNew {
     remove(this._pointFormComponent);
     this._pointFormComponent = null;
 
-    document.querySelector('.trip-main__event-add-btn').disabled = false;
+    // document.querySelector('.trip-main__event-add-btn').disabled = false;
     document.removeEventListener('keydown', this._escKeyDownHandler);
   }
 

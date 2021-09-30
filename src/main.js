@@ -56,7 +56,6 @@ const handleTableStatsClick = (tableStatsItem) => {
       routeListPresenter.init();
       if (!isOnline()) {
         toast('You can\'t create new point offline');
-        // statisticsComponent.set(MenuItem.TASKS);
         break;
       }
       break;
@@ -73,6 +72,8 @@ filterPresenter.init();
 routeListPresenter.init();
 routeInfo.init();
 
+document.querySelector('.trip-main__event-add-btn').disabled = true;
+console.log(document.querySelector('.trip-main__event-add-btn').disabled);
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
   routeListPresenter.createPoint();

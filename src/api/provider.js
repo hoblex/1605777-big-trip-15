@@ -1,10 +1,10 @@
-import TasksModel from '../model/points.js';
+import PointsModel from '../model/points.js';
 import {isOnline} from '../utils/common.js';
 
 const getSyncedPoints = (items) =>
   items
     .filter(({success}) => success)
-    .map(({payload}) => payload.task);
+    .map(({payload}) => payload.point);
 
 const createStoreStructure = (items) =>
   items
@@ -22,10 +22,10 @@ export default class Provider {
   getPoints() {
     if (isOnline()) {
       return this._api.getPoints()
-        .then((tasks) => {
-          const items = createStoreStructure(tasks.map(TasksModel.adaptToServer));
+        .then((points) => {
+          const items = createStoreStructure(points.map(PointsModel.adaptToServer));
           this._store.setItems(items);
-          return tasks;
+          return points;
         });
     }
 
@@ -48,7 +48,7 @@ export default class Provider {
     return Promise.resolve(point);
   }
 
-  addPoint(task) {
+  addPoint(point) {
     if (isOnline()) {
       return this._api.addPoint(point)
         .then((newPoint) => {
@@ -57,7 +57,7 @@ export default class Provider {
         });
     }
 
-    return Promise.reject(new Error('Add task failed'));
+    return Promise.reject(new Error('Add point failed'));
   }
 
   deletePoint(point) {
@@ -66,7 +66,7 @@ export default class Provider {
         .then(() => this._store.removeItem(point.id));
     }
 
-    return Promise.reject(new Error('Delete task failed'));
+    return Promise.reject(new Error('Delete point failed'));
   }
 
   sync() {
