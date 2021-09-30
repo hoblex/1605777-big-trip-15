@@ -18,7 +18,7 @@ import Provider from './api/provider.js';
 const AUTHORIZATION = 'Basic gL3df6yrPwhf5dp5b';
 const END_POINT = 'https://15.ecmascript.pages.academy/big-trip/';
 const api = new Api(END_POINT, AUTHORIZATION);
-const STORE_PREFIX = 'taskmanager-localstorage';
+const STORE_PREFIX = 'pointmanager-localstorage';
 const STORE_VER = 'v15';
 const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;
 
