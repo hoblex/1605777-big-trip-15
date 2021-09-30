@@ -8,6 +8,8 @@ import {sortTimePointDown, sortDatePointUp, sortPricePointDown} from '../utils/p
 import {SortType, UpdateType, UserAction, FilterBy} from '../const';
 import {filter} from '../utils/filter.js';
 import LoadingView from '../view/loading.js';
+import {toast} from '../utils/toast.js';
+import {isOnline} from '../utils/common.js';
 
 export default class RouteList {
   constructor(routeListContainer, pointsModel, descriptionsList, offersList, filterModel, api) {
@@ -89,6 +91,11 @@ export default class RouteList {
           });
         break;
       case UserAction.ADD_POINT:
+        if (!isOnline()) {
+          toast('You can\'t create new task offline');
+          // siteMenuComponent.setMenuItem(MenuItem.TASKS);
+          break;
+        }
         this._pointNewPresenter.setSaving();
         this._api.addPoint(update)
           .then((response) => {

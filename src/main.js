@@ -6,10 +6,8 @@ import PointsModel from './model/points';
 import Descriptions from './presenter/descriptions';
 import Offers from './presenter/offers';
 import FilterPresenter from './presenter/filter.js';
-import {isOnline} from './utils/common.js';
 import FilterModel from './model/filter';
 import {TableStatsItems, UpdateType, FilterBy} from './const';
-import {toast} from './utils/toast.js';
 import TableStatsPresenter from './presenter/table-stats';
 import Api from './api/api';
 import Store from './api/store.js';
@@ -54,10 +52,6 @@ const handleTableStatsClick = (tableStatsItem) => {
       routeListPresenter.destroy();
       filterModel.setFilter(UpdateType.MAJOR, FilterBy.EVERYTHING);
       routeListPresenter.init();
-      if (!isOnline()) {
-        toast('You can\'t create new point offline');
-        break;
-      }
       break;
     case TableStatsItems.STATS:
       tableStats.init(tableStatsItem);
@@ -72,8 +66,6 @@ filterPresenter.init();
 routeListPresenter.init();
 routeInfo.init();
 
-document.querySelector('.trip-main__event-add-btn').disabled = true;
-console.log(document.querySelector('.trip-main__event-add-btn').disabled);
 document.querySelector('.trip-main__event-add-btn').addEventListener('click', (evt) => {
   evt.preventDefault();
   routeListPresenter.createPoint();
