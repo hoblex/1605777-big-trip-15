@@ -1,4 +1,4 @@
-const CACHE_PREFIX = 'taskmanager-cache';
+const CACHE_PREFIX = 'pointmanager-cache';
 const CACHE_VER = 'v15';
 const CACHE_NAME = `${CACHE_PREFIX}-${CACHE_VER}`;
 
@@ -12,14 +12,13 @@ self.addEventListener('install', (evt) => {
         '/',
         '/index.html',
         '/bundle.js',
-        '/css/normalize.css',
         '/css/style.css',
-        '/fonts/Monstserrat-Bold.woff',
-        '/fonts/Monstserrat-ExtraBold.woff2',
-        '/fonts/Monstserrat-Medium.woff',
-        '/fonts/Monstserrat-Regular.woff2',
-        '/fonts/Monstserrat-SemiBold.woff2',
-        '/img/wave.svg',
+        '/fonts/Montserrat-Bold.woff2',
+        '/fonts/Montserrat-ExtraBold.woff2',
+        '/fonts/Montserrat-Medium.woff2',
+        '/fonts/Montserrat-Regular.woff2',
+        '/fonts/Montserrat-SemiBold.woff2',
+        '/img/logo.png',
       ])),
   );
 });
